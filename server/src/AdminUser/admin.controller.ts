@@ -1,19 +1,42 @@
-import { Controller, Get } from '@nestjs/common'
+import { Controller, Get, Param, Res, HttpStatus } from '@nestjs/common'
+import { Response } from 'express';
 import { AdminUserService } from './admin.service'
 
-@Controller('admin')
+@Controller('api/v1/admin')
 export class AdminUserController {
     constructor(
         private readonly adminUserService: AdminUserService
     ){}
-    @Get()
-    async findAll() {
-        const adminList = await this.adminUserService.findAll()
-        return adminList
+    @Get('/:id')
+    async get(@Param('id') id:string, @Res() res: Response) {
+        try {
+            const adminList = await this.adminUserService.get(parseInt(id))
+            res.json({
+                code: 20000,
+                msg: 'admin',
+                data: adminList[0]
+            })
+        } catch {
+            res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
+                code: 50000,
+                msg: 'server error'
+            })
+        }
     }
-    @Get('/abc')
-    async getDetail() {
-        const adminList = await this.adminUserService.findRedis()
-        return adminList
+    @Get()
+    async getAll(@Res() res: Response) {
+        try {
+            const adminList = await this.adminUserService.get()
+            res.json({
+                code: 20000,
+                msg: 'admin list',
+                data: adminList
+            })
+        } catch {
+            res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
+                code: 50000,
+                msg: 'server error'
+            })
+        }
     }
 }
