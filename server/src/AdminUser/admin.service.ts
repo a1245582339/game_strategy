@@ -1,20 +1,22 @@
-import { Injectable, Inject } from '@nestjs/common'
+import { Injectable } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
 import { Repository } from 'typeorm'
 import { AdminUser } from './admin.entity'
-import { RedisService } from 'nestjs-redis';
+import * as redis from 'redis';
 
 @Injectable()
 export class AdminUserService {
     constructor(
         @InjectRepository(AdminUser)
-        private readonly adminUserRepository: Repository<AdminUser>,
-        private readonly redisService: RedisService,
+        private readonly adminUserRepository: Repository<AdminUser>
     ) {}
     async findAll(): Promise<AdminUser[]> {
         return await this.adminUserRepository.find()
     }
     async findRedis(): Promise<any> {
-        return await this.redisService.getClient('default')
+        const client = redis.createClient();
+        const res = client.get('test') 
+        console.log(res)
+        return res
     }
 }
