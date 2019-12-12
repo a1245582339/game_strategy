@@ -16,11 +16,13 @@ export class AdminUserController {
                 msg: 'admin',
                 data: adminList[0]
             })
-        } catch {
+        } catch (err) {
             res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
                 code: 50000,
-                msg: 'server error'
+                msg: 'server error',
+                data: err
             })
+            throw err
         }
     }
     @Get()
@@ -32,11 +34,13 @@ export class AdminUserController {
                 msg: 'admin list',
                 data: adminList
             })
-        } catch {
+        } catch (err) {
             res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
                 code: 50000,
-                msg: 'server error'
+                msg: 'server error',
+                data: err
             })
+            throw err
         }
     }
 }
