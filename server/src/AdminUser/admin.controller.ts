@@ -1,4 +1,4 @@
-import { Controller, Get, Param, Res, HttpStatus, Post, Body, Put } from '@nestjs/common'
+import { Controller, Get, Param, Res, HttpStatus, Post, Body, Put, Query } from '@nestjs/common'
 import { Response } from 'express';
 import { ParseIntPipe } from '@nestjs/common/pipes/parse-int.pipe';
 import { AdminUserService } from './admin.service'
@@ -9,7 +9,7 @@ export class AdminUserController {
     constructor(
         private readonly adminUserService: AdminUserService
     ){}
-    @Get('/:id')
+    @Get('user/:id')
     async get(@Param('id', new ParseIntPipe()) id: number, @Res() res: Response) {
         try {
             const adminList = await this.adminUserService.get(id)
@@ -25,7 +25,7 @@ export class AdminUserController {
             throw err
         }
     }
-    @Get()
+    @Get('user')
     async getAll(@Res() res: Response) {
         try {
             const adminList = await this.adminUserService.get()
@@ -41,8 +41,22 @@ export class AdminUserController {
             throw err
         }
     }
-
-    @Post()
+    @Get('check')
+    async checkExsit(@Query('name') name:string, @Res() res: Response) {
+        console.log(name)
+        try {
+            const result = await this.adminUserService.checkExist(name)
+            res.json({
+                msg: 'Exist status',
+                data: {
+                    exist: result
+                }
+            })
+        } catch (error) {
+            
+        }
+    }
+    @Post('user')
     async create(@Res() res: Response, @Body() body:AdminDto) {
         try {
             const data = await this.adminUserService.create(body)
@@ -64,7 +78,7 @@ export class AdminUserController {
             throw err
         }
     }
-    @Put('/:id')
+    @Put('user/:id')
     async update(@Param('id', new ParseIntPipe()) id:number, @Body() body:AdminDto, @Res() res: Response) {
         try {
             await this.adminUserService.update(id, body)
@@ -79,4 +93,5 @@ export class AdminUserController {
             throw err
         }
     }
+    
 }

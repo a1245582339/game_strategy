@@ -13,9 +13,12 @@ export class AdminUserService {
     get(id?: number): Promise<AdminUser[]> {
         return this.adminUserRepository.find({ select: ['id', 'name'], where: Object.assign({ is_del: 0 }, id ? { id } : {}) })
     }
+    async checkExist(name: string): Promise<boolean> {
+        return !!(await this.adminUserRepository.findOne({ name, is_del: 0 }))
+    }
     async create(body: AdminDto): Promise<AdminUser | boolean> {
         try {
-            const exist = await this.adminUserRepository.findOne({ name: body.name })
+            const exist = await this.checkExist(body.name)
             if (exist) {
                 return false
             } else {
