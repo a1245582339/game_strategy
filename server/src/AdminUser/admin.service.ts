@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
 import { Repository } from 'typeorm'
 import { AdminUser } from './admin.entity'
+import { AdminDto } from './admin.dto';
 
 @Injectable()
 export class AdminUserService {
@@ -11,5 +12,13 @@ export class AdminUserService {
     ) {}
     get(id?: number): Promise<AdminUser[]> {
         return this.adminUserRepository.find({ select: ['id', 'name'], where: Object.assign({ is_del: 0 }, id ? { id } : {}) })
+    }
+    async create(body: AdminDto): Promise<AdminUser | boolean> {
+        const exist = await this.adminUserRepository.findOne({ name: body.name })
+        if (exist) {
+            return false
+        } else {
+            return this.adminUserRepository.save(body)
+        }
     }
 }

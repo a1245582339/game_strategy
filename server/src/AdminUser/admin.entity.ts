@@ -13,6 +13,9 @@ export class AdminUser {
     @Column()
     password: string;
 
+    @Column()
+    role: number;
+
     @Column({default: 0})
     is_del: number
 }
