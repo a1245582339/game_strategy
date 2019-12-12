@@ -1,11 +1,6 @@
-import { IsInt, IsString } from 'class-validator';
 export class AdminDto {
-    @IsString()
-    readonly name: string
-
-    @IsInt()
-    readonly password: string
-
-    @IsInt()
-    readonly role: number
+    readonly name?: string
+    readonly password?: string
+    readonly role?: number
+    readonly is_del?: number
 }

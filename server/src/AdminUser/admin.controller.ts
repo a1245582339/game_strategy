@@ -1,4 +1,4 @@
-import { Controller, Get, Param, Res, HttpStatus, Post, Body } from '@nestjs/common'
+import { Controller, Get, Param, Res, HttpStatus, Post, Body, Put } from '@nestjs/common'
 import { Response } from 'express';
 import { ParseIntPipe } from '@nestjs/common/pipes/parse-int.pipe';
 import { AdminUserService } from './admin.service'
@@ -10,20 +10,17 @@ export class AdminUserController {
         private readonly adminUserService: AdminUserService
     ){}
     @Get('/:id')
-    async get(@Param('id', new ParseIntPipe()) id, @Res() res: Response) {
-        console.log(id)
+    async get(@Param('id', new ParseIntPipe()) id: number, @Res() res: Response) {
         try {
             const adminList = await this.adminUserService.get(id)
             res.json({
-                code: 20000,
                 msg: 'Admin',
                 data: adminList[0]
             })
         } catch (err) {
             res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
-                code: 50000,
                 msg: 'Server error',
-                data: err
+                err
             })
             throw err
         }
@@ -33,15 +30,13 @@ export class AdminUserController {
         try {
             const adminList = await this.adminUserService.get()
             res.json({
-                code: 20000,
                 msg: 'Admin list',
                 data: adminList
             })
         } catch (err) {
             res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
-                code: 50000,
                 msg: 'Server error',
-                data: err
+                err
             })
             throw err
         }
@@ -63,9 +58,23 @@ export class AdminUserController {
             
         } catch (err) {
             res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
-                code: 50000,
                 msg: 'Server error',
-                data: err
+                err
+            })
+            throw err
+        }
+    }
+    @Put('/:id')
+    async update(@Param('id', new ParseIntPipe()) id:number, @Body() body:AdminDto, @Res() res: Response) {
+        try {
+            await this.adminUserService.update(id, body)
+            res.json({
+                msg: "Ok"
+            })
+        } catch (err) {
+            res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
+                msg: 'Server error',
+                err
             })
             throw err
         }

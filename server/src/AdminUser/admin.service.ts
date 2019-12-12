@@ -9,16 +9,34 @@ export class AdminUserService {
     constructor(
         @InjectRepository(AdminUser)
         private readonly adminUserRepository: Repository<AdminUser>,
-    ) {}
+    ) { }
     get(id?: number): Promise<AdminUser[]> {
         return this.adminUserRepository.find({ select: ['id', 'name'], where: Object.assign({ is_del: 0 }, id ? { id } : {}) })
     }
     async create(body: AdminDto): Promise<AdminUser | boolean> {
-        const exist = await this.adminUserRepository.findOne({ name: body.name })
-        if (exist) {
-            return false
-        } else {
-            return this.adminUserRepository.save(body)
+        try {
+            const exist = await this.adminUserRepository.findOne({ name: body.name })
+            if (exist) {
+                return false
+            } else {
+                return this.adminUserRepository.save(body)
+            }
+        } catch (err) {
+            throw err
+        }
+
+    }
+    async update(id: number, body: AdminDto): Promise<boolean> {
+        try {
+            const update = await this.adminUserRepository.update({
+                id,
+                is_del: 0
+            }, body)
+            if (update) {
+                return true
+            }
+        } catch (err) {
+            throw err
         }
     }
 }

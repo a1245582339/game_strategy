@@ -11,7 +11,7 @@
  Target Server Version : 50720
  File Encoding         : 65001
 
- Date: 10/12/2019 23:39:14
+ Date: 12/12/2019 23:16:40
 */
 
 SET NAMES utf8mb4;
@@ -26,8 +26,16 @@ CREATE TABLE `admin_user`  (
   `name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
   `password` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
   `is_del` int(11) NOT NULL DEFAULT 0,
+  `role` int(11) NOT NULL,
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 4 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of admin_user
+-- ----------------------------
+INSERT INTO `admin_user` VALUES (1, 'ew', '1', 0, 1);
+INSERT INTO `admin_user` VALUES (2, 'editor', '1', 0, 2);
+INSERT INTO `admin_user` VALUES (3, 'ew7', '2', 0, 2);
 
 -- ----------------------------
 -- Table structure for article
