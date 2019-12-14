@@ -10,8 +10,8 @@ export class AdminUserService {
         @InjectRepository(AdminUser)
         private readonly adminUserRepository: Repository<AdminUser>,
     ) { }
-    get(id?: number): Promise<AdminUser[]> {
-        return this.adminUserRepository.find({ select: ['id', 'name'], where: Object.assign({ is_del: 0 }, id ? { id } : {}) })
+    get(payload?: AdminDto): Promise<AdminUser[]> {
+        return this.adminUserRepository.find({ select: ['id', 'name'], where: {...payload, is_del: 0} })
     }
     async checkExist(name: string): Promise<boolean> {
         return !!(await this.adminUserRepository.findOne({ name, is_del: 0 }))

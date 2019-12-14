@@ -1,34 +1,21 @@
-import { Controller, Get, Param, Res, HttpStatus, Post, Body, Put, Query } from '@nestjs/common'
+import { Controller, Get, Param, Res, HttpStatus, Post, Body, Put, Query, UseGuards } from '@nestjs/common'
 import { Response } from 'express';
 import { ParseIntPipe } from '@nestjs/common/pipes/parse-int.pipe';
 import { AdminUserService } from './admin.service'
 import { AdminDto } from './admin.dto';
+import { AuthGuard } from '@nestjs/passport'
 
+@UseGuards(AuthGuard('jwt'))
 @Controller('api/v1/admin')
 export class AdminUserController {
     constructor(
         private readonly adminUserService: AdminUserService
     ){}
-    @Get('user/:id')
-    async get(@Param('id', new ParseIntPipe()) id: number, @Res() res: Response) {
-        try {
-            const adminList = await this.adminUserService.get(id)
-            res.json({
-                msg: 'Admin',
-                data: adminList[0]
-            })
-        } catch (err) {
-            res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
-                msg: 'Server error',
-                err
-            })
-            throw err
-        }
-    }
+
     @Get('user')
-    async getAll(@Res() res: Response) {
+    async getAll(@Res() res: Response, @Query() query: AdminDto) {
         try {
-            const adminList = await this.adminUserService.get()
+            const adminList = await this.adminUserService.get(query)
             res.json({
                 msg: 'Admin list',
                 data: adminList
@@ -43,7 +30,6 @@ export class AdminUserController {
     }
     @Get('check')
     async checkExsit(@Query('name') name:string, @Res() res: Response) {
-        console.log(name)
         try {
             const result = await this.adminUserService.checkExist(name)
             res.json({
