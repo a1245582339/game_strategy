@@ -6,7 +6,7 @@ import { AuthService } from './auth.service'
 export class AuthController {
     constructor(private readonly authService: AuthService) {}
 
-    @Post('getToken')
+    @Post('login')
     async getToken(@Body('name') name: string, @Body('password') password: string, @Res() res: Response) {
         const token = await this.authService.createToken(name, password)
         if (token) {

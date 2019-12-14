@@ -1,4 +1,4 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common'
+import { Injectable } from '@nestjs/common'
 import { AdminUserService } from '../AdminUser/admin.service'
 import { JwtService } from '@nestjs/jwt'
 
@@ -17,9 +17,7 @@ export class AuthService {
     async createToken(name: string, password: string) {
         const user = (await this.validateAdmin({ name, password }))[0]
         if (user) {
-            const accessToken = this.jwtService.sign({name, password}, {
-                expiresIn: 60 * 60
-            })
+            const accessToken = this.jwtService.sign({name, password})
             return accessToken
         } else {
             return false

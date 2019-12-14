@@ -11,10 +11,14 @@ export class AdminUserService {
         private readonly adminUserRepository: Repository<AdminUser>,
     ) { }
     get(payload?: AdminDto): Promise<AdminUser[]> {
-        return this.adminUserRepository.find({ select: ['id', 'name'], where: {...payload, is_del: 0} })
+        return this.adminUserRepository.find({ select: ['id', 'name', 'role'], where: {...payload, is_del: 0} })
     }
     async checkExist(name: string): Promise<boolean> {
         return !!(await this.adminUserRepository.findOne({ name, is_del: 0 }))
+    }
+    async checkRole(name: string): Promise<boolean> {
+         const user = await this.adminUserRepository.findOne({ name, is_del: 0 })
+         return user.role === 1
     }
     async create(body: AdminDto): Promise<AdminUser | boolean> {
         try {

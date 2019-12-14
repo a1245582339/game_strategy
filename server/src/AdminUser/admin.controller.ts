@@ -4,6 +4,8 @@ import { ParseIntPipe } from '@nestjs/common/pipes/parse-int.pipe';
 import { AdminUserService } from './admin.service'
 import { AdminDto } from './admin.dto';
 import { AuthGuard } from '@nestjs/passport'
+import { RolesGuard } from '../guard/roles.guard'
+
 
 @UseGuards(AuthGuard('jwt'))
 @Controller('api/v1/admin')
@@ -11,7 +13,7 @@ export class AdminUserController {
     constructor(
         private readonly adminUserService: AdminUserService
     ){}
-
+    
     @Get('user')
     async getAll(@Res() res: Response, @Query() query: AdminDto) {
         try {
@@ -28,6 +30,7 @@ export class AdminUserController {
             throw err
         }
     }
+
     @Get('check')
     async checkExsit(@Query('name') name:string, @Res() res: Response) {
         try {
@@ -38,10 +41,16 @@ export class AdminUserController {
                     exist: result
                 }
             })
-        } catch (error) {
-            
+        } catch (err) {
+            res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
+                msg: 'Server error',
+                err
+            })
+            throw err
         }
     }
+
+    @UseGuards(RolesGuard)
     @Post('user')
     async create(@Res() res: Response, @Body() body:AdminDto) {
         try {
@@ -64,6 +73,8 @@ export class AdminUserController {
             throw err
         }
     }
+
+    @UseGuards(RolesGuard)
     @Put('user/:id')
     async update(@Param('id', new ParseIntPipe()) id:number, @Body() body:AdminDto, @Res() res: Response) {
         try {
