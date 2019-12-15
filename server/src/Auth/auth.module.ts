@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { JwtModule } from '@nestjs/jwt';
 import { AdminUserModule } from '../AdminUser/admin.module';
+import { ClientUserModule } from '../ClientUser/client.module';
 import { AuthService } from './auth.service';
 import { JwtStrategy } from './jwt.strategy';
 import { AuthController } from './auth.controller';
@@ -10,10 +11,11 @@ import { PassportModule } from '@nestjs/passport'
     imports: [
         PassportModule.register({ defaultStrategy: 'jwt' }),
         JwtModule.register({
-            secretOrPrivateKey: 'secret',
+            secret: 'secret',
             signOptions: { expiresIn: '7d' },
         }),
-        AdminUserModule
+        AdminUserModule,
+        ClientUserModule
     ],
     providers:  [AuthService, JwtStrategy],
     controllers: [AuthController],

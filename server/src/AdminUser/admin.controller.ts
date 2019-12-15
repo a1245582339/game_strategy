@@ -4,8 +4,8 @@ import { ParseIntPipe } from '@nestjs/common/pipes/parse-int.pipe';
 import { AdminUserService } from './admin.service'
 import { AdminDto } from './admin.dto';
 import { AuthGuard } from '@nestjs/passport'
-import { RolesGuard } from '../guard/roles.guard'
-
+import { AdminGuard } from '../guard/admin.guard'
+import { SelfGuard } from '../guard/self.guard'
 
 @UseGuards(AuthGuard('jwt'))
 @Controller('api/v1/admin')
@@ -15,7 +15,7 @@ export class AdminUserController {
     ){}
     
     @Get('user')
-    async getAll(@Res() res: Response, @Query() query: AdminDto) {
+    async get(@Res() res: Response, @Query() query: AdminDto) {
         try {
             const adminList = await this.adminUserService.get(query)
             res.json({
@@ -30,7 +30,6 @@ export class AdminUserController {
             throw err
         }
     }
-
     @Get('check')
     async checkExsit(@Query('name') name:string, @Res() res: Response) {
         try {
@@ -50,12 +49,11 @@ export class AdminUserController {
         }
     }
 
-    @UseGuards(RolesGuard)
+    @UseGuards(AdminGuard)
     @Post('user')
     async create(@Res() res: Response, @Body() body:AdminDto) {
         try {
-            const data = await this.adminUserService.create(body)
-            if (data) {
+            if (await this.adminUserService.create(body)) {
                 res.status(HttpStatus.CREATED).json({
                     msg: 'Ok'
                 })
@@ -74,7 +72,7 @@ export class AdminUserController {
         }
     }
 
-    @UseGuards(RolesGuard)
+    @UseGuards(AdminGuard)
     @Put('user/:id')
     async update(@Param('id', new ParseIntPipe()) id:number, @Body() body:AdminDto, @Res() res: Response) {
         try {
@@ -82,6 +80,24 @@ export class AdminUserController {
             res.json({
                 msg: "Ok"
             })
+        } catch (err) {
+            res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
+                msg: 'Server error',
+                err
+            })
+            throw err
+        }
+    }
+    @UseGuards(SelfGuard)
+    @Put('changePassword/:id')
+    async changePassword(@Param('id', new ParseIntPipe()) id:number, @Body('password') password:string, @Body('old_password') old_password:string, @Res() res: Response) {
+        try {
+            if (await this.adminUserService.checkPassword(id, old_password)) {
+                await this.adminUserService.update(id, { password })
+                res.json({ msg: 'Ok' })
+            } else {
+                res.json({ code: 20003, msg: 'Oldpassword error' })
+            }
         } catch (err) {
             res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
                 msg: 'Server error',

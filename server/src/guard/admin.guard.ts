@@ -2,7 +2,7 @@ import { Injectable, CanActivate, ExecutionContext } from '@nestjs/common'
 import { decode } from 'jsonwebtoken'
 import { AdminUserService } from '../AdminUser/admin.service'
 @Injectable()
-export class RolesGuard implements CanActivate {
+export class AdminGuard implements CanActivate {
     constructor(
         private readonly adminUserServer: AdminUserService
     ) {}
@@ -12,6 +12,7 @@ export class RolesGuard implements CanActivate {
         if (!token) return false
         const userInfo:any = decode(token.split(' ')[1])
         const { name } = userInfo
-        return await this.adminUserServer.checkRole(name)
+        const user = await this.adminUserServer.checkRole(name)
+        return user && user.role === 1
     }
 }
