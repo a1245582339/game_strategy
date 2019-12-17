@@ -11,6 +11,12 @@ export class Category {
     p_id: number;
 
     @Column()
+    l_id: number;
+
+    @Column()
+    r_id: number;
+
+    @Column()
     name: string;
 
     @Column()
