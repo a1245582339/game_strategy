@@ -11,7 +11,7 @@
  Target Server Version : 50720
  File Encoding         : 65001
 
- Date: 15/12/2019 16:39:58
+ Date: 17/12/2019 23:39:36
 */
 
 SET NAMES utf8mb4;
@@ -57,12 +57,22 @@ CREATE TABLE `article`  (
 DROP TABLE IF EXISTS `category`;
 CREATE TABLE `category`  (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `p_id` int(11) NOT NULL,
+  `p_id` int(11) NOT NULL DEFAULT 0,
+  `l_id` int(11) NOT NULL,
+  `r_id` int(11) NOT NULL,
   `name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
   `is_del` int(11) NOT NULL DEFAULT 0,
-  `type` int(11) NOT NULL,
+  `type` int(11) NOT NULL COMMENT '1：游戏平台\r\n2：游戏类型\r\n3：游戏专区',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 10 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of category
+-- ----------------------------
+INSERT INTO `category` VALUES (1, 0, 1, 8, 'root', 0, 0);
+INSERT INTO `category` VALUES (7, 1, 2, 3, '电脑游戏', 0, 1);
+INSERT INTO `category` VALUES (8, 1, 4, 7, '手机游戏', 0, 1);
+INSERT INTO `category` VALUES (9, 8, 5, 6, '王者荣耀', 0, 2);
 
 -- ----------------------------
 -- Table structure for comment
