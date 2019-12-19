@@ -1,24 +1,15 @@
 import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm'
 
 @Entity({
-    name: 'category'
+    name: 'article'
 })
-export class Category {
+export class Article {
     @PrimaryGeneratedColumn()
     id: number;
-
-    @Column()
-    p_id: number;
-
-    @Column()
-    l_id: number;
-
-    @Column()
-    r_id: number;
 
     @Column()
     name: string;
 
     @Column()
-    type: number
+    content: string;
 }

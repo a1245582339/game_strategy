@@ -4,6 +4,7 @@ import { ParseIntPipe } from '@nestjs/common/pipes/parse-int.pipe';
 import { CategoryService } from './category.service'
 import { CategoryDto } from './category.dto'
 import { toCateList } from '../utils/optCategory';
+import { AuthGuard } from '@nestjs/passport'
 
 @Controller('api/v1/category')
 export class CategoryController {
@@ -40,6 +41,7 @@ export class CategoryController {
             throw err
         }
     }
+    @UseGuards(AuthGuard('jwt'))
     @Post()
     async create(@Res() res: Response, @Body() body: CategoryDto) {
         try {
@@ -52,6 +54,7 @@ export class CategoryController {
         }
     }
 
+    @UseGuards(AuthGuard('jwt'))
     @Put('create/:id')
     async update(@Res() res: Response, @Body('name') name: string, @Param('id', new ParseIntPipe()) id:number) {
         try {
@@ -70,6 +73,7 @@ export class CategoryController {
         }
     }
 
+    @UseGuards(AuthGuard('jwt'))
     @Put('del/:id')
     async delete(@Param('id', new ParseIntPipe()) id:number, @Res() res: Response) {
         try {
