@@ -11,7 +11,6 @@ export class CategoryController {
     async getCateory(@Res() res: Response) {
         try {
             const categorys = await this.categoryService.getCateory()
-            // const resData = categorys
         } catch (err) {
             res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
                 msg: 'Server error',
@@ -20,9 +19,21 @@ export class CategoryController {
             throw err
         }
     }
-    @Get('/game/:id')
-    async getGame(@Param('id', new ParseIntPipe()) id: number, @Query('name') name: string) {
-
+    @Get('/game')
+    async getGame(@Query('name') name: string, @Query('name') page: number, @Query('name') size: number, @Res() res: Response) {
+        try {
+            const gameList = await this.categoryService.getGame(name, page, size)
+            res.json({
+                msg: 'Game List',
+                data: gameList
+            })
+        } catch (err) {
+            res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
+                msg: 'Server error',
+                err
+            })
+            throw err
+        }
     }
     @Post()
     async create(@Res() res: Response, @Body() body: CategoryDto) {

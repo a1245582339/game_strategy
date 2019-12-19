@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
-import { Repository, Between, LessThan, getConnection } from 'typeorm'
+import { Repository, LessThan, Like } from 'typeorm'
 import { Category } from './category.entity'
 import { CategoryDto } from './category.dto'
 
@@ -14,6 +14,17 @@ export class CategoryService {
         // 获取所有分类
         return this.categoryService.find({
             type: LessThan(3)
+        })
+    }
+    getGame(name: string, page: number, size: number): Promise<CategoryDto[]> {
+        return this.categoryService.find({
+            select: ['id', 'name'],
+            where: {
+                name: Like(`%${name}%`),
+                is_del: 0
+            }, 
+            skip: page * size,
+            take: size
         })
     }
     async create(body: CategoryDto): Promise<boolean> {
