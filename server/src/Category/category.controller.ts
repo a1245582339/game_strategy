@@ -20,6 +20,10 @@ export class CategoryController {
             throw err
         }
     }
+    @Get('/game/:id')
+    async getGame(@Param('id', new ParseIntPipe()) id: number, @Query('name') name: string) {
+
+    }
     @Post()
     async create(@Res() res: Response, @Body() body: CategoryDto) {
         try {
