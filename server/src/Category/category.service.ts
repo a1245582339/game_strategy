@@ -10,10 +10,13 @@ export class CategoryService {
         @InjectRepository(Category)
         private readonly categoryService: Repository<Category>
     ){}
-    getCateory(): Promise<CategoryDto[]> {
+    getCateory(): Promise<Category[]> {
         // 获取所有分类
         return this.categoryService.find({
-            type: LessThan(3)
+            select: ['id', 'name', 'type', 'p_id'],
+            where: {
+                type: LessThan(3)
+            }
         })
     }
     getGame(name: string, page: number, size: number): Promise<CategoryDto[]> {

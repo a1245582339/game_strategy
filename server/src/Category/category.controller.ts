@@ -3,6 +3,7 @@ import { Response } from 'express';
 import { ParseIntPipe } from '@nestjs/common/pipes/parse-int.pipe';
 import { CategoryService } from './category.service'
 import { CategoryDto } from './category.dto'
+import { toCateList } from '../utils/optCategory';
 
 @Controller('api/v1/category')
 export class CategoryController {
@@ -11,6 +12,10 @@ export class CategoryController {
     async getCateory(@Res() res: Response) {
         try {
             const categorys = await this.categoryService.getCateory()
+            res.json({
+                data: toCateList(categorys),
+                msg: 'Category list'
+            })
         } catch (err) {
             res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
                 msg: 'Server error',

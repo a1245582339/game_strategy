@@ -1,15 +1,14 @@
 import { Category } from '../Category/category.entity';
-const toCateList = (data: Category[], type = 0) => {
-    const newData = data.reduce((total, curr) => {
-        if (curr.type === type) {
+export const toCateList = (data: Category[], p_id = 0) => {
+    return data.reduce((total, curr) => {
+        if (curr.p_id === p_id) {
             const newItem = {
-                id: 0,
-                list: [],
-                name: ''
+                ...curr,
+                list: toCateList(data.filter(item => item.type > curr.type), curr.id)
             }
-            const fatherIndex = total.findIndex(item => item.id === curr.id)
-            // fatherIndex > -1 ?  newItem.list[fatherIndex].push : new
+            return [...total, newItem]
+        } else {
+            return [...total]
         }
-        return []
     }, [])
 }
