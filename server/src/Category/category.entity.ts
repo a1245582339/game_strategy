@@ -21,4 +21,7 @@ export class Category {
 
     @Column()
     type: number
+
+    @Column()
+    cover: string
 }

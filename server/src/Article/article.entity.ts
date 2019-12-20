@@ -12,4 +12,7 @@ export class Article {
 
     @Column()
     content: string;
+
+    @Column()
+    cover: string;
 }

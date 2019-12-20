@@ -21,9 +21,10 @@ export class CategoryService {
     }
     getGame(name: string, page: number, size: number): Promise<CategoryDto[]> {
         return this.categoryService.find({
-            select: ['id', 'name'],
+            select: ['id', 'name', 'cover'],
             where: {
-                name: Like(`%${name}%`)
+                name: Like(`%${name}%`),
+                type: 3
             }, 
             skip: page * size,
             take: size
