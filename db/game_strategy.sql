@@ -11,7 +11,7 @@
  Target Server Version : 50728
  File Encoding         : 65001
 
- Date: 20/12/2019 10:01:18
+ Date: 20/12/2019 18:07:32
 */
 
 SET NAMES utf8mb4;
@@ -46,11 +46,12 @@ DROP TABLE IF EXISTS `article`;
 CREATE TABLE `article` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `title` varchar(255) NOT NULL,
-  `p_id` int(11) NOT NULL,
+  `content` varchar(255) NOT NULL,
   `cover` varchar(255) NOT NULL,
-  `content` text NOT NULL,
-  `create_time` varchar(255) NOT NULL,
-  PRIMARY KEY (`id`)
+  `categoryId` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `FK_12824e4598ee46a0992d99ba553` (`categoryId`),
+  CONSTRAINT `FK_12824e4598ee46a0992d99ba553` FOREIGN KEY (`categoryId`) REFERENCES `category` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC;
 
 -- ----------------------------
@@ -64,7 +65,7 @@ CREATE TABLE `category` (
   `r_id` int(11) NOT NULL,
   `name` varchar(255) NOT NULL,
   `type` int(11) NOT NULL COMMENT '1：游戏平台\r\n2：游戏类型\r\n3：游戏专区',
-  `cover` varchar(255) DEFAULT NULL,
+  `cover` varchar(255) NOT NULL,
   PRIMARY KEY (`id`) USING BTREE
 ) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC;
 
@@ -72,10 +73,10 @@ CREATE TABLE `category` (
 -- Records of category
 -- ----------------------------
 BEGIN;
-INSERT INTO `category` VALUES (1, 0, 1, 8, 'root', 0, NULL);
-INSERT INTO `category` VALUES (7, 1, 2, 3, '电脑游戏', 1, NULL);
-INSERT INTO `category` VALUES (8, 1, 4, 7, '手机游戏', 1, NULL);
-INSERT INTO `category` VALUES (9, 8, 5, 6, '王者荣耀', 2, NULL);
+INSERT INTO `category` VALUES (1, 0, 1, 8, 'root', 0, '1');
+INSERT INTO `category` VALUES (7, 1, 2, 3, '电脑游戏', 1, '2');
+INSERT INTO `category` VALUES (8, 1, 4, 7, '手机游戏', 1, '3');
+INSERT INTO `category` VALUES (9, 8, 5, 6, '王者荣耀', 2, '4');
 COMMIT;
 
 -- ----------------------------

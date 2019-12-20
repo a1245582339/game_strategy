@@ -1,5 +1,5 @@
-import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm'
-
+import { Entity, Column, PrimaryGeneratedColumn, OneToMany } from 'typeorm'
+import { Article } from '../Article/article.entity';
 @Entity({
     name: 'category'
 })
@@ -24,4 +24,7 @@ export class Category {
 
     @Column()
     cover: string
+
+    @OneToMany(type => Article, article => article.category)
+    articles: Article[]
 }

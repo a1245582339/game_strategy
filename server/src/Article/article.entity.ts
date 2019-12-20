@@ -1,5 +1,5 @@
-import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm'
-
+import { Entity, Column, PrimaryGeneratedColumn, ManyToOne } from 'typeorm'
+import { Category } from '../Category/category.entity';
 @Entity({
     name: 'article'
 })
@@ -8,11 +8,14 @@ export class Article {
     id: number;
 
     @Column()
-    name: string;
+    title: string;
 
     @Column()
     content: string;
 
     @Column()
     cover: string;
+
+    @ManyToOne(type => Category, category => category.id, { cascade: ['remove'] })
+    category: Category
 }
