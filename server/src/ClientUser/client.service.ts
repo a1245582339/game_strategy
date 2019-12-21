@@ -26,12 +26,12 @@ export class ClientUserService {
         }
     }
     async checkExist(login_name: string): Promise<boolean> {
-        return !!(await this.clientUserRepository.findOne({ login_name, is_del: 0 }))
+        return !!(await this.clientUserRepository.findOne({ login_name, del: 0 }))
     }
     async update(id: number, body: ClientDto): Promise<boolean> {
         try {
             const update = await this.clientUserRepository.update({
-                id, is_del: 0
+                id, del: 0
             }, body)
             return !!update
         } catch (err) {
@@ -39,7 +39,7 @@ export class ClientUserService {
         }
     }
     async checkPassword(id: number, password: string): Promise<boolean> {
-        const user = await this.clientUserRepository.findOne({id, is_del: 0})
+        const user = await this.clientUserRepository.findOne({id, del: 0})
         return user.password === password
     }
 }

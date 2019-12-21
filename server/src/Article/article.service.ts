@@ -14,4 +14,12 @@ export class ArticleService {
         return this.articleService.find({
         })
     }
+    async delArticleByGameId(gameId: number) {
+        try {
+            const del = await this.articleService.update({ gameId, del: 0 }, { del: 1 })
+            return del
+        } catch (err) {
+            throw err
+        }
+    }
 }

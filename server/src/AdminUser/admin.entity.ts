@@ -17,5 +17,5 @@ export class AdminUser {
     role: number;
 
     @Column({default: 0})
-    is_del: number
+    del: number
 }

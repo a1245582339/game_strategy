@@ -16,6 +16,9 @@ export class Article {
     @Column()
     cover: string;
 
-    @ManyToOne(type => Category, category => category.id, { cascade: ['remove'] })
-    category: Category
+    @Column()
+    gameId: number;
+
+    @Column({ default: 0 })
+    del: number
 }

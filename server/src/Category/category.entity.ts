@@ -1,5 +1,5 @@
-import { Entity, Column, PrimaryGeneratedColumn, OneToMany } from 'typeorm'
-import { Article } from '../Article/article.entity';
+import { Entity, Column, PrimaryGeneratedColumn, OneToMany, JoinColumn } from 'typeorm'
+import { Game } from '../Game/game.entity';
 @Entity({
     name: 'category'
 })
@@ -22,9 +22,9 @@ export class Category {
     @Column()
     type: number
 
-    @Column()
-    cover: string
+    @Column({ default: 0 })
+    del: number
 
-    @OneToMany(type => Article, article => article.category)
-    articles: Article[]
+    @OneToMany(type => Game, game => game.category)
+    games: Game
 }

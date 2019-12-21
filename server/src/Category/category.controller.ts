@@ -10,28 +10,12 @@ import { AuthGuard } from '@nestjs/passport'
 export class CategoryController {
     constructor(private readonly categoryService: CategoryService) {}
     @Get('/all')
-    async getCateory(@Res() res: Response) {
+    async getAllCateory(@Res() res: Response) {
         try {
-            const categorys = await this.categoryService.getCateory()
+            const categorys = await this.categoryService.getAllCategory()
             res.json({
                 data: toCateList(categorys),
                 msg: 'Category list'
-            })
-        } catch (err) {
-            res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
-                msg: 'Server error',
-                err
-            })
-            throw err
-        }
-    }
-    @Get('/game')
-    async getGame(@Query('name') name: string, @Query('name') page: number, @Query('name') size: number, @Res() res: Response) {
-        try {
-            const gameList = await this.categoryService.getGame(name, page, size)
-            res.json({
-                msg: 'Game List',
-                data: gameList
             })
         } catch (err) {
             res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
@@ -55,7 +39,7 @@ export class CategoryController {
     }
 
     @UseGuards(AuthGuard('jwt'))
-    @Put('create/:id')
+    @Put('update/:id')
     async update(@Res() res: Response, @Body('name') name: string, @Param('id', new ParseIntPipe()) id:number) {
         try {
             if (await this.categoryService.update(id, name)) {

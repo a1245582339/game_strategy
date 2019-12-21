@@ -14,10 +14,10 @@ export class AdminUserService {
         return this.adminUserRepository.find({ select: ['id', 'name', 'role'], where: {...payload, is_del: 0} })
     }
     async checkExist(name: string): Promise<boolean> {
-        return !!(await this.adminUserRepository.findOne({ name, is_del: 0 }))
+        return !!(await this.adminUserRepository.findOne({ name, del: 0 }))
     }
     async checkRole(name: string): Promise<AdminUser> {
-         const user = await this.adminUserRepository.findOne({ name, is_del: 0 })
+         const user = await this.adminUserRepository.findOne({ name, del: 0 })
          return user
     }
     async create(body: AdminDto): Promise<boolean> {
@@ -37,7 +37,7 @@ export class AdminUserService {
         try {
             const update = await this.adminUserRepository.update({
                 id,
-                is_del: 0
+                del: 0
             }, body)
             return !!update
         } catch (err) {
@@ -45,7 +45,7 @@ export class AdminUserService {
         }
     }
     async checkPassword(id: number, password: string): Promise<boolean> {
-        const user = await this.adminUserRepository.findOne({id, is_del: 0})
+        const user = await this.adminUserRepository.findOne({id, del: 0})
         return user.password === password
     }
 }

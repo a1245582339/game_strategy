@@ -3,7 +3,7 @@ export class ClientDto {
     readonly nick_name?: string
     readonly password?: string
     readonly email?: string
-    readonly is_del?: number
+    readonly del?: number
     readonly page?: number
     readonly size?: number
 }

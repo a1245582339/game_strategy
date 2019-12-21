@@ -20,5 +20,5 @@ export class ClientUser {
     email: string;
 
     @Column({ default: 0 })
-    is_del: number
+    del: number
 }
