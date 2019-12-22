@@ -26,5 +26,5 @@ export class Category {
     del: number
 
     @OneToMany(type => Game, game => game.category)
-    games: Game
+    games: Game[]
 }

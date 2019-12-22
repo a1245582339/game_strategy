@@ -25,10 +25,6 @@ export class ClientUserController {
                 data: userList
             })
         } catch (err) {
-            res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
-                msg: 'Server error',
-                err
-            })
             throw err
         }
     }
@@ -44,10 +40,6 @@ export class ClientUserController {
                 }
             })
         } catch (err) {
-            res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
-                msg: 'Server error',
-                err
-            })
             throw err
         }
     }
@@ -65,10 +57,6 @@ export class ClientUserController {
                 })
             }
         } catch (err) {
-            res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
-                msg: 'Server error',
-                err
-            })
             throw err
         }
     }
@@ -82,10 +70,6 @@ export class ClientUserController {
                 msg: "Ok"
             })
         } catch (err) {
-            res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
-                msg: 'Server error',
-                err
-            })
             throw err
         }
     }

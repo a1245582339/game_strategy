@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
-import { Repository, getConnection } from 'typeorm'
+import { Repository, Like } from 'typeorm'
 import { Game } from './game.entity'
 import { GameDto } from './game.dto'
 import { ArticleService } from '../Article/article.service'
@@ -12,14 +12,34 @@ export class GameService {
         private readonly gameService: Repository<Game>,
         private readonly articleService: ArticleService
     ){}
-    async getGameDetail(id: number) {
-        const detail = await this.gameService.find({
+    async getByname(name: string = '', page: number = 0, size: number = 10): Promise<Game[]> {
+        const gameList = await this.gameService.find({
+            relations: ['category'],
+            where: {
+                name: Like(`%${name}%`), 
+                del: 0
+            },
+            skip: page * size, 
+            take: size 
+        })
+        return gameList
+    }
+    async getDetail(id: number): Promise<Game> {
+        const detail = await this.gameService.findOne({
             relations: ['category'],
             where: {
                 id, del: 0
             }
         })
         return detail
+    }
+    async create(body: GameDto): Promise<Game> {
+        const create = await this.gameService.save(body)
+        return create
+    }
+    async update(id: number, body: GameDto): Promise<boolean> {
+        const update = await this.gameService.update({ id, del: 0 }, body)
+        return !!update
     }
     async delGameByCategoryId(categoryId: number) {
         const gameIds = (await this.gameService.find({
@@ -30,7 +50,7 @@ export class GameService {
             }
         })).map(item => item.id)
         const delGame = this.gameService.update({ categoryId, del: 0 }, { del: 1 })
-        const delArticle = (gameId: number) => this.articleService.delArticleByGameId(gameId)
+        const delArticle = (gameId: number) => this.articleService.delByGameId(gameId)
         const delResult = await Promise.all([delGame, ...gameIds.map(gameId => delArticle(gameId))])
         return delResult[0]
     }

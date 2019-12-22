@@ -1,5 +1,5 @@
 import { Entity, Column, PrimaryGeneratedColumn, ManyToOne } from 'typeorm'
-import { Category } from '../Category/category.entity';
+import { Game } from '../Game/game.entity';
 @Entity({
     name: 'article'
 })
@@ -21,4 +21,10 @@ export class Article {
 
     @Column({ default: 0 })
     del: number
+
+    @Column()
+    create_time: string
+
+    @ManyToOne(type => Game, game => game.articles)
+    game: Game
 }

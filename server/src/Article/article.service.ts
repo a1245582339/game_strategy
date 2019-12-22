@@ -10,11 +10,39 @@ export class ArticleService {
         @InjectRepository(Article)
         private readonly articleService: Repository<Article>
     ){}
-    getArticle(): Promise<Article[]> {
-        return this.articleService.find({
+    getDetail(id: number): Promise<Article> {
+        return this.articleService.findOne({
+            relations: ['game'],
+            where: {
+                id, del: 0
+            }
         })
     }
-    async delArticleByGameId(gameId: number) {
+    getList(title: string, page: number, size: number): Promise<Article[]> {
+        return this.articleService.find({
+            select: ['id', 'cover', 'title', 'gameId'],
+            relations: ['game'],
+            where: {
+                title: Like(`%${title}%`),
+                del: 0
+            },
+            skip: page * size, 
+            take: size 
+        })
+    }
+    create(body: ArticleDto): Promise<Article> {
+        const create_time = Date.now().toString()
+        return this.articleService.save({ ...body, create_time })
+    }
+    async delById(id: number) {
+        try {
+            const del = await this.articleService.update({ id, del: 0 }, { del: 1 })
+            return del
+        } catch (err) {
+            throw err
+        }
+    }
+    async delByGameId(gameId: number) {
         try {
             const del = await this.articleService.update({ gameId, del: 0 }, { del: 1 })
             return del

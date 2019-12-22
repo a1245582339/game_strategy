@@ -23,10 +23,6 @@ export class AdminUserController {
                 data: adminList
             })
         } catch (err) {
-            res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
-                msg: 'Server error',
-                err
-            })
             throw err
         }
     }
@@ -41,10 +37,6 @@ export class AdminUserController {
                 }
             })
         } catch (err) {
-            res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
-                msg: 'Server error',
-                err
-            })
             throw err
         }
     }
@@ -64,10 +56,6 @@ export class AdminUserController {
             }
             
         } catch (err) {
-            res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
-                msg: 'Server error',
-                err
-            })
             throw err
         }
     }
@@ -81,10 +69,6 @@ export class AdminUserController {
                 msg: "Ok"
             })
         } catch (err) {
-            res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
-                msg: 'Server error',
-                err
-            })
             throw err
         }
     }
@@ -99,10 +83,6 @@ export class AdminUserController {
                 res.json({ code: 20003, msg: 'Oldpassword error' })
             }
         } catch (err) {
-            res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
-                msg: 'Server error',
-                err
-            })
             throw err
         }
     }

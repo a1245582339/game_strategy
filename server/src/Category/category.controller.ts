@@ -18,10 +18,6 @@ export class CategoryController {
                 msg: 'Category list'
             })
         } catch (err) {
-            res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
-                msg: 'Server error',
-                err
-            })
             throw err
         }
     }

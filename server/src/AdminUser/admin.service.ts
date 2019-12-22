@@ -11,7 +11,10 @@ export class AdminUserService {
         private readonly adminUserRepository: Repository<AdminUser>,
     ) {}
     get(payload?: AdminDto): Promise<AdminUser[]> {
-        return this.adminUserRepository.find({ select: ['id', 'name', 'role'], where: {...payload, is_del: 0} })
+        return this.adminUserRepository.find({ 
+            select: ['id', 'name', 'role'], 
+            where: { ...payload, del: 0 } 
+        })
     }
     async checkExist(name: string): Promise<boolean> {
         return !!(await this.adminUserRepository.findOne({ name, del: 0 }))
