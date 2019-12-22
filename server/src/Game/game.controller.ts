@@ -1,4 +1,4 @@
-import { Controller, Get, Param, Res, Post, Body, Put, Query, UseGuards } from '@nestjs/common'
+import { Controller, Get, Param, Res, Post, Body, Put, Query } from '@nestjs/common'
 import { Response } from 'express';
 import { ParseIntPipe } from '@nestjs/common/pipes/parse-int.pipe';
 import { GameService } from './game.service'

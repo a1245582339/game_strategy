@@ -1,6 +1,7 @@
-import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, JoinColumn, OneToMany } from 'typeorm'
+import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, OneToMany } from 'typeorm'
 import { Category } from '../Category/category.entity';
 import { Article } from '../Article/article.entity'
+import { Follow } from '../Follow/follow.entity'
 @Entity({
     name: 'game'
 })
@@ -28,4 +29,7 @@ export class Game {
 
     @OneToMany(type => Article, article => article.game)
     articles: Article[]
+
+    @OneToMany(type => Article, follow => follow.game)
+    follows: Follow[]
 }

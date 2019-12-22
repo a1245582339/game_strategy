@@ -5,6 +5,8 @@ import { AdminUserModule } from './AdminUser/admin.module'
 import { CategoryModule } from './Category/category.module'
 import { ClientUserModule } from './ClientUser/client.module'
 import { GameModule } from './Game/game.module'
+import { ArticleModule } from './Article/article.module'
+import { FollowModule } from './Follow/follow.module'
 
 @Module({
     imports: [TypeOrmModule.forRoot({
@@ -22,7 +24,9 @@ import { GameModule } from './Game/game.module'
         AuthModule,
         ClientUserModule,
         CategoryModule,
-        GameModule
+        GameModule,
+        ArticleModule,
+        FollowModule
     ],
 })
 export class AppModule {}

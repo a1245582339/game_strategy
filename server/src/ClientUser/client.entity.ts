@@ -1,4 +1,5 @@
-import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm'
+import { Entity, Column, PrimaryGeneratedColumn, OneToMany } from 'typeorm'
+import { Follow } from '../Follow/follow.entity'
 
 @Entity({
     name: 'user'
@@ -21,4 +22,7 @@ export class ClientUser {
 
     @Column({ default: 0 })
     del: number
+
+    @OneToMany(type => Follow, follow => follow.user)
+    follows: Follow[]
 }
