@@ -9,12 +9,14 @@ export class FollowService {
         @InjectRepository(Follow)
         private readonly followService: Repository<Follow>
     ){}
-    async get(userId: number): Promise<Follow[]> {
+    async get(userId: number, page: number = 0, size: number = 10): Promise<Follow[]> {
         return this.followService.find({
             relations: ['game'],
             where: {
                 userId
-            }
+            },
+            skip: page * size, 
+            take: size 
         })
     }
     async create(userId: number, gameId: number): Promise<Follow> {

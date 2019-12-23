@@ -10,13 +10,15 @@ export class ClientUserService {
         @InjectRepository(ClientUser)
         private readonly clientUserRepository: Repository<ClientUser>
     ) { }
-    get(payload?: ClientDto, page?: number, size?: number): Promise<ClientUser[]> {
-        return this.clientUserRepository.find({ 
+    async get(payload?: ClientDto, page?: number, size?: number): Promise<[ClientUser[], number]> {
+        const total = await this.clientUserRepository.count({ ...payload, del: 0 })
+        const list = await this.clientUserRepository.find({ 
             select: ['id', 'login_name', 'nick_name', 'email'], 
             where: { ...payload, del: 0 }, 
             skip: page * size, 
             take: size 
         })
+        return [list, total]
     }
     async create(body: ClientDto): Promise<ClientUser | boolean> {
         try {

@@ -12,7 +12,11 @@ export class GameService {
         private readonly gameService: Repository<Game>,
         private readonly articleService: ArticleService
     ){}
-    async getByname(name: string = '', page: number = 0, size: number = 10): Promise<Game[]> {
+    async getByname(name: string = '', page: number = 0, size: number = 10): Promise<[Game[], number]> {
+        const total = await this.gameService.count({
+            name: Like(`%${name}%`), 
+            del: 0
+        })
         const gameList = await this.gameService.find({
             relations: ['category'],
             where: {
@@ -22,7 +26,7 @@ export class GameService {
             skip: page * size, 
             take: size 
         })
-        return gameList
+        return [gameList, total]
     }
     async getDetail(id: number): Promise<Game> {
         const detail = await this.gameService.findOne({

@@ -11,10 +11,11 @@ export class GameController {
     async getGame(@Query() query: any, @Res() res: Response) {
         const { name, page, size } = query
         try {
-            const gameList = await this.gameService.getByname(name, page, size)
+            const [gameList, total] = await this.gameService.getByname(name, page, size)
             res.json({
                 msg: 'Game list',
-                list: gameList
+                list: gameList,
+                total
             })
         } catch (err) {
             throw err

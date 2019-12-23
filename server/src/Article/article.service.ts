@@ -18,8 +18,12 @@ export class ArticleService {
             }
         })
     }
-    getList(title: string, page: number, size: number): Promise<Article[]> {
-        return this.articleService.find({
+    async getList(title: string, page: number, size: number): Promise<[Article[], number]> {
+        const total = await this.articleService.count({
+                title: Like(`%${title}%`),
+                del: 0
+        })
+        const list = await this.articleService.find({
             select: ['id', 'cover', 'title', 'gameId'],
             relations: ['game'],
             where: {
@@ -29,6 +33,7 @@ export class ArticleService {
             skip: page * size, 
             take: size 
         })
+        return [list, total]
     }
     create(body: ArticleDto): Promise<Article> {
         const create_time = Date.now().toString()
