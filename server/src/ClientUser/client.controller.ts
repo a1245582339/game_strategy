@@ -19,10 +19,11 @@ export class ClientUserController {
             const _query = { ... query }
             delete _query.page
             delete _query.size
-            const userList = await this.clientUserService.get(_query, page, size)
+            const [userList, total] = await this.clientUserService.get(_query, page, size)
             res.json({
                 msg: 'Client user list',
-                data: userList
+                list: userList,
+                total
             })
         } catch (err) {
             throw err

@@ -37,7 +37,7 @@ export class AuthService {
     async createClientToken(login_name: string, password: string) {
         const user = (await this.validateClient({ login_name, password }))[0]
         if (user) {
-            const accessToken = this.jwtService.sign({ id: user.id, login_name, password, role: 'editor' })
+            const accessToken = this.jwtService.sign({ id: user.id, login_name, password, role: 'user' })
             return accessToken
         } else {
             return false

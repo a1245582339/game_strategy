@@ -1,5 +1,6 @@
-import { Entity, Column, PrimaryGeneratedColumn, ManyToOne } from 'typeorm'
+import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, OneToMany } from 'typeorm'
 import { Game } from '../Game/game.entity';
+import { Favorties } from '../Favorites/favorites.entity';
 @Entity({
     name: 'article'
 })
@@ -27,4 +28,7 @@ export class Article {
 
     @ManyToOne(type => Game, game => game.articles)
     game: Game
+
+    @OneToMany(type => Favorties, favorties => favorties.article)
+    favorties: Favorties[]
 }
