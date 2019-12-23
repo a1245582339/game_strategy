@@ -1,6 +1,7 @@
 export class ClientDto {
     readonly login_name?: string
     readonly nick_name?: string
+    readonly avatar?: string
     readonly password?: string
     readonly email?: string
     readonly del?: number

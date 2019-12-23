@@ -17,6 +17,9 @@ export class ClientUser {
     nick_name: string;
 
     @Column()
+    avatar: string;
+
+    @Column()
     password: string;
 
     @Column()

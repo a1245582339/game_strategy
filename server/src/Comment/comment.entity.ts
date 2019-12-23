@@ -24,14 +24,11 @@ export class Comment {
     read: number;
 
     @Column()
-    replyUserId: number;
+    replyId: number;
 
     @Column()
     del: number;
 
     @ManyToOne(type => ClientUser, user => user.comments)
     user: ClientUser
-
-    @ManyToOne(type => ClientUser, user => user.comments)
-    replyUser: ClientUser
 }
