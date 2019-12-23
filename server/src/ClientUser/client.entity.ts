@@ -1,6 +1,7 @@
 import { Entity, Column, PrimaryGeneratedColumn, OneToMany } from 'typeorm'
 import { Follow } from '../Follow/follow.entity'
 import { Favorties } from '../Favorites/favorites.entity';
+import { Comment } from '../Comment/comment.entity';
 
 @Entity({
     name: 'user'
@@ -29,4 +30,7 @@ export class ClientUser {
 
     @OneToMany(type => Favorties, favorties => favorties.user)
     favorties: Favorties[]
+
+    @OneToMany(type => Comment, comment => comment.user)
+    comments: Comment[]
 }
