@@ -19,9 +19,17 @@ export class CommentService {
             skip: page * size, 
             take: size 
         })
+        const getReplyUser = (id: number) => this.commentService.findOne({
+            select: ['user'],
+            relations: ['user'],
+            where: {
+                id
+            }
+        })
         const total = this.commentService.count({
             articleId, del: 0
         })
+        
         return Promise.all([comments, total])
     }
     async del (id: number, userId: number): Promise<boolean> {

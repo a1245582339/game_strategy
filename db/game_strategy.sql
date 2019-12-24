@@ -11,7 +11,7 @@
  Target Server Version : 50728
  File Encoding         : 65001
 
- Date: 23/12/2019 20:05:22
+ Date: 24/12/2019 19:56:00
 */
 
 SET NAMES utf8mb4;
@@ -95,11 +95,11 @@ COMMIT;
 DROP TABLE IF EXISTS `comment`;
 CREATE TABLE `comment` (
   `id` int(11) NOT NULL,
-  `user_id` int(11) NOT NULL,
+  `userId` int(11) NOT NULL,
   `articleId` int(11) NOT NULL,
   `create_time` varchar(255) NOT NULL,
   `content` varchar(255) NOT NULL,
-  `userId` int(11) DEFAULT NULL,
+  `replyId` int(11) DEFAULT NULL,
   `read` int(11) NOT NULL,
   `del` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`) USING BTREE
