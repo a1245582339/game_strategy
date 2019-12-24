@@ -1,12 +1,17 @@
-import { Controller, Get, Param, Res, Req, Body, Put, Query, HttpStatus } from '@nestjs/common'
+import { Controller, Get, Param, Res, Req, Body, Put, Query, HttpStatus, Post } from '@nestjs/common'
 import { Response, Request } from 'express';
 import { decode } from 'jsonwebtoken'
 import { ParseIntPipe } from '@nestjs/common/pipes/parse-int.pipe';
 import { CommentService } from './comment.service';
+import { CommentDto } from './comment.dto'
+import { CommentGateway } from './comment.gateway'
 
 @Controller('api/v1/comment')
 export class CommentController {
-    constructor(private readonly commentService: CommentService) {}
+    constructor(
+        private readonly commentService: CommentService,
+        private readonly commentGateway: CommentGateway
+    ) {}
     @Get()
     async getComments(@Query('articleId') articleId: number, @Res() res: Response) {
         let comment: any, total: number
@@ -26,6 +31,15 @@ export class CommentController {
             msg: 'Comment list',
             list: comment,
             total
+        })
+    }
+    @Post()
+    async create(@Res() res: Response, @Body() body: CommentDto) {
+        const result = await this.commentService.create(body)
+        this.commentGateway.server.emit('event', result)
+        console.log(result)
+        res.json({
+            msg: 'Ok'
         })
     }
     @Put('del/:id')

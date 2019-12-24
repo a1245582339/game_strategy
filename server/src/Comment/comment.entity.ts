@@ -18,15 +18,15 @@ export class Comment {
     articleId: number;
 
     @Column()
-    create_time: number;
+    create_time: string;
 
-    @Column()
+    @Column({ default: 0 })
     read: number;
 
-    @Column()
+    @Column({ default: 0 })
     replyId: number;
 
-    @Column()
+    @Column({ default: 0 })
     del: number;
 
     @ManyToOne(type => ClientUser, user => user.comments)

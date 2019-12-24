@@ -8,6 +8,7 @@ import { GameModule } from './Game/game.module'
 import { ArticleModule } from './Article/article.module'
 import { FollowModule } from './Follow/follow.module'
 import { FavortiesModule } from './Favorites/favorites.module';
+import { CommentModule } from './Comment/comment.module'
 
 @Module({
     imports: [TypeOrmModule.forRoot({
@@ -28,7 +29,8 @@ import { FavortiesModule } from './Favorites/favorites.module';
         GameModule,
         ArticleModule,
         FollowModule,
-        FavortiesModule
+        FavortiesModule,
+        CommentModule
     ],
 })
 export class AppModule {}

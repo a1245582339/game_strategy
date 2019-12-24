@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
 import { Repository } from 'typeorm'
 import { Comment } from './comment.entity'
+import { CommentDto } from './comment.dto'
 
 @Injectable()
 export class CommentService {
@@ -31,6 +32,9 @@ export class CommentService {
         })
         
         return Promise.all([comments, total])
+    }
+    async create (body: CommentDto): Promise<Comment> {
+        return this.commentService.save({ ...body, create_time: Date.now().toString() })
     }
     async del (id: number, userId: number): Promise<boolean> {
         const del = await this.commentService.update({ id, userId, del: 0 }, { del: 1 })
