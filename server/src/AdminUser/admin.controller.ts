@@ -1,11 +1,11 @@
-import { Controller, Get, Param, Res, HttpStatus, Post, Body, Put, Query, UseGuards } from '@nestjs/common'
+import { Controller, Get, Param, Res, HttpStatus, Post, Body, Put, Query, UseGuards, Req } from '@nestjs/common'
 import { Response } from 'express';
 import { ParseIntPipe } from '@nestjs/common/pipes/parse-int.pipe';
 import { AdminUserService } from './admin.service'
 import { AdminDto } from './admin.dto';
+import { decode } from 'jsonwebtoken'
 import { AuthGuard } from '@nestjs/passport'
 import { AdminGuard } from '../guard/admin.guard'
-import { SelfGuard } from '../guard/self.guard'
 
 @UseGuards(AuthGuard('jwt'))
 @Controller('api/v1/admin')
@@ -72,15 +72,17 @@ export class AdminUserController {
             throw err
         }
     }
-    @UseGuards(SelfGuard)
-    @Put('changePassword/:id')
-    async changePassword(@Param('id', new ParseIntPipe()) id:number, @Body('password') password:string, @Body('old_password') old_password:string, @Res() res: Response) {
+
+    @Put('changePassword')
+    async changePassword(@Req() req:any, @Body('password') password:string, @Body('old_password') old_password:string, @Res() res: Response) {
         try {
+            const token = req.headers.authorization.split(' ')[1]
+            const { id }: any = decode(token)
             if (await this.adminUserService.checkPassword(id, old_password)) {
                 await this.adminUserService.update(id, { password })
                 res.json({ msg: 'Ok' })
             } else {
-                res.json({ code: 20003, msg: 'Oldpassword error' })
+                res.json({ code: 20003, msg: 'Old password error' })
             }
         } catch (err) {
             throw err

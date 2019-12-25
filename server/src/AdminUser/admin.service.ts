@@ -19,7 +19,7 @@ export class AdminUserService {
     async checkExist(name: string): Promise<boolean> {
         return !!(await this.adminUserRepository.findOne({ name, del: 0 }))
     }
-    async checkRole(name: string): Promise<AdminUser> {
+    async checkRole(name: string, password: string): Promise<AdminUser> {
          const user = await this.adminUserRepository.findOne({ name, del: 0 })
          return user
     }

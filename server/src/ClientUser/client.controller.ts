@@ -1,16 +1,18 @@
-import { Controller, Get, Param, Res, HttpStatus, Post, Body, Put, Query, UseGuards } from '@nestjs/common'
+import { Controller, Get, Param, Res, HttpStatus, Post, Body, Put, Query, UseGuards, Req } from '@nestjs/common'
 import { Response } from 'express';
 import { ParseIntPipe } from '@nestjs/common/pipes/parse-int.pipe';
 import { ClientDto } from './client.dto'
 import { ClientUserService } from './client.service'
+import { decode } from 'jsonwebtoken'
 import { AuthGuard } from '@nestjs/passport'
+import { EditorGuard } from '../guard/editor.guard'
 
 @Controller('api/v1/client')
 export class ClientUserController {
     constructor(
         private readonly clientUserService: ClientUserService
     ){}
-    @UseGuards(AuthGuard('jwt'))
+    @UseGuards(EditorGuard)
     @Get('user')
     async get(@Res() res: Response, @Query() query: ClientDto) {
         try {
@@ -29,7 +31,21 @@ export class ClientUserController {
             throw err
         }
     }
-    @UseGuards(AuthGuard('jwt'))
+    @Get('myDetail')
+    async getMe(@Req() req:any, @Res() res: Response) {
+        try {
+            const token = req.headers.authorization.split(' ')[1]
+            const { id }: any = decode(token)
+            const myDetail = await this.clientUserService.getOne(id)
+            res.json({
+                msg: 'My detail',
+                data: myDetail
+            })
+        } catch (error) {
+            throw error
+        }
+        
+    }
     @Get('check')
     async checkExsit(@Query('login_name') login_name:string, @Res() res: Response) {
         try {
@@ -62,7 +78,7 @@ export class ClientUserController {
         }
     }
 
-    @UseGuards(AuthGuard('jwt'))
+    @UseGuards(EditorGuard)
     @Put('user/:id')
     async update(@Param('id', new ParseIntPipe()) id:number, @Body() body:ClientDto, @Res() res: Response) {
         try {
@@ -72,6 +88,20 @@ export class ClientUserController {
             })
         } catch (err) {
             throw err
+        }
+    }
+
+    @Put('user')
+    async updateMe(@Req() req:any, @Res() res: Response, @Body() body:ClientDto) {
+        try {
+            const token = req.headers.authorization.split(' ')[1]
+            const { id }: any = decode(token)
+            await this.clientUserService.update(id, body)
+            res.json({
+                msg: "Ok"
+            })
+        } catch (error) {
+            throw error
         }
     }
 }

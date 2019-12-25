@@ -31,7 +31,8 @@ export class AuthService {
         
     }
     async validateAdmin(payload: IAdminInfo): Promise<any> {
-        return this.adminService.get(payload)
+        const { name, password } = payload
+        return this.adminService.get({ name, password, del: 0 })
     }
 
     async createClientToken(login_name: string, password: string) {

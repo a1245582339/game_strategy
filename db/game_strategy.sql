@@ -11,7 +11,7 @@
  Target Server Version : 50720
  File Encoding         : 65001
 
- Date: 24/12/2019 21:57:11
+ Date: 25/12/2019 23:20:20
 */
 
 SET NAMES utf8mb4;
@@ -92,19 +92,23 @@ CREATE TABLE `comment`  (
   `userId` int(11) NOT NULL,
   `articleId` int(11) NOT NULL,
   `content` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
-  `replyId` int(11) NOT NULL DEFAULT 0,
+  `replyUserId` int(11) NOT NULL DEFAULT 0,
   `read` int(11) NOT NULL DEFAULT 0,
   `del` int(11) NOT NULL DEFAULT 0,
   `create_time` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
   PRIMARY KEY (`id`) USING BTREE,
   INDEX `FK_c0354a9a009d3bb45a08655ce3b`(`userId`) USING BTREE,
-  CONSTRAINT `FK_c0354a9a009d3bb45a08655ce3b` FOREIGN KEY (`userId`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE = InnoDB AUTO_INCREMENT = 6 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+  INDEX `FK_c20404221e5c125a581a0d90c0e`(`articleId`) USING BTREE,
+  CONSTRAINT `FK_c0354a9a009d3bb45a08655ce3b` FOREIGN KEY (`userId`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `FK_c20404221e5c125a581a0d90c0e` FOREIGN KEY (`articleId`) REFERENCES `article` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE = InnoDB AUTO_INCREMENT = 8 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of comment
 -- ----------------------------
 INSERT INTO `comment` VALUES (5, 1, 1, 'qwe', 0, 0, 0, '1577195782561');
+INSERT INTO `comment` VALUES (6, 1, 1, 'qwe', 1, 0, 0, '1577196149310');
+INSERT INTO `comment` VALUES (7, 1, 1, 'qwe', 0, 0, 0, '1577196409395');
 
 -- ----------------------------
 -- Table structure for favorites
@@ -190,6 +194,6 @@ CREATE TABLE `user`  (
 -- ----------------------------
 -- Records of user
 -- ----------------------------
-INSERT INTO `user` VALUES (1, 'test', 'test', '1', '1', 0, '');
+INSERT INTO `user` VALUES (1, 'test', 'test', '2', '1', 0, 'qwe');
 
 SET FOREIGN_KEY_CHECKS = 1;

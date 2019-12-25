@@ -11,8 +11,8 @@ export class AdminGuard implements CanActivate {
         const token = req.headers['authorization']
         if (!token) return false
         const userInfo:any = decode(token.split(' ')[1])
-        const { name } = userInfo
-        const user = await this.adminUserServer.checkRole(name)
+        const { name, password } = userInfo
+        const user = await this.adminUserServer.checkRole(name, password)
         return user && user.role === 1
     }
 }

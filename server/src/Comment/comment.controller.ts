@@ -13,9 +13,34 @@ export class CommentController {
         private readonly commentGateway: CommentGateway
     ) {}
     @Get()
-    async getComments(@Query('articleId') articleId: number, @Res() res: Response) {
+    async getComments(@Query() query: any, @Res() res: Response) {
         let comment: any, total: number
-        [comment, total] = await this.commentService.getComments(articleId)
+        const { articleId, page, size } = query;
+        [comment, total] = await this.commentService.getComments(articleId, page, size)
+        comment = comment.map((item: any) => {
+            const user = {
+                id: item.user.id,
+                name: item.user.nick_name || item.user.login_name,
+                avatar: item.user.avatar,
+            }
+            return {
+                ...item,
+                user
+            }
+        })
+        res.json({
+            msg: 'Comment list',
+            list: comment,
+            total
+        })
+    }
+    @Get('/myReplied')
+    async getMyReplied(@Res() res: Response, @Query() query: any, @Req() req: Request) {
+        const { page, size } = query;
+        let comment: any, total: number
+        const token = req.headers.authorization.split(' ')[1]
+        const { id }: any = decode(token);
+        [comment, total] = await this.commentService.getMyReplied(id, page, size)
         comment = comment.map((item: any) => {
             const user = {
                 id: item.user.id,
@@ -36,7 +61,7 @@ export class CommentController {
     @Post()
     async create(@Res() res: Response, @Body() body: CommentDto) {
         const result = await this.commentService.create(body)
-        this.commentGateway.server.emit('event', result)
+        this.commentGateway.server.to('123').emit('event', result)
         console.log(result)
         res.json({
             msg: 'Ok'
@@ -46,8 +71,8 @@ export class CommentController {
     async del(@Param('id', new ParseIntPipe()) id:number, @Res() res: Response, @Req() req: Request) {
         try {
             const token = req.headers.authorization.split(' ')[1]
-            const { userId }: any = decode(token)
-            const del = await this.commentService.del(id, userId)
+            const userInfo: any = decode(token)
+            const del = await this.commentService.del(id, userInfo.id)
             if (del) {
                 res.json({
                     msg: 'Ok'

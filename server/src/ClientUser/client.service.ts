@@ -12,13 +12,21 @@ export class ClientUserService {
     ) { }
     async get(payload?: ClientDto, page?: number, size?: number): Promise<[ClientUser[], number]> {
         const list = this.clientUserRepository.find({ 
-            select: ['id', 'login_name', 'nick_name', 'email'], 
+            select: ['id', 'login_name', 'nick_name', 'email', 'avatar'], 
             where: { ...payload, del: 0 }, 
             skip: page * size, 
             take: size 
         })
         const total = this.clientUserRepository.count({ ...payload, del: 0 })
         return Promise.all([list, total])
+    }
+    getOne(id?: number) {
+        return this.clientUserRepository.findOne({
+            select: ['id', 'login_name', 'nick_name', 'email', 'avatar'],
+            where: {
+                id, del: 0
+            }
+        })
     }
     async create(body: ClientDto): Promise<ClientUser | boolean> {
         try {

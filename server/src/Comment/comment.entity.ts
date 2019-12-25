@@ -1,5 +1,6 @@
 import { Entity, Column, PrimaryGeneratedColumn, ManyToOne } from 'typeorm'
 import { ClientUser } from '../ClientUser/client.entity';
+import { Article } from '../Article/article.entity'
 
 @Entity({
     name: 'comment'
@@ -24,11 +25,14 @@ export class Comment {
     read: number;
 
     @Column({ default: 0 })
-    replyId: number;
+    replyUserId: number;
 
     @Column({ default: 0 })
     del: number;
 
     @ManyToOne(type => ClientUser, user => user.comments)
     user: ClientUser
+
+    @ManyToOne(type => Article, article => article.comments)
+    article: Article
 }
