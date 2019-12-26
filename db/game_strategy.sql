@@ -11,7 +11,7 @@
  Target Server Version : 50720
  File Encoding         : 65001
 
- Date: 25/12/2019 23:20:20
+ Date: 26/12/2019 23:16:35
 */
 
 SET NAMES utf8mb4;
@@ -28,14 +28,15 @@ CREATE TABLE `admin_user`  (
   `del` int(11) NOT NULL DEFAULT 0,
   `role` int(11) NOT NULL,
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 4 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 5 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of admin_user
 -- ----------------------------
-INSERT INTO `admin_user` VALUES (1, 'ew', '1', 0, 2);
-INSERT INTO `admin_user` VALUES (2, 'editor', '1', 0, 2);
+INSERT INTO `admin_user` VALUES (1, 'ew', '1', 0, 1);
+INSERT INTO `admin_user` VALUES (2, 'editor', '123', 0, 2);
 INSERT INTO `admin_user` VALUES (3, 'ew7', '2', 0, 2);
+INSERT INTO `admin_user` VALUES (4, 'test', '123', 0, 2);
 
 -- ----------------------------
 -- Table structure for article
@@ -52,12 +53,13 @@ CREATE TABLE `article`  (
   PRIMARY KEY (`id`) USING BTREE,
   INDEX `FK_f0c0a548770631363577d0c6063`(`gameId`) USING BTREE,
   CONSTRAINT `FK_f0c0a548770631363577d0c6063` FOREIGN KEY (`gameId`) REFERENCES `game` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE = InnoDB AUTO_INCREMENT = 2 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 3 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of article
 -- ----------------------------
 INSERT INTO `article` VALUES (1, 'tst', 'ttt', 'tttt', 1, 0, '1576998210452');
+INSERT INTO `article` VALUES (2, '测试', '内容', 'www', 1, 1, '1577372109762');
 
 -- ----------------------------
 -- Table structure for category
@@ -72,16 +74,17 @@ CREATE TABLE `category`  (
   `type` int(11) NOT NULL COMMENT '1：游戏平台\r\n2：游戏类型\r\n3：游戏专区',
   `del` int(11) NOT NULL DEFAULT 0,
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 21 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 22 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of category
 -- ----------------------------
-INSERT INTO `category` VALUES (1, 0, 1, 10, 'root', 0, 0);
+INSERT INTO `category` VALUES (1, 0, 1, 12, 'root', 0, 0);
 INSERT INTO `category` VALUES (7, 1, 2, 9, '电脑游戏', 1, 0);
 INSERT INTO `category` VALUES (10, 7, 3, 4, '动作游戏', 2, 0);
 INSERT INTO `category` VALUES (19, 7, 5, 6, '角色扮演', 2, 0);
 INSERT INTO `category` VALUES (20, 7, 7, 8, '第一人称射击', 2, 0);
+INSERT INTO `category` VALUES (21, 1, 10, 11, '手游', 1, 0);
 
 -- ----------------------------
 -- Table structure for comment
@@ -168,13 +171,14 @@ CREATE TABLE `game`  (
   PRIMARY KEY (`id`) USING BTREE,
   INDEX `FK_3f10804f18297163a6189353e64`(`categoryId`) USING BTREE,
   CONSTRAINT `FK_3f10804f18297163a6189353e64` FOREIGN KEY (`categoryId`) REFERENCES `category` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE = InnoDB AUTO_INCREMENT = 3 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 4 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of game
 -- ----------------------------
 INSERT INTO `game` VALUES (1, '英雄联盟', 'ss\'d撒大苏打撒旦', 'www', 19, 0);
 INSERT INTO `game` VALUES (2, '刺激战场', '123', '123', 19, 0);
+INSERT INTO `game` VALUES (3, '尼尔机械纪元', 'adasdsadsadsad', 'sdasdsadsadsadsadsad', 10, 0);
 
 -- ----------------------------
 -- Table structure for user
