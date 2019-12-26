@@ -3,6 +3,7 @@ import { Response } from 'express';
 import { ParseIntPipe } from '@nestjs/common/pipes/parse-int.pipe';
 import { ArticleDto } from './article.dto'
 import { ArticleService } from './article.service'
+import { AuthGuard } from '@nestjs/passport'
 
 @Controller('api/v1/article')
 export class ArticleController {
@@ -28,6 +29,7 @@ export class ArticleController {
             detail
         })
     }
+    @UseGuards(AuthGuard('jwt'))
     @Post()
     async create(@Res() res: Response, @Body() body: ArticleDto) {
         try {
@@ -39,6 +41,7 @@ export class ArticleController {
             throw error
         }
     }
+    @UseGuards(AuthGuard('jwt'))
     @Put('/del/:id')
     async del(@Param('id', new ParseIntPipe()) id:number, @Res() res: Response) {
         try {

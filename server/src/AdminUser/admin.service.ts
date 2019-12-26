@@ -29,7 +29,7 @@ export class AdminUserService {
             if (exist) {
                 return false
             } else {
-                return !!(await this.adminUserRepository.save(body))
+                return !!(await this.adminUserRepository.save({...body, del: 0, role: 2}))
             }
         } catch (err) {
             throw err

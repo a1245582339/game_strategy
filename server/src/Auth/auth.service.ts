@@ -46,6 +46,7 @@ export class AuthService {
         
     }
     async validateClient(payload: IClientInfo): Promise<any> {
-        return this.clientService.get(payload)
+        const { login_name, password } = payload
+        return (await this.clientService.get({ login_name, password }))[0]
     }
 }

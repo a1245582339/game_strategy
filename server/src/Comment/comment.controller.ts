@@ -58,14 +58,34 @@ export class CommentController {
             total
         })
     }
+    @Get('unread')
+    async getUnReadCount(@Req() req: Request, @Res() res: Response) {
+        try {
+            const token = req.headers.authorization.split(' ')[1]
+            const { id }: any = decode(token);
+            const count = this.commentService.getUnreadCount(id)
+            res.json({
+                msg: 'Unread count',
+                count
+            })
+        } catch (error) {
+            throw error
+        }
+        
+    }
     @Post()
     async create(@Res() res: Response, @Body() body: CommentDto) {
-        const result = await this.commentService.create(body)
-        this.commentGateway.server.to('123').emit('event', result)
-        console.log(result)
-        res.json({
-            msg: 'Ok'
-        })
+        try {
+            const result = await this.commentService.create(body)
+            // this.commentGateway.server.to('123').emit('event', result)
+            // console.log(result)
+            res.json({
+                msg: 'Ok'
+            })
+        } catch (error) {
+            throw error
+        }
+        
     }
     @Put('del/:id')
     async del(@Param('id', new ParseIntPipe()) id:number, @Res() res: Response, @Req() req: Request) {

@@ -54,6 +54,11 @@ export class CommentService {
         })
         return Promise.all([comment, total])
     }
+    getUnreadCount (replyUserId: number): Promise<number> {
+        return this.commentService.count({
+            del: 0, read: 0, replyUserId
+        })
+    }
     async create (body: CommentDto): Promise<Comment> {
         return this.commentService.save({ ...body, create_time: Date.now().toString() })
     }

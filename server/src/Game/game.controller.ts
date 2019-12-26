@@ -1,8 +1,9 @@
-import { Controller, Get, Param, Res, Post, Body, Put, Query } from '@nestjs/common'
+import { Controller, Get, Param, Res, Post, Body, Put, Query, UseGuards } from '@nestjs/common'
 import { Response } from 'express';
 import { ParseIntPipe } from '@nestjs/common/pipes/parse-int.pipe';
 import { GameService } from './game.service'
 import { GameDto } from './game.dto'
+import { AuthGuard } from '@nestjs/passport'
 
 @Controller('api/v1/game')
 export class GameController {
@@ -34,7 +35,7 @@ export class GameController {
             throw err
         }
     }
-
+    @UseGuards(AuthGuard('jwt'))
     @Post()
     async create(@Body() body: GameDto, @Res() res: Response) {
         try {
@@ -46,7 +47,7 @@ export class GameController {
             throw error
         }
     }
-
+    @UseGuards(AuthGuard('jwt'))
     @Put('/update/:id')
     async update(@Param('id', new ParseIntPipe()) id:number, @Body() body: GameDto, @Res() res: Response) {
         try {
@@ -55,7 +56,7 @@ export class GameController {
             throw error
         }
     }
-
+    @UseGuards(AuthGuard('jwt'))
     @Put('/del/:id')
     async delGame(@Param('id', new ParseIntPipe()) id:number, @Res() res: Response) {
         // const del = await this.gameService.delGame(id)

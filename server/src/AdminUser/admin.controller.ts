@@ -14,10 +14,11 @@ export class AdminUserController {
         private readonly adminUserService: AdminUserService
     ){}
     
+    @UseGuards(AdminGuard)
     @Get('user')
     async get(@Res() res: Response, @Query() query: AdminDto) {
         try {
-            const adminList = await this.adminUserService.get(query)
+            const adminList = await this.adminUserService.get({...query, role: 2})
             res.json({
                 msg: 'Admin list',
                 data: adminList
