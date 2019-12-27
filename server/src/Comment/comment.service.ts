@@ -21,7 +21,7 @@ export class CommentService {
                     articleId, del: 0
                 },
                 skip: page * size, 
-                take: size 
+                take: size
             })
             const getReplyUser = (userId: number) => {
                 return this.clientUserService.getOne(userId)
@@ -47,7 +47,10 @@ export class CommentService {
                 replyUserId: userId
             },
             skip: page * size, 
-            take: size
+            take: size,
+            order: {
+                create_time: 'DESC'
+            }
         })
         const total = this.commentService.count({
             replyUserId: userId, del: 0

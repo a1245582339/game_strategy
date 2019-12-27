@@ -16,12 +16,15 @@ export class FavortiesService {
                 userId
             },
             skip: page * size, 
-            take: size 
+            take: size,
+            order: {
+                create_time: 'DESC'
+            }
         })
     }
     create(userId: number, articleId: number): Promise<Favorties> {
         return this.favortiesService.save({
-            userId, articleId, create_time: Date.now()
+            userId, articleId, create_time: Date.now().toString()
         })
     }
     async delById(id: number) {

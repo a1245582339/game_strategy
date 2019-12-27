@@ -15,6 +15,9 @@ export class Favorties {
     @Column()
     userId: number;
 
+    @Column()
+    create_time: string;
+
     @ManyToOne(type => Article, article => article.favorties)
     article: Article
 

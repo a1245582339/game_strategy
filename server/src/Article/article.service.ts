@@ -28,7 +28,10 @@ export class ArticleService {
                 del: 0
             },
             skip: page * size, 
-            take: size 
+            take: size,
+            order: {
+                create_time: 'DESC'
+            }
         })
         const total = this.articleService.count({
             title: Like(`%${title}%`),
