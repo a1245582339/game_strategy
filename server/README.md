@@ -14,8 +14,8 @@ POST /api/v1/auth/admin/login
 
 ```json
 {
-  "name": 用户名,
-  "password": 密码
+  "name": "用户名",
+  "password": "密码"
 }
 ```
 
@@ -88,8 +88,8 @@ POST /api/v1/admin/user
 
 ```json
 {
-  "name": 用户名,
-  "passsword": 密码
+  "name": "用户名",
+  "passsword": "密码"
 }
 ```
 
@@ -133,8 +133,8 @@ POST /api/v1/auth/client/login
 
 ```json
 {
-  "name": 用户名,
-  "password": 密码
+  "name": "用户名",
+  "password": "密码"
 }
 ```
 
@@ -158,9 +158,9 @@ POST /api/v1/client/user
 #### 参数
 ```json
 {
-  "login_name": 用户名,
-  "page": 页码,
-  "size": 每页条数
+  "login_name": "用户名",
+  "page": "页码",
+  "size": "每页条数"
 }
 ```
 #### 响应
@@ -229,11 +229,11 @@ POST /api/v1/client/user
 #### 参数
 ```json
 {
-    "login_name": 登录名,
-    "nick_name": 昵称,
-    "avatar": 头像,
-    "password": 密码,
-    "email": 邮箱
+    "login_name": "登录名",
+    "nick_name": "昵称",
+    "avatar": "头像",
+    "password": "密码",
+    "email": "邮箱"
 }
 ```
 #### 响应
@@ -251,12 +251,12 @@ PUT /api/v1/client/user/:id
 #### 参数
 ```json
 {
-    "login_name": 登录名,
-    "nick_name": 昵称,
-    "avatar": 头像,
-    "password": 密码,
-    "email": 邮箱,
-    "del": 删除标识符
+    "login_name": "登录名",
+    "nick_name": "昵称",
+    "avatar": "头像",
+    "password": "密码",
+    "email": "邮箱",
+    "del": "删除标识符"
 }
 ```
 #### 响应
@@ -274,10 +274,10 @@ PUT /api/v1/client/user
 #### 参数
 ```json
 {
-    "nick_name": 昵称,
-    "avatar": 头像,
-    "password": 密码,
-    "email": 邮箱,
+    "nick_name": "昵称",
+    "avatar": "头像",
+    "password": "密码",
+    "email": "邮箱"
 }
 ```
 #### 响应
@@ -314,8 +314,8 @@ POST /api/v1/auth/client/login
 
 ```json
 {
-  "name": 用户名,
-  "password": 密码
+  "name": "用户名",
+  "password": "密码"
 }
 ```
 ***
@@ -388,8 +388,8 @@ POST /api/v1/category
 
 ```json
 {
-  "p_id": 父级分类,
-  "name": 分类名称
+  "p_id": "父级分类",
+  "name": "分类名称"
 }
 ```
 #### 响应
@@ -411,7 +411,7 @@ POST /api/v1/category/update/:id
 
 ```json
 {
-  "name": 分类名称
+  "name": "分类名称"
 }
 ```
 #### 响应
@@ -433,7 +433,7 @@ POST /api/v1/category/del/:id
 
 ```json
 {
-  "name": 分类名称
+  "name": "分类名称"
 }
 ```
 #### 响应
@@ -683,10 +683,10 @@ POST /api/v1/game/article
 #### 参数
 ```json
 {
-    "title": 标题,
-    "content": 内容,
-    "cover": 封面,
-    "gameId": 游戏id
+    "title": "标题",
+    "content": "内容",
+    "cover": "封面",
+    "gameId": "游戏id"
 }
 ```
 #### 响应
@@ -766,7 +766,7 @@ POST /api/v1/follow
 #### 参数
 ```json
 {
-    "gameId": 游戏id
+    "gameId": "游戏id"
 }
 ```
 #### 响应
@@ -784,7 +784,7 @@ DELETE /api/v1/follow/delByid/:id
 #### 参数
 ```json
 {
-    "gameId": 游戏id
+    "gameId": "游戏id"
 }
 ```
 #### 响应
@@ -868,7 +868,7 @@ POST /api/v1/favorties
 #### 参数
 ```json
 {
-    "articleId": 文章id
+    "articleId": "文章id"
 }
 ```
 #### 响应
@@ -886,7 +886,7 @@ DELETE /api/v1/favorties/delByid/:id
 #### 参数
 ```json
 {
-    "gameId": 游戏id
+    "gameId": "游戏id"
 }
 ```
 #### 响应
