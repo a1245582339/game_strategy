@@ -63,7 +63,7 @@ export class CommentController {
         try {
             const token = req.headers.authorization.split(' ')[1]
             const { id }: any = decode(token);
-            const count = this.commentService.getUnreadCount(id)
+            const count = await this.commentService.getUnreadCount(id)
             res.json({
                 msg: 'Unread count',
                 count
@@ -86,6 +86,17 @@ export class CommentController {
             throw error
         }
         
+    }
+    @Put('/read')
+    async read(@Res() res: Response, @Body('time') time: string) {
+        try {
+            await this.commentService.read(time)
+            res.json({
+                msg: 'Ok'
+            })
+        } catch (error) {
+            throw error
+        }
     }
     @Put('del/:id')
     async del(@Param('id', new ParseIntPipe()) id:number, @Res() res: Response, @Req() req: Request) {

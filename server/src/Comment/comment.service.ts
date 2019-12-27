@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
-import { Repository } from 'typeorm'
+import { Repository, LessThan, LessThanOrEqual } from 'typeorm'
 import { Comment } from './comment.entity'
 import { CommentDto } from './comment.dto'
 import { ClientUserService } from '../ClientUser/client.service'
@@ -61,6 +61,11 @@ export class CommentService {
         return this.commentService.count({
             del: 0, read: 0, replyUserId
         })
+    }
+    async read(time: string) {
+        return this.commentService.update({
+            del: 0, create_time: LessThanOrEqual(time)
+        }, { read: 1 })
     }
     async create (body: CommentDto): Promise<Comment> {
         return this.commentService.save({ ...body, create_time: Date.now().toString() })

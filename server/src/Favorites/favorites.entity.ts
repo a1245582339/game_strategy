@@ -10,7 +10,7 @@ export class Favorties {
     id: number;
 
     @Column()
-    gameId: number;
+    articleId: number;
 
     @Column()
     userId: number;

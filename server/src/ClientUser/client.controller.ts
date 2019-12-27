@@ -49,6 +49,12 @@ export class ClientUserController {
     @Get('check')
     async checkExsit(@Query('login_name') login_name:string, @Res() res: Response) {
         try {
+            if (!login_name) {
+                res.status(HttpStatus.BAD_REQUEST).json({
+                    msg: 'Params error'
+                })
+                return
+            }
             const result = await this.clientUserService.checkExist(login_name)
             res.json({
                 msg: 'Exist status',
@@ -102,6 +108,21 @@ export class ClientUserController {
             })
         } catch (error) {
             throw error
+        }
+    }
+    @Put('changePassword')
+    async changePassword(@Req() req:any, @Body('password') password:string, @Body('old_password') old_password:string, @Res() res: Response) {
+        try {
+            const token = req.headers.authorization.split(' ')[1]
+            const { id }: any = decode(token)
+            if (await this.clientUserService.checkPassword(id, old_password)) {
+                await this.clientUserService.update(id, { password })
+                res.json({ msg: 'Ok' })
+            } else {
+                res.json({ code: 20003, msg: 'Old password error' })
+            }
+        } catch (err) {
+            throw err
         }
     }
 }
