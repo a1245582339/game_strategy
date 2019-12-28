@@ -3,7 +3,7 @@ import { Article } from '../Article/article.entity';
 import { ClientUser } from '../ClientUser/client.entity'
 
 @Entity({
-    name: 'favorties'
+    name: 'favorites'
 })
 export class Favorties {
     @PrimaryGeneratedColumn()

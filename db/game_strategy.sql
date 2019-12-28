@@ -11,7 +11,7 @@
  Target Server Version : 50720
  File Encoding         : 65001
 
- Date: 26/12/2019 23:16:35
+ Date: 28/12/2019 19:34:09
 */
 
 SET NAMES utf8mb4;
@@ -118,28 +118,15 @@ INSERT INTO `comment` VALUES (7, 1, 1, 'qwe', 0, 0, 0, '1577196409395');
 -- ----------------------------
 DROP TABLE IF EXISTS `favorites`;
 CREATE TABLE `favorites`  (
-  `id` int(11) NOT NULL,
   `userId` int(11) NOT NULL,
   `articleId` int(11) NOT NULL,
   `create_time` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
-  `del` int(11) NOT NULL DEFAULT 0,
-  PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
-
--- ----------------------------
--- Table structure for favorties
--- ----------------------------
-DROP TABLE IF EXISTS `favorties`;
-CREATE TABLE `favorties`  (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `gameId` int(11) NOT NULL,
-  `userId` int(11) NOT NULL,
-  `articleId` int(11) NULL DEFAULT NULL,
   PRIMARY KEY (`id`) USING BTREE,
-  INDEX `FK_a4cbc7d4493e58508f772fc8daf`(`articleId`) USING BTREE,
-  INDEX `FK_02f3409d97822c6945adf6cc743`(`userId`) USING BTREE,
-  CONSTRAINT `FK_02f3409d97822c6945adf6cc743` FOREIGN KEY (`userId`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `FK_a4cbc7d4493e58508f772fc8daf` FOREIGN KEY (`articleId`) REFERENCES `article` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+  INDEX `FK_a9e25be94f65c6f11f420d97bca`(`articleId`) USING BTREE,
+  INDEX `FK_e747534006c6e3c2f09939da60f`(`userId`) USING BTREE,
+  CONSTRAINT `FK_a9e25be94f65c6f11f420d97bca` FOREIGN KEY (`articleId`) REFERENCES `article` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `FK_e747534006c6e3c2f09939da60f` FOREIGN KEY (`userId`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
