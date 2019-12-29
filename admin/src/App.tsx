@@ -1,20 +1,25 @@
 import React from 'react';
-import { BrowserRouter, Switch, Route } from "react-router-dom";
+import { BrowserRouter, Switch, Route, Redirect } from "react-router-dom";
 import View from './view';
 import './App.css';
 
 const App: React.FC = () => {
   return (
-    <BrowserRouter basename="/">
+    <>
+      <BrowserRouter basename="/">
         <Switch>
-            <Route path="/login" >
-                <View.Login />
-            </Route>
-            <Route path="/layout" >
-                {/* <View.Layout /> */}
-            </Route>
+          <Route exact path="/">
+            <Redirect to="/dashboard" />
+          </Route>
+          <Route path="/login" >
+            <View.Login />
+          </Route>
+          <Route path="/dashboard" >
+            <View.Dashboard />
+          </Route>
         </Switch>
-    </BrowserRouter>
+      </BrowserRouter>
+    </>
   );
 }
 

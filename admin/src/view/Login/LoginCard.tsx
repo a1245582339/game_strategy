@@ -1,8 +1,10 @@
 import React from "react";
 import { Form, Icon, Input, Button, Checkbox, message } from "antd";
 import { FormComponentProps } from "antd/es/form";
+import { useHistory } from "react-router-dom";
 import styled from 'styled-components';
-import { login } from '@/api/login'
+import { loginApi } from '@/api/user'
+import { setToken } from '@/utils/cookie'
 
 const Title = styled.div`
 	text-align: center;
@@ -15,23 +17,27 @@ interface UserFormProps extends FormComponentProps {
 	password: string;
 	remember: boolean;
 }
-interface ILoginRes {
-	code?: number
-	msg?: string
-	token?: string
+interface ILoginResErr {
+	code: number
+	msg: string
+}
+interface ILoginResSucc {
+	token: string
 }
 const LoginCard: React.FC<UserFormProps> = props => {
+	const hisrory = useHistory()
 	const handleSubmit = (e: React.FormEvent<EventTarget>) => {
 		e.preventDefault();
 		props.form.validateFields(async (err, values) => {
 			if (!err) {
 				console.log("Received values of form: ", values);
-				const res = await login<ILoginRes>(values)
+				const res = await loginApi<ILoginResSucc, ILoginResErr>(values)
 				console.log(res)
 				if (res.code) {
 					message.error('用户名密码错误，请重试')
 				} else {
-					console.log(res.token)
+					setToken(res.token)
+					hisrory.push('/dashboard')
 				}
 			}
 		});

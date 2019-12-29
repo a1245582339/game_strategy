@@ -1,11 +1,12 @@
 import { Controller, Get, Param, Res, HttpStatus, Post, Body, Put, Query, UseGuards, Req } from '@nestjs/common'
-import { Response } from 'express';
+import { Response, Request } from 'express';
 import { ParseIntPipe } from '@nestjs/common/pipes/parse-int.pipe';
 import { AdminUserService } from './admin.service'
 import { AdminDto } from './admin.dto';
 import { decode } from 'jsonwebtoken'
 import { AuthGuard } from '@nestjs/passport'
 import { AdminGuard } from '../guard/admin.guard'
+import { EditorGuard } from '../guard/editor.guard'
 
 @UseGuards(AuthGuard('jwt'))
 @Controller('api/v1/admin')
@@ -25,6 +26,20 @@ export class AdminUserController {
             })
         } catch (err) {
             throw err
+        }
+    }
+    @Get('me')
+    async getMyInfo(@Req() req:Request, @Res() res: Response) {
+        try {
+            const token = req.headers.authorization.split(' ')[1]
+            const { id }: any = decode(token)
+            const myInfo = await this.adminUserService.getInfo(id)
+            res.json({
+                msg: 'Info',
+                data: myInfo
+            })
+        } catch (error) {
+            throw error
         }
     }
     @Get('check')
@@ -75,7 +90,7 @@ export class AdminUserController {
     }
 
     @Put('changePassword')
-    async changePassword(@Req() req:any, @Body('password') password:string, @Body('old_password') old_password:string, @Res() res: Response) {
+    async changePassword(@Req() req:Request, @Body('password') password:string, @Body('old_password') old_password:string, @Res() res: Response) {
         try {
             const token = req.headers.authorization.split(' ')[1]
             const { id }: any = decode(token)

@@ -30,6 +30,35 @@ Content-Type:application/json
 ```
 
 ---
+### 登录
+
+#### 请求
+
+```http
+POST /api/v1/admin/me
+```
+
+#### 参数
+
+```json
+无
+}
+```
+
+#### 响应
+
+```json
+HTTP/1.1 200 OK
+Content-Type:application/json
+{
+    "me": "Info",
+    "data": {
+      
+    }
+}
+```
+
+---
 
 ### 获取管理员列表
 

@@ -1,3 +1,3 @@
 import Login from './Login/Login';
-// import Layout from './Layout/index';
-export default { Login }
+import Dashboard from './Dashboard';
+export default { Login, Dashboard }
