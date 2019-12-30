@@ -28,9 +28,7 @@ const Dashboard: React.FC<IUserStore> = (({ onLoginSuccess }) => {
             <Sidebar collapsed={collapsed} />
             <Layout>
                 <Headbar collapsed={collapsed} onCollapsed={onCollapsed} />
-                <Content>
-                    {/* {userStore.userInfo.name} */}
-                </Content>
+                <Content />
             </Layout>
         </Layout>
     )

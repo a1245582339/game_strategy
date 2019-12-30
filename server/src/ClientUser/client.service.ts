@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
-import { Repository } from 'typeorm'
+import { Repository, Like } from 'typeorm'
 import { ClientUser } from './client.entity'
 import { ClientDto } from './client.dto'
 
@@ -13,11 +13,11 @@ export class ClientUserService {
     async get(payload?: ClientDto, page?: number, size?: number): Promise<[ClientUser[], number]> {
         const list = this.clientUserRepository.find({ 
             select: ['id', 'login_name', 'nick_name', 'email', 'avatar'], 
-            where: { ...payload, del: 0 }, 
+            where: { ...payload, login_name: Like(`%${payload.login_name || ''}%`), del: 0 }, 
             skip: page * size, 
             take: size 
         })
-        const total = this.clientUserRepository.count({ ...payload, del: 0 })
+        const total = this.clientUserRepository.count({ ...payload, login_name: Like(`%${payload.login_name || ''}%`), del: 0 })
         return Promise.all([list, total])
     }
     getOne(id?: number) {

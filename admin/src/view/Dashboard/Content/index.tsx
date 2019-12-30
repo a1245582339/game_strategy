@@ -3,6 +3,7 @@ import { Switch, Route, Redirect } from "react-router-dom";
 import { Layout } from 'antd';
 import User from './User'
 import Home from './Home';
+import Category from './Category'
 
 const Content: React.FC = () => {
     return (
@@ -11,11 +12,14 @@ const Content: React.FC = () => {
                 <Route exact path="/dashboard">
                     <Redirect to="/dashboard/home" />
                 </Route>
-                <Route exact path="/dashboard/home" >
+                <Route path="/dashboard/home" >
                     <Home />
                 </Route>
-                <Route exact path="/dashboard/user" >
+                <Route path="/dashboard/user" >
                     <User />
+                </Route>
+                <Route path="/dashboard/category" >
+                    <Category />
                 </Route>
             </Switch>
         </Layout.Content>

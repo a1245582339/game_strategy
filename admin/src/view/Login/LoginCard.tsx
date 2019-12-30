@@ -36,7 +36,9 @@ const LoginCard: React.FC<UserFormProps> = props => {
 				if (res.code) {
 					message.error('用户名密码错误，请重试')
 				} else {
-                    setToken(res.token)
+					if (values.remember) {
+						setToken(res.token)
+					}
                     message.success('欢迎回来！')
 					hisrory.push('/dashboard')
 				}
