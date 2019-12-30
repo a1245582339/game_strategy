@@ -35,10 +35,10 @@ export class FavortiesController {
             throw error
         }
     }
-    @Delete('delByid/:id')
-    async delById(@Param('id', new ParseIntPipe()) id:number, @Res() res: Response) {
+    @Delete('delByid')
+    async delById(@Body('ids') ids:[], @Res() res: Response) {
         try {
-            await this.favortiesServies.delById(id)
+            await Promise.all(ids.map(id => this.favortiesServies.delById(id)))
             res.json({
                 msg: 'ok'
             })

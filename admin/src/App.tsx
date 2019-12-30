@@ -5,7 +5,6 @@ import './App.css';
 
 const App: React.FC = () => {
   return (
-    <>
       <BrowserRouter basename="/">
         <Switch>
           <Route exact path="/">
@@ -19,7 +18,6 @@ const App: React.FC = () => {
           </Route>
         </Switch>
       </BrowserRouter>
-    </>
   );
 }
 

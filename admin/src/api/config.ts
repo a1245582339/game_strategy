@@ -29,7 +29,7 @@ http.interceptors.request.use(
 http.interceptors.response.use(
   response => response.data,
   (error) => {
-    console.log(error)
+    message.error('请求异常，请检查网络环境')
     throw error
   },
 );

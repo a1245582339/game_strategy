@@ -6,10 +6,10 @@ import { setUserInfo, IUserInfo } from '@/store/action'
 import { getUserInfoApi } from '@/api/user'
 import Sidebar from './Sidebar/Sidebar'
 import Headbar from './Headbar/Headbar'
+import Content from './Content';
 interface IUserStore {
 	onLoginSuccess: (info: IUserInfo) => void
 }
-const { Content } = Layout;
 const Dashboard: React.FC<IUserStore> = (({ onLoginSuccess }) => {
     const [collapsed, setCollapsed] = useState(false)
     useEffect(() => {
@@ -28,7 +28,7 @@ const Dashboard: React.FC<IUserStore> = (({ onLoginSuccess }) => {
             <Sidebar collapsed={collapsed} />
             <Layout>
                 <Headbar collapsed={collapsed} onCollapsed={onCollapsed} />
-                <Content style={{ margin: '0 16px' }}>
+                <Content>
                     {/* {userStore.userInfo.name} */}
                 </Content>
             </Layout>
