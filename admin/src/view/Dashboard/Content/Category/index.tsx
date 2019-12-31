@@ -1,18 +1,16 @@
-import React, { useEffect, useState } from 'react';
-import { getCategoryApi } from '@/api/category'
-interface ICategory {
-    id: number
-    p_id: number
-    name: string
-    type: number,
-    list: ICategory[]
-}
+import React from 'react';
+import { Layout } from 'antd';
+import SideTree from './SideTree';
+
+const { Content, Sider } = Layout;
 const Category: React.FC = () => {
-    
     return (
-        <>
-            <div>Category</div>
-        </>
+        <Layout style={{backgroundColor: '#fff'}}>
+            <Sider width={200}>
+                <SideTree />
+            </Sider>
+            <Content></Content>
+        </Layout>
     )
 }
 export default Category

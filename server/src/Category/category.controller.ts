@@ -1,4 +1,4 @@
-import { Controller, Get, Param, Res, HttpStatus, Post, Body, Put, Query, UseGuards } from '@nestjs/common'
+import { Controller, Get, Param, Res, HttpStatus, Post, Body, Put, Query, UseGuards, Delete } from '@nestjs/common'
 import { Response } from 'express';
 import { ParseIntPipe } from '@nestjs/common/pipes/parse-int.pipe';
 import { CategoryService } from './category.service'
@@ -35,7 +35,7 @@ export class CategoryController {
     }
 
     @UseGuards(AuthGuard('jwt'))
-    @Put('update/:id')
+    @Put('/:id')
     async update(@Res() res: Response, @Body('name') name: string, @Param('id', new ParseIntPipe()) id:number) {
         try {
             if (await this.categoryService.update(id, name)) {
@@ -54,7 +54,7 @@ export class CategoryController {
     }
 
     @UseGuards(AuthGuard('jwt'))
-    @Put('del/:id')
+    @Delete('/:id')
     async delete(@Param('id', new ParseIntPipe()) id:number, @Res() res: Response) {
         try {
             if (await this.categoryService.delete(id)) {
@@ -64,7 +64,6 @@ export class CategoryController {
             } else {
                 res.json({
                     code: 20004,
-                    msg: `No found category as id = ${id}`
                 })
             }
         } catch (err) {

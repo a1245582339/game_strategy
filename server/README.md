@@ -519,7 +519,7 @@ Content-Type:application/json
 #### 请求
 
 ```http
-POST /api/v1/category/update/:id
+PUT /api/v1/category/update/:id
 ```
 
 #### 参数

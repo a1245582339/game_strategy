@@ -12,7 +12,7 @@ const Title = styled.div`
 	height: 80px;
 `
 
-interface UserFormProps extends FormComponentProps {
+interface IUserFormProps extends FormComponentProps {
 	name: string;
 	password: string;
 	remember: boolean;
@@ -24,7 +24,7 @@ interface ILoginResErr {
 interface ILoginResSucc {
 	token: string
 }
-const LoginCard: React.FC<UserFormProps> = props => {
+const LoginCard: React.FC<IUserFormProps> = props => {
 	const hisrory = useHistory()
 	const handleSubmit = (e: React.FormEvent<EventTarget>) => {
 		e.preventDefault();
@@ -32,7 +32,6 @@ const LoginCard: React.FC<UserFormProps> = props => {
 			if (!err) {
 				console.log("Received values of form: ", values);
 				const res = await loginApi<ILoginResSucc, ILoginResErr>(values)
-				console.log(res)
 				if (res.code) {
 					message.error('用户名密码错误，请重试')
 				} else {
@@ -90,4 +89,4 @@ const LoginCard: React.FC<UserFormProps> = props => {
 		</>
 	);
 };
-export default Form.create<UserFormProps>()(LoginCard);
+export default Form.create<IUserFormProps>()(LoginCard);
