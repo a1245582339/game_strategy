@@ -80,7 +80,7 @@ const User: React.FC = () => {
     }
     useEffect(() => {
         fetchData()
-    }, [page, size, login_name, fetchData])
+    }, [fetchData])
     return (
         <>
             <Search

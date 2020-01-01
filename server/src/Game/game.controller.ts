@@ -1,4 +1,4 @@
-import { Controller, Get, Param, Res, Post, Body, Put, Query, UseGuards } from '@nestjs/common'
+import { Controller, Get, Param, Res, Post, Body, Put, Query, UseGuards, Delete } from '@nestjs/common'
 import { Response } from 'express';
 import { ParseIntPipe } from '@nestjs/common/pipes/parse-int.pipe';
 import { GameService } from './game.service'
@@ -10,9 +10,9 @@ export class GameController {
     constructor(private readonly gameService: GameService) {}
     @Get()
     async getGame(@Query() query: any, @Res() res: Response) {
-        const { name, page, size } = query
+        const { name, page, size, categoryId } = query
         try {
-            const [gameList, total] = await this.gameService.getByname(name, page, size)
+            const [gameList, total] = await this.gameService.getByname(name, page, size, categoryId)
             res.json({
                 msg: 'Game list',
                 list: gameList,
@@ -22,19 +22,7 @@ export class GameController {
             throw err
         }
     }
-
-    @Get('/detail/:id')
-    async getGameDetail(@Param('id', new ParseIntPipe()) id:number, @Res() res: Response) {
-        try {
-            const detail = await this.gameService.getDetail(id)
-            res.json({
-                detail,
-                msg: 'detail'
-            })
-        } catch (err) {
-            throw err
-        }
-    }
+    
     @UseGuards(AuthGuard('jwt'))
     @Post()
     async create(@Body() body: GameDto, @Res() res: Response) {
@@ -48,7 +36,7 @@ export class GameController {
         }
     }
     @UseGuards(AuthGuard('jwt'))
-    @Put('/update/:id')
+    @Put('/:id')
     async update(@Param('id', new ParseIntPipe()) id:number, @Body() body: GameDto, @Res() res: Response) {
         try {
             await this.gameService.update(id, body)
@@ -57,9 +45,9 @@ export class GameController {
         }
     }
     @UseGuards(AuthGuard('jwt'))
-    @Put('/del/:id')
+    @Delete('/:id')
     async delGame(@Param('id', new ParseIntPipe()) id:number, @Res() res: Response) {
-        // const del = await this.gameService.delGame(id)
+        await this.gameService.del(id)
         res.json({msg: 'Ok'})
     }
 }

@@ -32,6 +32,7 @@ const CategoryEditDialog: React.FC<IFormProps> = (props) => {
             visible={visible}
             onOk={handleOk}
             onCancel={() => handleCancle()}
+            destroyOnClose={true}
         >
             <Form layout="vertical">
                 <Form.Item label="名称">
