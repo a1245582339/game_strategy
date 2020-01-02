@@ -3,7 +3,6 @@ import { Table, Pagination, Input, Button, Modal, message } from 'antd';
 import { ColumnProps } from 'antd/es/table';
 import { getGameApi, addGameApi, editGameApi, delGameApi } from '@/api/game'
 import GameEditDialog from './GameEditDialog'
-import ButtonGroup from 'antd/lib/button/button-group';
 import styled from 'styled-components';
 
 const CoverInTable = styled.img`
@@ -47,10 +46,10 @@ const Game: React.FC<{ categoryId: number }> = ({ categoryId }) => {
         key: 'action',
         render(_text: any, record: any) {
             return (
-                <ButtonGroup>
+                <Button.Group>
                     <Button type="primary" size="small" icon="edit" onClick={() => handleClickEdit(record)}>编辑</Button>
                     <Button type="danger" size="small" icon="delete" onClick={() => handleClickDeleteGame(record.id)}>删除</Button>
-                </ButtonGroup>
+                </Button.Group>
             )
         }
     }]

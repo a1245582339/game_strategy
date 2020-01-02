@@ -7,8 +7,8 @@
     "path": "user",
     "icon": "user"
 }, {
-    "title": "分类管理",
-    "path": "category",
+    "title": "游戏管理",
+    "path": "game",
     "icon": "profile"
 }, {
     "title": "文章管理",

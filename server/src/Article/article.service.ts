@@ -21,7 +21,7 @@ export class ArticleService {
     async getList(title: string, page: number, size: number): Promise<[Article[], number]> {
         
         const list = this.articleService.find({
-            select: ['id', 'cover', 'title', 'gameId'],
+            select: ['id', 'cover', 'title', 'gameId', 'create_time'],
             relations: ['game'],
             where: {
                 title: Like(`%${title}%`),

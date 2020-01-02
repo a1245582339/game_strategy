@@ -1,4 +1,4 @@
-import { Controller, Get, Param, Res, Post, Body, Put, Query, UseGuards } from '@nestjs/common'
+import { Controller, Get, Param, Res, Post, Body, Put, Query, UseGuards, Delete } from '@nestjs/common'
 import { Response } from 'express';
 import { ParseIntPipe } from '@nestjs/common/pipes/parse-int.pipe';
 import { ArticleDto } from './article.dto'
@@ -13,7 +13,7 @@ export class ArticleController {
     async getList(@Query() query: any, @Res() res: Response) {
         const { title, page, size } = query
         let list: any, total: number
-        [list, total] = await this.articleService.getList(title || '', page || 0, size || 10)
+        [list, total] = await this.articleService.getList(title, page || 0, size || 10)
         list = list.map((item: any) => ({ ...item, game: item.game.name }))
         res.json({
             msg: 'Article list',
@@ -42,7 +42,7 @@ export class ArticleController {
         }
     }
     @UseGuards(AuthGuard('jwt'))
-    @Put('/del/:id')
+    @Delete('/:id')
     async del(@Param('id', new ParseIntPipe()) id:number, @Res() res: Response) {
         try {
             await this.articleService.delById(id)
