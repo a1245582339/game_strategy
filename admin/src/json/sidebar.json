@@ -11,10 +11,6 @@
     "path": "category",
     "icon": "profile"
 }, {
-    "title": "游戏管理",
-    "path": "game",
-    "icon": "dribbble"
-}, {
     "title": "文章管理",
     "path": "article",
     "icon": "read"
