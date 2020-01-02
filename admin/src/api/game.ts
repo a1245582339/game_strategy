@@ -14,6 +14,7 @@ export const addGameApi = (body: IGame) => {
     return http.post(domain, body)
 }
 export const editGameApi = (id: number, body: IGame) => {
+    console.log(body)
     return http.put(`${domain}/${id}`, body)
 }
 export const delGameApi = (id: number) => {

@@ -4,6 +4,11 @@ import { ColumnProps } from 'antd/es/table';
 import { getGameApi, addGameApi, editGameApi, delGameApi } from '@/api/game'
 import GameEditDialog from './GameEditDialog'
 import ButtonGroup from 'antd/lib/button/button-group';
+import styled from 'styled-components';
+
+const CoverInTable = styled.img`
+    width: 100px;
+`
 
 const { Search } = Input;
 const { confirm } = Modal;
@@ -14,6 +19,7 @@ interface IGame {
     desp: string
     cover: string
     categoryId: number
+    category: any
 }
 interface IGameListRes {
     msg: string
@@ -33,6 +39,9 @@ const Game: React.FC<{ categoryId: number }> = ({ categoryId }) => {
         title: '封面',
         key: 'cover',
         dataIndex: 'cover',
+        render (text: string) {
+            return <CoverInTable src={text}></CoverInTable>
+        }
     }, {
         title: '操作',
         key: 'action',
@@ -52,7 +61,7 @@ const Game: React.FC<{ categoryId: number }> = ({ categoryId }) => {
     const [name, setName] = useState('')
     const [loading, setLoading] = useState(false)
     const [visible, setVisiable] = useState(false)
-    const [editData, setEditData] = useState<IGame>({ id: 0, name: '', desp: '', cover: '', categoryId: 0 })
+    const [editData, setEditData] = useState<IGame>({ id: 0, name: '', desp: '', cover: '', category: {}, categoryId: 0 })
     const fetchData = useCallback(async () => {
         setLoading(true)
         const result = await getGameApi<IGameListRes>({ name, page: page - 1, size, ...(categoryId ? { categoryId } : {}) })
@@ -66,10 +75,12 @@ const Game: React.FC<{ categoryId: number }> = ({ categoryId }) => {
         setVisiable(false)
     }
     const onSubmit = async (body: IGame) => {
+        console.log(body.id)
         body.id ?
             await editGameApi(body.id, body) :
             await addGameApi({ ...body, categoryId})
         message.success(`${body.id ? '编辑' : '创建'}成功`)
+        fetchData()
     }
     const handleClickEdit = (record: IGame) => {
         setEditData(record)
@@ -98,7 +109,7 @@ const Game: React.FC<{ categoryId: number }> = ({ categoryId }) => {
                 style={{ width: 300 }}
                 enterButton
             />
-            {categoryId ? <Button style={{float: "right"}} type="primary" onClick={() => { setVisiable(true) }}>
+            {categoryId ? <Button style={{float: "right"}} type="primary" onClick={() => { setVisiable(true); setEditData({ id: 0, name: '', desp: '', cover: '', categoryId, category: {id: 0} }) }}>
                 创建游戏
             </Button> : <></>}
             <Table

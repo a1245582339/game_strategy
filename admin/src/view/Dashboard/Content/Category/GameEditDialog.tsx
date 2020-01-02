@@ -16,6 +16,7 @@ interface IGame {
     desp: string 
     cover: string
     categoryId: number
+    category: any
 }
 const GameEditDialog: React.FC<IFormProps<IGame>> = (props) => {
     const [visible, setVisible] = useState(false)
@@ -29,19 +30,21 @@ const GameEditDialog: React.FC<IFormProps<IGame>> = (props) => {
                 size: 1,
                 name: 'cover.png',
                 status: 'done',
-                url: `http://localhost:3000/${props.editData.cover}`,
+                url: props.editData.cover,
                 type: 'done',
                 response: {
                     path: props.editData.cover
                 }
               }])
+        } else {
+            setCoverPath([])
         }
         setVisible(props.visible)
     }, [props.visible, props.editData.id, props.editData.cover]);
     const handleOk = () => {
         props.form.validateFields(async (err, value) => {
             if (!err) {
-                await props.onSubmit({...value, ...{ cover: coverPath[0].response.path }})
+                await props.onSubmit({...value, id: props.editData.id, cover: coverPath[0] ? coverPath[0].response.path : '', categoryId: props.editData.category.id })
                 setCoverPath([])
                 props.onClose()
             }
@@ -58,7 +61,7 @@ const GameEditDialog: React.FC<IFormProps<IGame>> = (props) => {
         setCoverPath([])
     }
     const handlePreview = (file: UploadFile) => {
-        window.open(`http://localhost:3000/${file.response.path}`)
+        window.open(file.response.path)
     }
     return (
         <Modal
@@ -86,6 +89,7 @@ const GameEditDialog: React.FC<IFormProps<IGame>> = (props) => {
                     {getFieldDecorator('cover', {
                     })(<Upload
                         name='file'
+                        accept="image/png, image/jpg, image/jpeg"
                         action='/api/v1/upload'
                         fileList={coverPath}
                         onChange={handleUpload}

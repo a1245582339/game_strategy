@@ -11,6 +11,6 @@ export class UploaderService {
         const path = join(process.cwd(), 'public', `${filename}`)
         const writeImage = createWriteStream(path)
         writeImage.write(file.buffer)
-        return `public/${filename}`
+        return `http://localhost:3000/public/${filename}`
     }
 }

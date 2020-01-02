@@ -27,7 +27,8 @@ export class GameController {
     @Post()
     async create(@Body() body: GameDto, @Res() res: Response) {
         try {
-            await this.gameService.create(body)
+            const cover = body.cover || 'http://localhost:3000/public/defaultCover.png'
+            await this.gameService.create({ ...body, cover })
             res.json({
                 msg: 'Ok'
             })
@@ -40,6 +41,9 @@ export class GameController {
     async update(@Param('id', new ParseIntPipe()) id:number, @Body() body: GameDto, @Res() res: Response) {
         try {
             await this.gameService.update(id, body)
+            res.json({
+                msg: 'Ok'
+            })
         } catch (error) {
             throw error
         }
