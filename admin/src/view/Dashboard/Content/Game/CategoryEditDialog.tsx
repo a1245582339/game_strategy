@@ -23,7 +23,7 @@ const CategoryEditDialog: React.FC<IFormProps> = (props) => {
             }
         })
     }
-    const handleCancle = () => {
+    const handleCancel = () => {
         props.onClose()
     }
     return (
@@ -31,7 +31,7 @@ const CategoryEditDialog: React.FC<IFormProps> = (props) => {
             title={`${props.create ? '添加' : '编辑'}`}
             visible={visible}
             onOk={handleOk}
-            onCancel={() => handleCancle()}
+            onCancel={() => handleCancel()}
             destroyOnClose={true}
         >
             <Form layout="vertical">

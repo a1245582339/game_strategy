@@ -18,13 +18,13 @@ export class ArticleService {
             }
         })
     }
-    async getList(title: string, page: number, size: number): Promise<[Article[], number]> {
-        
+    async getList(title: string, page: number, size: number, gameId?: number): Promise<[Article[], number]> {
         const list = this.articleService.find({
             select: ['id', 'cover', 'title', 'gameId', 'create_time'],
             relations: ['game'],
             where: {
                 title: Like(`%${title}%`),
+                ...(gameId ? { gameId } : {}) ,
                 del: 0
             },
             skip: page * size, 
@@ -35,6 +35,7 @@ export class ArticleService {
         })
         const total = this.articleService.count({
             title: Like(`%${title}%`),
+            ...(gameId ? { gameId } : {}) ,
             del: 0
         })
         return Promise.all([list, total])

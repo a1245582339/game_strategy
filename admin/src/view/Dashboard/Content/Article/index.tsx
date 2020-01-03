@@ -1,8 +1,10 @@
 import React, { useEffect, useState, useCallback } from 'react';
-import { Table, Pagination, Input, Button, Modal, message, Select } from 'antd';
+import { Table, Pagination, Input, Button, Modal, message, Select, Spin } from 'antd';
 import { ColumnProps } from 'antd/es/table';
-import { getArticleListApi, getArticleDetailApi, createArticleApi, delArticleApi } from '@/api/article'
+import { getArticleListApi, delArticleApi } from '@/api/article'
+import { getGameApi } from '@/api/game';
 import { formatDate } from '@/utils/time'
+import CreateDialog from './CreateDialog';
 
 import styled from 'styled-components';
 
@@ -11,12 +13,17 @@ const CoverInTable = styled.img`
 `
 const { Search } = Input;
 const { confirm } = Modal;
+const { Option } = Select;
 interface IArticle {
     id: number
     title: string
     cover: string
     gameId: number
     create_time: string
+}
+interface IGame {
+    id: number
+    name: string
 }
 interface IArticleListRes {
     msg: string
@@ -36,14 +43,14 @@ const Article: React.FC = () => {
         title: '封面',
         key: 'cover',
         dataIndex: 'cover',
-        render (text: string) {
+        render(text: string) {
             return <CoverInTable src={text}></CoverInTable>
         }
     }, {
         title: '创建时间',
         key: 'create_time',
         dataIndex: 'create_time',
-        render (text: string) {
+        render(text: string) {
             return <span>{formatDate(parseInt(text))}</span>
         }
     }, {
@@ -65,8 +72,9 @@ const Article: React.FC = () => {
     const [title, setTitle] = useState('')
     const [gameId, setGameId] = useState(0)
     const [loading, setLoading] = useState(false)
-    const [visible, setVisiable] = useState(false)
-    const [game, setGame] = useState()
+    const [searchLoading, setSearchLoading] = useState(false)
+    const [createVisible, setCreateVisiable] = useState(false)
+    const [gameList, setGameList] = useState<IGame[]>([])
     const fetchData = useCallback(async () => {
         setLoading(true)
         const result = await getArticleListApi<IArticleListRes>({ title, page: page - 1, size, ...(gameId ? { gameId } : {}) })
@@ -90,17 +98,41 @@ const Article: React.FC = () => {
             },
             onCancel() { }
         })
-    }   
+    }
+    const handleSearch = async (value: string) => {
+        if (value) {
+            setSearchLoading(true)
+            const result = await getGameApi<{ list: IGame[] }>({ name: value, page: 0, size: 20 })
+            setGameList(result.list.map(item => ({id: item.id, name: item.name})))
+            setTimeout(() => {
+                setSearchLoading(false)
+            }, 300)
+        } else {
+            setGameList([])
+        }
+        
+    }
     return (
         <>
             <Search
-                placeholder="请输入游戏名称关键字"
+                placeholder="请输入文章名称关键字"
                 onSearch={value => setTitle(value)}
                 style={{ width: 300 }}
                 enterButton
             />
-            <Select showSearch></Select>
-            <Button style={{float: "right"}} type="primary" onClick={() => { setVisiable(true) }}>
+            <Select
+                style={{width: 300, marginLeft: 10}}
+                showSearch
+                allowClear
+                placeholder="请搜索游戏名称选择游戏"
+                onSearch={handleSearch}
+                filterOption={false}
+                notFoundContent={searchLoading ? <Spin size="small" /> : null}
+                onChange={(value: number) => { setGameId(value) }}
+            >
+                {gameList.map((item: IGame) => <Option key={item.id}>{item.name}</Option>)}
+            </Select>
+            <Button style={{ float: "right" }} type="primary" onClick={() => { setCreateVisiable(true) }}>
                 新建文章
             </Button>
             <Table
@@ -111,13 +143,17 @@ const Article: React.FC = () => {
                 pagination={false}
                 loading={loading}
             />
-             <Pagination
+            <Pagination
                 style={{ marginTop: '10px', float: 'right' }}
                 defaultCurrent={1}
                 total={total}
                 showSizeChanger
                 onChange={page => setPage(page)}
                 onShowSizeChange={size => setSize(size)}
+            />
+            <CreateDialog 
+                visible={createVisible} 
+                onClose={() => {setCreateVisiable(false)}} 
             />
         </>
     )
