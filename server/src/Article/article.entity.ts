@@ -12,7 +12,7 @@ export class Article {
     @Column()
     title: string;
 
-    @Column()
+    @Column('longtext')
     content: string;
 
     @Column()

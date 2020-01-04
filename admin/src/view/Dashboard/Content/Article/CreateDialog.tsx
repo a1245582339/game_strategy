@@ -1,11 +1,13 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Modal, Form, Input, Select, Spin, Upload, Icon, Button } from 'antd';
 import { FormComponentProps } from "antd/es/form";
 import { getArticleDetailApi, createArticleApi } from '@/api/article';
-import { ContentUtils } from 'braft-utils'
+import { UploadFile, UploadChangeParam } from 'antd/lib/upload/interface';
 import { getGameApi } from '@/api/game';
-import BraftEditor from 'braft-editor'
-import 'braft-editor/dist/index.css'
+import { Editor } from 'react-draft-wysiwyg';
+import { EditorState } from 'draft-js';
+import draftToHtml from 'draftjs-to-html';
+import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 
 const { Option } = Select;
 interface IFormProps extends FormComponentProps {
@@ -19,14 +21,15 @@ interface IGame {
 
 const CreateDialog: React.FC<IFormProps> = props => {
     const [gameId, setGameId] = useState(0)
+    const [coverPath, setCoverPath] = useState<UploadFile[]>([])
     const [searchLoading, setSearchLoading] = useState(false)
     const [gameList, setGameList] = useState<IGame[]>([])
-    const [content, setContent] = useState(BraftEditor.createEditorState(null))
+    const [content, setContent] = useState<EditorState>(EditorState.createEmpty())
     const { getFieldDecorator } = props.form
     const handleOk = () => {
         props.form.validateFields(async (err, value) => {
             if (!err) {
-                
+                console.log(value, draftToHtml(value.content))
             }
         })
     }
@@ -34,23 +37,27 @@ const CreateDialog: React.FC<IFormProps> = props => {
         if (value) {
             setSearchLoading(true)
             const result = await getGameApi<{ list: IGame[] }>({ name: value, page: 0, size: 20 })
-            setGameList(result.list.map(item => ({id: item.id, name: item.name})))
+            setGameList(result.list.map(item => ({ id: item.id, name: item.name })))
             setTimeout(() => {
                 setSearchLoading(false)
             }, 300)
         } else {
             setGameList([])
         }
-        
-    }
-    const handleEditorChange = (editorState: any) => {
-        setContent(editorState)
+
     }
     const handleCancel = () => {
         props.onClose()
     }
+    const handleUpload = (info: UploadChangeParam) => {
+        setCoverPath([info.fileList[info.fileList.length - 1]])
+    }
+    const handlePreview = (file: UploadFile) => {
+        window.open(file.response.path)
+    }
     return (
         <Modal
+            style={{ top: 20 }}
             width={1200}
             title="新建文章"
             visible={props.visible}
@@ -62,13 +69,14 @@ const CreateDialog: React.FC<IFormProps> = props => {
                 <Form.Item label="名称">
                     {getFieldDecorator('name', {
                         rules: [{ required: true, message: '请输入名称！' }],
+                        initialValue: ''
                     })(<Input />)}
                 </Form.Item>
                 <Form.Item label="游戏">
                     {getFieldDecorator('gameId', {
                         rules: [{ required: true, message: '请选择游戏！' }],
                     })(<Select
-                        style={{width: 300, marginLeft: 10}}
+                        style={{ width: 300, marginLeft: 10 }}
                         showSearch
                         allowClear
                         placeholder="请搜索游戏名称选择游戏"
@@ -80,37 +88,31 @@ const CreateDialog: React.FC<IFormProps> = props => {
                         {gameList.map((item: IGame) => <Option key={item.id}>{item.name}</Option>)}
                     </Select>)}
                 </Form.Item>
-                <Form.Item label="名称">
-                    {getFieldDecorator('name', {
-                        rules: [{ required: true, message: '请输入名称！' }],
-                        initialValue: content
-                    })(<BraftEditor
-                        onChange={handleEditorChange}
-                        extendControls={[
-                            {
-                              key: 'antd-uploader',
-                              type: 'component',
-                              component: (
-                                <Upload
-                                  accept="image/*"
-                                  showUploadList={false}
-                                  action='/api/v1/upload'
-                                  onChange={() => {
-                                      setContent(ContentUtils.insertMedias(content, [{
-                                        type: 'IMAGE',
-                                        url: URL.createObjectURL
-                                      }]))
-                                  }}
-                                >
-                                  {/* 这里的按钮最好加上type="button"，以避免在表单容器中触发表单提交，用Antd的Button组件则无需如此 */}
-                                  <Button>
-                                    插入图片
-                                    <Icon type="picture" theme="filled" />
-                                  </Button>
-                                </Upload>
-                              )
-                            }
-                          ]}
+                <Form.Item label="封面">
+                    {getFieldDecorator('cover', {
+                    })(<Upload
+                        name='file'
+                        accept="image/*"
+                        action='/api/v1/upload'
+                        fileList={coverPath}
+                        onChange={handleUpload}
+                        listType='picture'
+                        onPreview={handlePreview}
+                    >
+                        <Button>
+                            <Icon type="upload" />点击上传封面
+                        </Button>
+                    </Upload>)}
+
+                </Form.Item>
+                <Form.Item label="内容">
+                    {getFieldDecorator('content', {
+                        initialValue: ''
+                    })(<Editor
+                        editorState={content}
+                        onEditorStateChange={(value: EditorState) => {
+                            setContent(value)
+                        }}
                     />)}
                 </Form.Item>
             </Form>

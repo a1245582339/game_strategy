@@ -57,9 +57,6 @@ const GameEditDialog: React.FC<IFormProps<IGame>> = (props) => {
     const handleUpload = (info: UploadChangeParam) => {
         setCoverPath([info.fileList[info.fileList.length - 1]])
     }
-    const handleRemoveCover = () => {
-        setCoverPath([])
-    }
     const handlePreview = (file: UploadFile) => {
         window.open(file.response.path)
     }
@@ -94,7 +91,6 @@ const GameEditDialog: React.FC<IFormProps<IGame>> = (props) => {
                         fileList={coverPath}
                         onChange={handleUpload}
                         listType='picture'
-                        onRemove={handleRemoveCover}
                         onPreview={handlePreview}
                     >
                         <Button>
