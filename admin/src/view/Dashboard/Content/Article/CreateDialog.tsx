@@ -1,13 +1,14 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { Modal, Form, Input, Select, Spin, Upload, Icon, Button } from 'antd';
+import React, { useState } from 'react';
+import { Modal, Form, Input, Select, Spin, Upload, Icon, Button, message } from 'antd';
 import { FormComponentProps } from "antd/es/form";
-import { getArticleDetailApi, createArticleApi } from '@/api/article';
+import { createArticleApi } from '@/api/article';
 import { UploadFile, UploadChangeParam } from 'antd/lib/upload/interface';
 import { getGameApi } from '@/api/game';
 import { Editor } from 'react-draft-wysiwyg';
-import { EditorState } from 'draft-js';
-import draftToHtml from 'draftjs-to-html';
+import { EditorState, convertToRaw } from 'draft-js';
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
+import http from '@/api/config'
+import draftToHtml from 'draftjs-to-html';
 
 const { Option } = Select;
 interface IFormProps extends FormComponentProps {
@@ -20,7 +21,6 @@ interface IGame {
 }
 
 const CreateDialog: React.FC<IFormProps> = props => {
-    const [gameId, setGameId] = useState(0)
     const [coverPath, setCoverPath] = useState<UploadFile[]>([])
     const [searchLoading, setSearchLoading] = useState(false)
     const [gameList, setGameList] = useState<IGame[]>([])
@@ -29,7 +29,10 @@ const CreateDialog: React.FC<IFormProps> = props => {
     const handleOk = () => {
         props.form.validateFields(async (err, value) => {
             if (!err) {
-                console.log(value, draftToHtml(value.content))
+                const data = { ...value, content: draftToHtml(convertToRaw(content.getCurrentContent())), cover: value.cover ? value.cover.file.response.path : '' }
+                await createArticleApi(data)
+                message.success('创建成功')
+                props.onClose()
             }
         })
     }
@@ -66,8 +69,8 @@ const CreateDialog: React.FC<IFormProps> = props => {
             destroyOnClose={true}
         >
             <Form layout="vertical">
-                <Form.Item label="名称">
-                    {getFieldDecorator('name', {
+                <Form.Item label="标题">
+                    {getFieldDecorator('title', {
                         rules: [{ required: true, message: '请输入名称！' }],
                         initialValue: ''
                     })(<Input />)}
@@ -83,7 +86,6 @@ const CreateDialog: React.FC<IFormProps> = props => {
                         onSearch={handleSearch}
                         filterOption={false}
                         notFoundContent={searchLoading ? <Spin size="small" /> : null}
-                        onChange={(value: number) => { setGameId(value) }}
                     >
                         {gameList.map((item: IGame) => <Option key={item.id}>{item.name}</Option>)}
                     </Select>)}
@@ -108,12 +110,30 @@ const CreateDialog: React.FC<IFormProps> = props => {
                 <Form.Item label="内容">
                     {getFieldDecorator('content', {
                         initialValue: ''
-                    })(<Editor
+                    })(<div style={{ border: '1px solid #ddd' }}><Editor
                         editorState={content}
                         onEditorStateChange={(value: EditorState) => {
                             setContent(value)
                         }}
-                    />)}
+                        localization={{
+                            locale: 'zh'
+                        }}
+                        toolbar={{
+                            image: {
+                                urlEnabled: false,
+                                defaultSize: {
+                                    height: 'auto',
+                                    width: '100%',
+                                  },
+                                uploadCallback: async (img: File) => {
+                                    var data = new FormData()
+                                    data.append('file', img)
+                                    const res: any = await http.post('/upload', data)
+                                    return { data: { link: res.path } }
+                                }
+                            }
+                        }}
+                    /></div>)}
                 </Form.Item>
             </Form>
         </Modal>

@@ -5,6 +5,7 @@ import { getArticleListApi, delArticleApi } from '@/api/article'
 import { getGameApi } from '@/api/game';
 import { formatDate } from '@/utils/time'
 import CreateDialog from './CreateDialog';
+import PreviewDialog from './PreviewDialog'
 
 import styled from 'styled-components';
 
@@ -59,7 +60,7 @@ const Article: React.FC = () => {
         render(_text: any, record: any) {
             return (
                 <Button.Group>
-                    <Button type="primary" size="small" icon="eye" onClick={() => handleClickDel(record.id)}>预览</Button>
+                    <Button type="primary" size="small" icon="eye" onClick={() => { setPreviewVisiable(true); setPreiviewId(record.id) }}>预览</Button>
                     <Button type="danger" size="small" icon="delete" onClick={() => handleClickDel(record.id)}>删除</Button>
                 </Button.Group>
             )
@@ -74,6 +75,8 @@ const Article: React.FC = () => {
     const [loading, setLoading] = useState(false)
     const [searchLoading, setSearchLoading] = useState(false)
     const [createVisible, setCreateVisiable] = useState(false)
+    const [previewId, setPreiviewId] = useState<number>()
+    const [previewVisible, setPreviewVisiable] = useState(false)
     const [gameList, setGameList] = useState<IGame[]>([])
     const fetchData = useCallback(async () => {
         setLoading(true)
@@ -154,6 +157,11 @@ const Article: React.FC = () => {
             <CreateDialog 
                 visible={createVisible} 
                 onClose={() => {setCreateVisiable(false)}} 
+            />
+            <PreviewDialog 
+                id={previewId}
+                visible={previewVisible}  
+                onClose={() => {setPreviewVisiable(false)}} 
             />
         </>
     )
