@@ -156,6 +156,7 @@ const Article: React.FC = () => {
             />
             <CreateDialog 
                 visible={createVisible} 
+                fetchData={fetchData}
                 onClose={() => {setCreateVisiable(false)}} 
             />
             <PreviewDialog 

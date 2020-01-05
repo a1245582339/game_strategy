@@ -34,11 +34,15 @@ const PreviewDialog: React.FC<IProps> = (props) => {
     useEffect(() => {
         getDetail()
     }, [getDetail])
+    const handleCancel = () => {
+        props.onClose()
+    }
     return (
         <Modal
             title={detail?.title || ''}
-
             visible={props.visible}
+            onOk={handleCancel}
+            onCancel={handleCancel}
         >
             {(detail?.content && !loading) ?
                 <div dangerouslySetInnerHTML={{__html: detail?.content}}></div> :

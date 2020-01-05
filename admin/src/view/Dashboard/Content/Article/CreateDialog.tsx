@@ -13,6 +13,7 @@ import draftToHtml from 'draftjs-to-html';
 const { Option } = Select;
 interface IFormProps extends FormComponentProps {
     visible: boolean
+    fetchData(): void
     onClose(): void
 }
 interface IGame {
@@ -33,6 +34,7 @@ const CreateDialog: React.FC<IFormProps> = props => {
                 await createArticleApi(data)
                 message.success('创建成功')
                 props.onClose()
+                props.fetchData()
             }
         })
     }

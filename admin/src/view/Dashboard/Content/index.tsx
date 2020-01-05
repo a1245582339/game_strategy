@@ -5,6 +5,7 @@ import User from './User'
 import Home from './Home'
 import Game from './Game'
 import Article from './Article'
+import Password from './Password'
 
 const Content: React.FC = () => {
     return (
@@ -24,6 +25,9 @@ const Content: React.FC = () => {
                 </Route>
                 <Route path="/dashboard/article" >
                     <Article />
+                </Route>
+                <Route path="/dashboard/password" >
+                    <Password />
                 </Route>
             </Switch>
         </Layout.Content>

@@ -15,8 +15,8 @@
     "path": "article",
     "icon": "read"
 }, {
-    "title": "个人信息",
-    "path": "me",
+    "title": "修改密码",
+    "path": "password",
     "icon": "idcard"
 }, {
     "title": "管理员管理",
