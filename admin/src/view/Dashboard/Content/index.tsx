@@ -6,6 +6,8 @@ import Home from './Home'
 import Game from './Game'
 import Article from './Article'
 import Password from './Password'
+import Admin from './Admin'
+import Nofound from '../../404';
 
 const Content: React.FC = () => {
     return (
@@ -28,6 +30,12 @@ const Content: React.FC = () => {
                 </Route>
                 <Route path="/dashboard/password" >
                     <Password />
+                </Route>
+                <Route path="/dashboard/admin" >
+                    <Admin />
+                </Route>
+                <Route>
+                    <Nofound />
                 </Route>
             </Switch>
         </Layout.Content>

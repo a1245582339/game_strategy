@@ -3,6 +3,7 @@ import { Menu, Icon, Layout } from 'antd';
 import { useHistory, useLocation } from "react-router-dom";
 import styled from 'styled-components';
 import sidebarData from '@/json/sidebar.json';
+import store from '@/store';
 
 const { Sider } = Layout;
 const Logo = styled.div`
@@ -15,11 +16,7 @@ const Sidebar: React.FC<{ collapsed: boolean }> = ({ collapsed }) => {
     const { pathname } = useLocation()
     const [defaultKey, setDefaultKey] = useState('home')
     useEffect(() => {
-        // console.log(collapsed)
-    }, [collapsed])
-    useEffect(() => {
         const route = pathname.replace('/dashboard/', '')
-        console.log(route)
         setDefaultKey(route)
     }, [pathname])
     const handleClick = (key: string) => {
@@ -29,7 +26,7 @@ const Sidebar: React.FC<{ collapsed: boolean }> = ({ collapsed }) => {
         <Sider collapsible collapsed={collapsed} trigger={null} >
             <Logo />
             <Menu theme="dark" selectedKeys={[defaultKey]} mode="inline">
-                {sidebarData.map(item =>
+                {sidebarData.filter(item => !item.auth || store.getState().role === 1).map(item =>
                     <Menu.Item key={item.path} onClick={({ key }) => handleClick(key)}>
                         <Icon type={item.icon} />
                         <span>{item.title}</span>

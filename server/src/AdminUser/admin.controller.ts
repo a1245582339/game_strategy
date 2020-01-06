@@ -16,13 +16,13 @@ export class AdminUserController {
     ){}
     
     @UseGuards(AdminGuard)
-    @Get('user')
+    @Get()
     async get(@Res() res: Response, @Query() query: AdminDto) {
         try {
             const adminList = await this.adminUserService.get({...query, role: 2})
             res.json({
                 msg: 'Admin list',
-                data: adminList
+                list: adminList
             })
         } catch (err) {
             throw err
@@ -58,7 +58,7 @@ export class AdminUserController {
     }
 
     @UseGuards(AdminGuard)
-    @Post('user')
+    @Post()
     async create(@Res() res: Response, @Body() body:AdminDto) {
         try {
             if (await this.adminUserService.create(body)) {
@@ -77,7 +77,7 @@ export class AdminUserController {
     }
 
     @UseGuards(AdminGuard)
-    @Put('user/:id')
+    @Put('/:id')
     async update(@Param('id', new ParseIntPipe()) id:number, @Body() body:AdminDto, @Res() res: Response) {
         try {
             await this.adminUserService.update(id, body)

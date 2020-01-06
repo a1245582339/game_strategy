@@ -1,4 +1,3 @@
-import { combineReducers } from 'redux';
 import { UserAction } from './action'
 
 const defaultState = {
@@ -10,13 +9,11 @@ const defaultState = {
 const reducer = (state = defaultState, action: UserAction) => {
     switch (action.type) {
         case 'SET_USR_INFO':
-            return { ...state, ...action.value };
+            return action.value;
         case 'DEL_USER_INFO':
-            return { defaultState }
+            return defaultState
         default:
             return state
     }
 }
-export default combineReducers({
-    reducer
-})
+export default reducer

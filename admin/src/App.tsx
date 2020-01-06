@@ -16,6 +16,15 @@ const App: React.FC = () => {
           <Route path="/dashboard" >
             <View.Dashboard />
           </Route>
+          <Route path="/401" >
+            <View.NoPermission />
+          </Route>
+          <Route path="/404" >
+            <View.NoFound />
+          </Route>
+          <Route>
+            <View.NoFound />
+          </Route>
         </Switch>
       </BrowserRouter>
   );

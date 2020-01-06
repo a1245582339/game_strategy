@@ -21,5 +21,6 @@
 }, {
     "title": "管理员管理",
     "path": "admin",
-    "icon": "lock"
+    "icon": "lock",
+    "auth": true
 }]
