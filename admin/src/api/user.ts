@@ -6,3 +6,7 @@ export const loginApi = <T, U>(body: { name: string, password: string }): Promis
 export const getUserInfoApi = <T>() :Promise<T> => {
     return http.get(`${domain}/me`)
 }
+
+export const changePasswordApi = <T>(body: {password: string; old_password: string}) :Promise<T> => {
+    return http.put(`${domain}/changePassword`, body)
+}

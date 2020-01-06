@@ -5,6 +5,7 @@ import { useHistory } from "react-router-dom";
 import styled from 'styled-components';
 import { loginApi } from '@/api/user'
 import { setToken } from '@/utils/cookie'
+import md5 from "js-md5";
 
 const Title = styled.div`
 	text-align: center;
@@ -30,8 +31,7 @@ const LoginCard: React.FC<IUserFormProps> = props => {
 		e.preventDefault();
 		props.form.validateFields(async (err, values) => {
 			if (!err) {
-				console.log("Received values of form: ", values);
-				const res = await loginApi<ILoginResSucc, ILoginResErr>(values)
+				const res = await loginApi<ILoginResSucc, ILoginResErr>({ name: values.name, password: md5(values.password) })
 				if (res.code) {
 					message.error('用户名密码错误，请重试')
 				} else {
