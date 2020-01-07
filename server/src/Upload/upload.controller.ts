@@ -9,7 +9,6 @@ export class UploaderController {
     @Post()
     @UseInterceptors(FileInterceptor('file'))
     async upload(@UploadedFile() file: any, @Res() res: Response) {
-        console.log('file????', file)
         const path = await this.uploaderService.saveFile(file)
         res.json({
             path

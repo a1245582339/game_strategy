@@ -4,8 +4,8 @@ import { ParseIntPipe } from '@nestjs/common/pipes/parse-int.pipe';
 import { ClientDto } from './client.dto'
 import { ClientUserService } from './client.service'
 import { decode } from 'jsonwebtoken'
-import { AuthGuard } from '@nestjs/passport'
 import { EditorGuard } from '../guard/editor.guard'
+import getIp from '../utils/getIp'
 
 @Controller('api/v1/client')
 export class ClientUserController {
@@ -24,7 +24,7 @@ export class ClientUserController {
             const [userList, total] = await this.clientUserService.get(_query, page, size)
             res.json({
                 msg: 'Client user list',
-                list: userList,
+                list: userList.map(item => ({ ...item, cover: `http://${getIp()}${item.avatar}`})),
                 total
             })
         } catch (err) {

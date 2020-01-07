@@ -4,6 +4,7 @@ import { ParseIntPipe } from '@nestjs/common/pipes/parse-int.pipe';
 import { GameService } from './game.service'
 import { GameDto } from './game.dto'
 import { AuthGuard } from '@nestjs/passport'
+import getIp from '../utils/getIp'
 
 @Controller('api/v1/game')
 export class GameController {
@@ -15,7 +16,7 @@ export class GameController {
             const [gameList, total] = await this.gameService.getByname(name, page, size, categoryId)
             res.json({
                 msg: 'Game list',
-                list: gameList,
+                list: gameList.map(item => ({ ...item, cover: `http://${getIp()}${item.cover}`})),
                 total
             })
         } catch (err) {
@@ -27,7 +28,7 @@ export class GameController {
     @Post()
     async create(@Body() body: GameDto, @Res() res: Response) {
         try {
-            const cover = body.cover || 'http://localhost:3000/public/defaultCover.png'
+            const cover = body.cover || '/public/defaultCover.png'
             await this.gameService.create({ ...body, cover })
             res.json({
                 msg: 'Ok'

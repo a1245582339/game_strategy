@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../component/ArticleListItem.dart';
-import '../../api/config.dart';
+import '../../utils/config.dart';
 import '../../component/Loadmore.dart';
 
 class Home extends StatefulWidget {
@@ -11,6 +11,7 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   List data = [];
   int page = 0;
+  bool loadingMore = true;
   ScrollController _scrollController = ScrollController();
   @override
   void initState() {
@@ -45,7 +46,7 @@ class _HomeState extends State<Home> {
 
   _fetchData() {
     // 获取数据
-    return Http().get('/article', params: {'page': this.page.toString()});
+    return Http().get('/article', params: {'page': this.page.toString(), 'size': '20'});
   }
 
   @override
@@ -63,7 +64,10 @@ class _HomeState extends State<Home> {
                 }).toList(),
               ),
             )),
-            Loadmore()
+            Offstage(
+              offstage: !this.loadingMore,
+              child: Loadmore(),
+            )
           ],
         ));
   }
