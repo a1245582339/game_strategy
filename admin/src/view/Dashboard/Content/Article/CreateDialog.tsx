@@ -52,6 +52,7 @@ const CreateDialog: React.FC<IFormProps> = props => {
 
     }
     const handleCancel = () => {
+        setContent(EditorState.createEmpty())
         props.onClose()
     }
     const handleUpload = (info: UploadChangeParam) => {

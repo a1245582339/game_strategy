@@ -66,7 +66,8 @@ export class AdminUserController {
                     msg: 'Ok'
                 })
             } else {
-                res.status(HttpStatus.CONFLICT).json({
+                res.json({
+                    code: 20009,
                     msg: 'Name exist'
                 })
             }

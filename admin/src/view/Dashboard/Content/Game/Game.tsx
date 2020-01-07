@@ -74,7 +74,6 @@ const Game: React.FC<{ categoryId: number }> = ({ categoryId }) => {
         setVisiable(false)
     }
     const onSubmit = async (body: IGame) => {
-        console.log(body.id)
         body.id ?
             await editGameApi(body.id, body) :
             await addGameApi({ ...body, categoryId})
