@@ -1,12 +1,11 @@
 import 'dart:convert';
-
-import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' as http;
 class Http {
-  static const _host = 'http://192.168.43.135:3000/api/v1';
+  static const _host = 'http://10.4.34.116:3000/api/v1';
   get (String uri, { Map<String, String> params, bool auth = false }) async {
     String url = _getfullUrl(uri, params: params);
     var res = await http.get(url);
+    print(res);
     if (res.statusCode == 200) {
       return jsonDecode(res.body);
     }
@@ -22,5 +21,4 @@ class Http {
     }
     return url;
   }
-  
 } 

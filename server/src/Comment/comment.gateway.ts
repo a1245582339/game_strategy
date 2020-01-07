@@ -18,26 +18,14 @@ export class CommentGateway implements
 
     @WebSocketServer()
     server: Server // server实例,在这里即namespace为'/'的server
-
-    //#region 生命周期事件
-
-    // 初始化
     afterInit(server: Server) {
     
     }
-    
-    // 连接
     handleConnection(client: Client) {
 
     }
-    
-    // 断开连接
     handleDisconnect(client: Client) {
-
     }
-
-    //#endregion
-
     // 注册事件
     @SubscribeMessage('event')
     handle(client: Client, data: any) {

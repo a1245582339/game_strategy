@@ -1,7 +1,6 @@
-import 'dart:convert';
-import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import '../../api/config.dart';
+import './platform.dart';
 
 class Category extends StatefulWidget {
   @override
@@ -17,17 +16,18 @@ class _CategoryState extends State<Category> {
     _getData();
   }
   _getData() async {
-    data = (await Http().get('/category/all'))['data'];
-    print(data);
+    data = (await Http().get('/category/all'))['data'][0]['list'];
+    setState(() {
+      this.data = data;
+    });
   }
   @override
   Widget build(BuildContext context) {
     return Container(
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          // children: data.map((item) {
-          //   Text(item['name']);
-          // }),
+        child: Column(
+          children: this.data.map((platform) {
+            return Platform(title: platform['name'], category: platform['list'],);
+          }).toList()
         )
     );
   }

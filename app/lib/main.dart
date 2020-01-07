@@ -10,7 +10,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Flutter Demo',
-      // debugShowCheckedModeBanner: false,
+      debugShowCheckedModeBanner: false,
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
@@ -29,15 +29,12 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   int _currentIndex = 0;
-  List<Widget> pages= [];
+  List<Widget> pages = [];
 
   @override
-  void initState() { 
+  void initState() {
     super.initState();
-    pages
-      ..add(Home())
-      ..add(Category())
-      ..add(Follow());
+    pages..add(Home())..add(Category())..add(Follow());
   }
 
   @override
@@ -49,7 +46,7 @@ class _MyHomePageState extends State<MyHomePage> {
       body: pages[_currentIndex],
       bottomNavigationBar: BottomNavigationBar(
           items: [
-            (BottomNavigationBarItem(icon: Icon(Icons.home), title: Text('首页'))),
+            BottomNavigationBarItem(icon: Icon(Icons.home), title: Text('首页')),
             BottomNavigationBarItem(
                 icon: Icon(Icons.category), title: Text('分类')),
             BottomNavigationBarItem(

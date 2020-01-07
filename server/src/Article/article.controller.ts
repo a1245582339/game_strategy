@@ -13,7 +13,7 @@ export class ArticleController {
     async getList(@Query() query: any, @Res() res: Response) {
         const { title, page, size, gameId } = query
         let list: any, total: number
-        [list, total] = await this.articleService.getList(title, page || 0, size || 10, gameId)
+        [list, total] = await this.articleService.getList(title || '', page || 0, size || 10, gameId)
         list = list.map((item: any) => ({ ...item, game: item.game.name }))
         res.json({
             msg: 'Article list',
@@ -33,7 +33,8 @@ export class ArticleController {
     @Post()
     async create(@Res() res: Response, @Body() body: ArticleDto) {
         try {
-            await this.articleService.create(body)
+            const cover = body.cover || 'http://localhost:3000/public/defaultCover.png'
+            await this.articleService.create({ ...body, cover})
             res.json({
                 msg: 'ok'
             })

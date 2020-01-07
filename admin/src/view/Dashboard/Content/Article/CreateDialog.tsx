@@ -34,6 +34,8 @@ const CreateDialog: React.FC<IFormProps> = props => {
                 await createArticleApi(data)
                 message.success('创建成功')
                 props.onClose()
+                setContent(EditorState.createEmpty())
+                setCoverPath([])
                 props.fetchData()
             }
         })
@@ -53,6 +55,7 @@ const CreateDialog: React.FC<IFormProps> = props => {
     }
     const handleCancel = () => {
         setContent(EditorState.createEmpty())
+        setCoverPath([])
         props.onClose()
     }
     const handleUpload = (info: UploadChangeParam) => {
