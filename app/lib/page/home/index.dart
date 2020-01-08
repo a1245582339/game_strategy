@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 import 'package:flutter/material.dart';
 import '../../component/ArticleListItem.dart';
 import '../../utils/config.dart';
@@ -11,7 +13,7 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   List data = [];
   int page = 0;
-  bool loadingMore = true;
+  bool loadingMore = false;
   ScrollController _scrollController = ScrollController();
   @override
   void initState() {
@@ -41,34 +43,33 @@ class _HomeState extends State<Home> {
       this.data = data['list'];
       this.page = 0;
     });
-    return;
   }
 
   _fetchData() {
     // 获取数据
-    return Http().get('/article', params: {'page': this.page.toString(), 'size': '20'});
+    return Http()
+        .get('/article', params: {'page': this.page.toString(), 'size': '20'});
   }
 
   @override
   Widget build(BuildContext context) {
-    return RefreshIndicator(
-        onRefresh: _onRefesh,
-        child: Column(
-          children: <Widget>[
-            Container(
-                child: Expanded(
+    return Stack(
+      children: <Widget>[
+        Container(
+          child: RefreshIndicator(
+              onRefresh: this._onRefesh,
               child: ListView(
                 controller: _scrollController,
                 children: this.data.map((article) {
                   return ArticleListItem(article: article);
                 }).toList(),
-              ),
-            )),
-            Offstage(
-              offstage: !this.loadingMore,
-              child: Loadmore(),
-            )
-          ],
-        ));
+              )),
+        ),
+        Offstage(
+          offstage: !this.loadingMore,
+          child: Loadmore(),
+        )
+      ],
+    );
   }
 }
