@@ -1,5 +1,4 @@
-import 'dart:ffi';
-
+import 'dart:async';
 import 'package:flutter/material.dart';
 import '../../component/ArticleListItem.dart';
 import '../../utils/config.dart';
@@ -23,7 +22,7 @@ class _HomeState extends State<Home> {
       if (_scrollController.position.pixels ==
           _scrollController.position.maxScrollExtent) {
         setState(() {
-          this.page++;
+          this.loadingMore = true;
         });
         this._getData();
       }
@@ -34,14 +33,19 @@ class _HomeState extends State<Home> {
     var data = await this._fetchData();
     setState(() {
       this.data.addAll(data['list']);
+      this.page++;
     });
   }
 
   Future<Null> _onRefesh() async {
-    var data = await this._fetchData();
     setState(() {
-      this.data = data['list'];
       this.page = 0;
+    });
+    var data = await this._fetchData();
+    await Future.delayed(Duration(milliseconds: 300), () {
+      setState(() {
+        this.data = data['list'];
+      });
     });
   }
 
@@ -53,9 +57,9 @@ class _HomeState extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
+    return Column(
       children: <Widget>[
-        Container(
+        Expanded(
           child: RefreshIndicator(
               onRefresh: this._onRefesh,
               child: ListView(
@@ -65,10 +69,7 @@ class _HomeState extends State<Home> {
                 }).toList(),
               )),
         ),
-        Offstage(
-          offstage: !this.loadingMore,
-          child: Loadmore(),
-        )
+        // Text('data')
       ],
     );
   }

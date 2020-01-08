@@ -25,6 +25,7 @@ class ArticleListItem extends StatelessWidget {
             fit: BoxFit.cover,
           ),
           trailing: Icon(Icons.chevron_right),
+          onTap: () {},
         ),
         Divider()
       ],

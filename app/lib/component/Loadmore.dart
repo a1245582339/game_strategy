@@ -13,7 +13,7 @@ class _LoadmoreState extends State<Loadmore> {
     return Container(
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.end,
         children: <Widget>[
           Container(
               margin: EdgeInsets.only(right: 15.0),
