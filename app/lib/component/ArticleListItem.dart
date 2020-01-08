@@ -1,4 +1,6 @@
+import 'package:app/page/article/index.dart';
 import 'package:flutter/material.dart';
+import '../component/ArticleListItem.dart';
 
 class ArticleListItem extends StatelessWidget {
   final article;
@@ -25,9 +27,17 @@ class ArticleListItem extends StatelessWidget {
             fit: BoxFit.cover,
           ),
           trailing: Icon(Icons.chevron_right),
-          onTap: () {},
+          onTap: () {
+            Navigator.of(context).push(MaterialPageRoute(
+              builder: (context) {
+                print(article['id']);
+                return Article(id: article['id']);
+              }
+            ));
+          },
+          contentPadding: EdgeInsets.fromLTRB(16, 10, 16, 10),
         ),
-        Divider()
+        Divider(height: 1,)
       ],
     );
   }

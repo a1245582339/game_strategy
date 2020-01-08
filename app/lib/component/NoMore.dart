@@ -6,7 +6,8 @@ class Loadmore extends StatefulWidget {
   _LoadmoreState createState() => _LoadmoreState();
 }
 
-class _LoadmoreState extends State<Loadmore> with TickerProviderStateMixin {
+class _LoadmoreState extends State<Loadmore>
+    with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -19,10 +20,13 @@ class _LoadmoreState extends State<Loadmore> with TickerProviderStateMixin {
           Container(
               margin: EdgeInsets.only(right: 15.0),
               child: SpinKitDoubleBounce(
-                color: Theme.of(context).primaryColor,
-                size: 20,
-                controller: AnimationController(vsync: this, duration: const Duration(milliseconds: 800))
-              )),
+                  color: Theme.of(context).primaryColor,
+                  size: 20,
+                  controller: AnimationController(
+                      vsync: this,
+                      duration: const Duration(milliseconds: 800)))),
+          Text('没有更多数据了~', 
+          textAlign: TextAlign.center,)
         ],
       ),
     );

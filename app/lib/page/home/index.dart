@@ -13,6 +13,7 @@ class _HomeState extends State<Home> {
   List data = [];
   int page = 0;
   bool loadingMore = false;
+  bool noMore = false;
   ScrollController _scrollController = ScrollController();
   @override
   void initState() {
@@ -57,20 +58,32 @@ class _HomeState extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: <Widget>[
-        Expanded(
-          child: RefreshIndicator(
-              onRefresh: this._onRefesh,
-              child: ListView(
-                controller: _scrollController,
-                children: this.data.map((article) {
-                  return ArticleListItem(article: article);
-                }).toList(),
-              )),
-        ),
-        // Text('data')
-      ],
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('首页'),
+        actions: <Widget>[
+          IconButton(
+            icon: Icon(Icons.search),
+            onPressed: () {},
+          )
+        ],
+      ),
+      body: Container(
+        child: RefreshIndicator(
+            onRefresh: this._onRefesh,
+            child: ListView.builder(
+              itemCount: data.length + 1,
+              itemBuilder: (BuildContext context, int index) {
+                return index == data.length
+                    ? Offstage(
+                        offstage: !this.loadingMore,
+                        child: Loadmore(),
+                      )
+                    : ArticleListItem(article: data[index]);
+              },
+            )),
+      ),
+      drawer: Drawer(),
     );
   }
 }
