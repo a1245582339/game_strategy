@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:bot_toast/bot_toast.dart';
 import './page/home/index.dart';
 import './page/follow/index.dart';
 import './page/category/index.dart';
@@ -8,13 +9,16 @@ void main() => runApp(MyApp());
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
+    return BotToastInit(
+      child: MaterialApp(
+        title: 'Flutter Demo',
+        navigatorObservers: [BotToastNavigatorObserver()],
+        debugShowCheckedModeBanner: false,
+        theme: ThemeData(
+          primarySwatch: Colors.blue,
+        ),
+        home: MyHomePage(title: 'Flutter Demo Home Page'),
       ),
-      home: MyHomePage(title: 'Flutter Demo Home Page'),
     );
   }
 }

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../utils/config.dart';
+import '../../utils/http.dart';
 import './platform.dart';
 
 class Category extends StatefulWidget {

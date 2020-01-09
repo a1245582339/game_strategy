@@ -1,8 +1,10 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:bot_toast/bot_toast.dart';
 import '../../component/ArticleListItem.dart';
-import '../../utils/config.dart';
+import '../../utils/http.dart';
 import '../../component/Loadmore.dart';
+import '../login/login.dart';
 
 class Home extends StatefulWidget {
   @override
@@ -21,24 +23,39 @@ class _HomeState extends State<Home> {
     this._getData();
     _scrollController.addListener(() {
       if (_scrollController.position.pixels ==
-          _scrollController.position.maxScrollExtent) {
-        // setState(() {
-        //   this.loadingMore = true;
-        // });
+              _scrollController.position.maxScrollExtent) {
         this._getData();
       }
     });
   }
 
   _getData() async {
-    var data = await this._fetchData();
+    if (this.loadingMore && !this.mounted) {
+      return false;
+    }
     setState(() {
-      this.data.addAll(data['list']);
-      this.page++;
+      this.loadingMore = true;
+    });
+    var data = await this._fetchData();
+    print(data);
+    await Future.delayed(Duration(seconds: 1), () {
+      setState(() {
+        print(data['list'].length);
+        if (data['list'].length > 0) {
+          this.data.addAll(data['list']);
+          this.page++;
+        } else {
+          BotToast.showText(text: '没有更多了', duration: Duration(seconds: 1));
+        }
+        this.loadingMore = false;
+      });
     });
   }
 
   Future<Null> _onRefesh() async {
+      if (!this.mounted) {
+          return;
+      }
     setState(() {
       this.page = 0;
     });
@@ -53,7 +70,7 @@ class _HomeState extends State<Home> {
   _fetchData() {
     // 获取数据
     return Http()
-        .get('/article', params: {'page': this.page.toString(), 'size': '20'});
+        .get('/article', params: {'page': this.page.toString(), 'size': '10'});
   }
 
   @override
@@ -64,7 +81,14 @@ class _HomeState extends State<Home> {
         actions: <Widget>[
           IconButton(
             icon: Icon(Icons.search),
-            onPressed: () {},
+            onPressed: () {
+                print('object');
+                Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) {
+                        return Login();
+                    }
+                ));
+            },
           )
         ],
       ),
@@ -72,11 +96,12 @@ class _HomeState extends State<Home> {
         child: RefreshIndicator(
             onRefresh: this._onRefesh,
             child: ListView.builder(
+              controller: _scrollController,
               itemCount: data.length + 1,
               itemBuilder: (BuildContext context, int index) {
                 return index == data.length
                     ? Offstage(
-                        offstage: this.loadingMore,
+                        offstage: !this.loadingMore,
                         child: Loadmore(),
                       )
                     : ArticleListItem(article: data[index]);

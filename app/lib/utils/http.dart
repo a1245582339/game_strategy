@@ -11,6 +11,13 @@ class Http {
       return jsonDecode(res.body);
     }
   }
+  post(String uri, { Map<String, String> body }) async {
+      String url = _getfullUrl(uri);
+      var res = await http.post(url, body: body);
+      if (res.statusCode >= 200 && res.statusCode < 300) {
+        return jsonDecode(res.body);
+    }
+  }
   
   String _getfullUrl (uri, {Map<String, String> params}) {
     String url = _host + uri;

@@ -10,9 +10,9 @@ export class AuthController {
     async getAdminToken(@Body('name') name: string, @Body('password') password: string, @Res() res: Response) {
         const token = await this.authService.createAdminToken(name, password)
         if (token) {
-            res.json({ token })
+            res.status(HttpStatus.OK).json({ token })
         } else {
-            res.json({code: 40001, msg: 'Name or Password error!'})
+            res.status(HttpStatus.OK).json({code: 40001, msg: 'Name or Password error!'})
         }
     }
 
@@ -20,9 +20,9 @@ export class AuthController {
     async getClientToken(@Body('login_name') login_name: string, @Body('password') password: string, @Res() res: Response) {
         const token = await this.authService.createClientToken(login_name, password)
         if (token) {
-            res.json({ token })
+            res.status(HttpStatus.OK).json({ token })
         } else {
-            res.json({code: 40001, msg: 'Name or Password error!'})
+            res.status(HttpStatus.OK).json({code: 40001, msg: 'Name or Password error!'})
         }
     }
 }
