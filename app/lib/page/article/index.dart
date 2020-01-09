@@ -12,6 +12,7 @@ class Article extends StatefulWidget {
 
 class _ArticleState extends State<Article> {
   String _articleDetail = '';
+  String _title = '';
   int id;
   _ArticleState({this.id});
 
@@ -26,12 +27,16 @@ class _ArticleState extends State<Article> {
     print(data["detail"]["content"]);
     setState(() {
       this._articleDetail = data["detail"]["content"];
+      this._title = data["detail"]["title"];
     });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        appBar: AppBar(
+            title: Text(_title),
+        ),
       body: Container(
         child: SingleChildScrollView(
           child: Html(

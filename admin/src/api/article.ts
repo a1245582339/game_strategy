@@ -5,7 +5,7 @@ export const getArticleListApi = <T>(params: { title?: string, page: number, siz
     return http.get(domain, { params })
 }
 export const getArticleDetailApi = <T>(id: number): Promise<T> => {
-    return http.get(`${domain}/detail/${id}`)
+    return http.get(`${domain}/${id}`)
 }
 export const createArticleApi = <T>(body: T) => {
     return http.post(domain, body)
