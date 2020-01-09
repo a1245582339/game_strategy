@@ -6,28 +6,23 @@ class Loadmore extends StatefulWidget {
   _LoadmoreState createState() => _LoadmoreState();
 }
 
-class _LoadmoreState extends State<Loadmore> {
-  bool loading = true;
+class _LoadmoreState extends State<Loadmore> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     return Container(
+      padding: EdgeInsets.fromLTRB(0, 5, 0, 0),
+      height: 50,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.end,
         children: <Widget>[
           Container(
               margin: EdgeInsets.only(right: 15.0),
-              child: SpinKitRotatingCircle(
-                color: Colors.white,
-                size: 50.0,
+              child: SpinKitDoubleBounce(
+                color: Theme.of(context).primaryColor,
+                size: 20,
+                controller: AnimationController(vsync: this, duration: const Duration(milliseconds: 800))
               )),
-          (!loading
-              ? Text(
-                  "正在加载...慌什么慌",
-                )
-              : Text("正在加载...慌什么慌",
-                  style:
-                      TextStyle(fontWeight: FontWeight.bold, fontSize: 28.0))),
         ],
       ),
     );

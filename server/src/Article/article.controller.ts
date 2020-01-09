@@ -22,7 +22,7 @@ export class ArticleController {
             total
         })
     }
-    @Get('detail/:id')
+    @Get('/:id')
     async getDetail(@Param('id', new ParseIntPipe()) id:number, @Res() res: Response) {
         const detail = (await this.articleService.getDetail(id))
         res.json({

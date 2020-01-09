@@ -1,5 +1,4 @@
-import 'dart:ffi';
-
+import 'dart:async';
 import 'package:flutter/material.dart';
 import '../../component/ArticleListItem.dart';
 import '../../utils/config.dart';
@@ -14,6 +13,7 @@ class _HomeState extends State<Home> {
   List data = [];
   int page = 0;
   bool loadingMore = false;
+  bool noMore = false;
   ScrollController _scrollController = ScrollController();
   @override
   void initState() {
@@ -23,7 +23,7 @@ class _HomeState extends State<Home> {
       if (_scrollController.position.pixels ==
           _scrollController.position.maxScrollExtent) {
         setState(() {
-          this.page++;
+          this.loadingMore = true;
         });
         this._getData();
       }
@@ -34,14 +34,19 @@ class _HomeState extends State<Home> {
     var data = await this._fetchData();
     setState(() {
       this.data.addAll(data['list']);
+      this.page++;
     });
   }
 
   Future<Null> _onRefesh() async {
-    var data = await this._fetchData();
     setState(() {
-      this.data = data['list'];
       this.page = 0;
+    });
+    var data = await this._fetchData();
+    await Future.delayed(Duration(milliseconds: 300), () {
+      setState(() {
+        this.data = data['list'];
+      });
     });
   }
 
@@ -53,23 +58,32 @@ class _HomeState extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: <Widget>[
-        Container(
-          child: RefreshIndicator(
-              onRefresh: this._onRefesh,
-              child: ListView(
-                controller: _scrollController,
-                children: this.data.map((article) {
-                  return ArticleListItem(article: article);
-                }).toList(),
-              )),
-        ),
-        Offstage(
-          offstage: !this.loadingMore,
-          child: Loadmore(),
-        )
-      ],
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('首页'),
+        actions: <Widget>[
+          IconButton(
+            icon: Icon(Icons.search),
+            onPressed: () {},
+          )
+        ],
+      ),
+      body: Container(
+        child: RefreshIndicator(
+            onRefresh: this._onRefesh,
+            child: ListView.builder(
+              itemCount: data.length + 1,
+              itemBuilder: (BuildContext context, int index) {
+                return index == data.length
+                    ? Offstage(
+                        offstage: !this.loadingMore,
+                        child: Loadmore(),
+                      )
+                    : ArticleListItem(article: data[index]);
+              },
+            )),
+      ),
+      drawer: Drawer(),
     );
   }
 }
