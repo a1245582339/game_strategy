@@ -44,6 +44,7 @@ class _HomeState extends State<Home> {
         if (data['list'].length > 0) {
           this.data.addAll(data['list']);
           this.page++;
+          print(page);
         } else {
           BotToast.showText(text: '没有更多了', duration: Duration(seconds: 1));
         }
@@ -63,6 +64,9 @@ class _HomeState extends State<Home> {
     await Future.delayed(Duration(milliseconds: 300), () {
       setState(() {
         this.data = data['list'];
+        setState(() {
+          this.page++;
+        });
       });
     });
   }

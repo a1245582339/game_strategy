@@ -28,16 +28,17 @@ class ArticleListItem extends StatelessWidget {
           ),
           trailing: Icon(Icons.chevron_right),
           onTap: () {
-            Navigator.of(context).push(MaterialPageRoute(
-              builder: (context) {
-                print(article['id']);
+            Future.delayed(Duration(milliseconds: 200), () {
+              Navigator.of(context).push(MaterialPageRoute(builder: (context) {
                 return Article(id: article['id']);
-              }
-            ));
+              }));
+            });
           },
           contentPadding: EdgeInsets.fromLTRB(16, 10, 16, 10),
         ),
-        Divider(height: 1,)
+        Divider(
+          height: 1,
+        )
       ],
     );
   }

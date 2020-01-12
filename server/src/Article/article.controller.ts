@@ -27,7 +27,7 @@ export class ArticleController {
         const detail = (await this.articleService.getDetail(id))
         res.json({
             msg: 'Article list',
-            detail: { ...detail, cover: `http://${getIp()}${detail.cover}` }
+            detail: { ...detail, cover: `http://${getIp()}${detail.cover}`, content: detail.content.replace(/src="/g, `src="http://${getIp()}`) }
         })
     }
     @UseGuards(AuthGuard('jwt'))
