@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'dart:convert';
 import 'package:bot_toast/bot_toast.dart';
 import 'package:crypto/crypto.dart';
-// import 'package:shared_preferences/shared_preferences.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../../utils/http.dart';
 
 class Login extends StatefulWidget {
@@ -124,8 +124,8 @@ class _LoginState extends State<Login> {
                                     BotToast.showText(text: '登录名或密码错误，请重试');
                                 });
                             } else {
-                                // SharedPreferences prefs = await SharedPreferences.getInstance();
-                                // await prefs.setString('token', res['token']);
+                                SharedPreferences prefs = await SharedPreferences.getInstance();
+                                await prefs.setString('token', res['token']);
                                 Future.delayed(Duration(seconds: 1), () {
                                     BotToast.showText(text: '登录成功，欢迎回来～');
                                     BotToast.closeAllLoading();
