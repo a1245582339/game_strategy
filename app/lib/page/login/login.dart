@@ -126,6 +126,8 @@ class _LoginState extends State<Login> {
                             } else {
                                 SharedPreferences prefs = await SharedPreferences.getInstance();
                                 await prefs.setString('token', res['token']);
+                                final userInfo = await Http().get('/client/myDetail', auth: true);
+                                await prefs.setString('userInfo', userInfo);
                                 Future.delayed(Duration(seconds: 1), () {
                                     BotToast.showText(text: '登录成功，欢迎回来～');
                                     BotToast.closeAllLoading();

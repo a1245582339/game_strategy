@@ -42,7 +42,10 @@ export class ClientUserController {
                 data: myDetail
             })
         } catch (error) {
-            throw error
+            res.json({
+                code: 40001,
+                msg: 'Token missing'
+            })
         }
         
     }

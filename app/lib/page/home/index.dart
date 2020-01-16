@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:bot_toast/bot_toast.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../../component/ArticleListItem.dart';
 import '../../utils/http.dart';
 import '../../component/Loadmore.dart';
@@ -21,9 +22,10 @@ class _HomeState extends State<Home> {
   void initState() {
     super.initState();
     this._getData();
+    this._getUserInfo();
     _scrollController.addListener(() {
       if (_scrollController.position.pixels ==
-              _scrollController.position.maxScrollExtent) {
+          _scrollController.position.maxScrollExtent) {
         this._getData();
       }
     });
@@ -53,10 +55,16 @@ class _HomeState extends State<Home> {
     });
   }
 
+  _getUserInfo() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var userInfo = await prefs.get('token');
+    print('token' + userInfo);
+  }
+
   Future<Null> _onRefesh() async {
-      if (!this.mounted) {
-          return;
-      }
+    if (!this.mounted) {
+      return;
+    }
     setState(() {
       this.page = 0;
     });
@@ -86,12 +94,10 @@ class _HomeState extends State<Home> {
           IconButton(
             icon: Icon(Icons.search),
             onPressed: () {
-                print('object');
-                Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) {
-                        return Login();
-                    }
-                ));
+              print('object');
+              Navigator.of(context).push(MaterialPageRoute(builder: (context) {
+                return Login();
+              }));
             },
           )
         ],
@@ -112,7 +118,24 @@ class _HomeState extends State<Home> {
               },
             )),
       ),
-      drawer: Drawer(),
+      drawer: Drawer(
+        child: ListView(
+          padding: EdgeInsets.zero,
+          children: <Widget>[
+            UserAccountsDrawerHeader(
+              accountName: Text('data'),
+              accountEmail: Text('123123'),
+              currentAccountPicture: CircleAvatar(
+                child: Text('R'),
+              ),
+            ),
+            ListTile(
+              leading: Icon(Icons.settings),
+              title: Text('设置'),
+            )
+          ],
+        ),
+      ),
     );
   }
 }
