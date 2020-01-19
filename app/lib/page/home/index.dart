@@ -1,7 +1,9 @@
 import 'dart:async';
+import 'package:app/store/index.dart';
 import 'package:flutter/material.dart';
 import 'package:bot_toast/bot_toast.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:provider/provider.dart';
 import '../../component/ArticleListItem.dart';
 import '../../utils/http.dart';
 import '../../component/Loadmore.dart';
@@ -57,8 +59,10 @@ class _HomeState extends State<Home> {
 
   _getUserInfo() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    var userInfo = await prefs.get('token');
-    print('token' + userInfo);
+    var token = await prefs.get('token');
+    if (token != '') {
+        print(Provider.of<Store>(context, listen: false).getUserInfo);
+    }
   }
 
   Future<Null> _onRefesh() async {

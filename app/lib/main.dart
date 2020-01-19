@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:bot_toast/bot_toast.dart';
+import './store/index.dart';
 import './page/home/index.dart';
 import './page/follow/index.dart';
 import './page/category/index.dart';
@@ -9,15 +11,24 @@ void main() => runApp(MyApp());
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return BotToastInit(
-      child: MaterialApp(
-        title: 'Flutter Demo',
-        navigatorObservers: [BotToastNavigatorObserver()],
-        debugShowCheckedModeBanner: false,
-        theme: ThemeData(
-          primarySwatch: Colors.blue,
-        ),
-        home: MyHomePage(title: 'Flutter Demo Home Page'),
+    return MultiProvider(
+      providers: [
+          ChangeNotifierProvider(create: (_) => Store(),)
+      ],
+      child: Consumer<Store>(
+        builder: (context, store, _) {
+          return BotToastInit(
+            child: MaterialApp(
+              title: 'Flutter Demo',
+              navigatorObservers: [BotToastNavigatorObserver()],
+              debugShowCheckedModeBanner: false,
+              theme: ThemeData(
+                primarySwatch: Colors.blue,
+              ),
+              home: MyHomePage(title: 'Flutter Demo Home Page'),
+            ),
+          );
+        },
       ),
     );
   }
