@@ -31,7 +31,7 @@ export class ClientUserController {
             throw err
         }
     }
-    @Get('myDetail')
+    @Get('me')
     async getMe(@Req() req:any, @Res() res: Response) {
         try {
             const token = req.headers.authorization.split(' ')[1]

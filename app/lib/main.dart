@@ -1,10 +1,14 @@
+import 'package:app/component/appBar/home.dart';
+import 'package:app/component/appBar/notice.dart';
+import 'package:app/component/appBar/category.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:bot_toast/bot_toast.dart';
 import './store/index.dart';
 import './page/home/index.dart';
-import './page/follow/index.dart';
+import './page/notice/index.dart';
 import './page/category/index.dart';
+import './utils/userInfo.dart';
 
 void main() => runApp(MyApp());
 
@@ -13,7 +17,9 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-          ChangeNotifierProvider(create: (_) => Store(),)
+        ChangeNotifierProvider(
+          create: (_) => Store(),
+        )
       ],
       child: Consumer<Store>(
         builder: (context, store, _) {
@@ -45,16 +51,20 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   int _currentIndex = 0;
   List<Widget> pages = [];
-
+    List<Widget> appBar = [];
   @override
   void initState() {
     super.initState();
-    pages..add(Home())..add(Category())..add(Follow());
+    appBar..add(HomeBar())..add(CategoryBar())..add(NoticeBar());
+    pages..add(Home())..add(Category())..add(Notice());
+    
+    UserInfo(context);
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: appBar[_currentIndex],
       body: pages[_currentIndex],
       bottomNavigationBar: BottomNavigationBar(
           items: [
@@ -62,7 +72,7 @@ class _MyHomePageState extends State<MyHomePage> {
             BottomNavigationBarItem(
                 icon: Icon(Icons.category), title: Text('分类')),
             BottomNavigationBarItem(
-                icon: Icon(Icons.notifications), title: Text('关注')),
+                icon: Icon(Icons.notifications), title: Text('通知')),
           ],
           currentIndex: _currentIndex,
           onTap: (int index) {
@@ -70,6 +80,28 @@ class _MyHomePageState extends State<MyHomePage> {
               _currentIndex = index;
             });
           }),
+      drawer: Drawer(
+        child: ListView(
+          padding: EdgeInsets.zero,
+          children: <Widget>[
+            Provider.of<Store>(context).getUserInfo['id'] != null
+                ? UserAccountsDrawerHeader(
+                    accountName: Text(Provider.of<Store>(context)
+                            .getUserInfo['nick_name'] ??
+                        Provider.of<Store>(context).getUserInfo['login_name']),
+                    accountEmail: Text('123123'),
+                    currentAccountPicture: CircleAvatar(
+                      child: Text('R'),
+                    ),
+                  )
+                : Text('123'),
+            ListTile(
+              leading: Icon(Icons.settings),
+              title: Text('设置'),
+            )
+          ],
+        ),
+      ),
     );
   }
 }

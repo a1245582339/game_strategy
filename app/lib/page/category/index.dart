@@ -26,9 +26,6 @@ class _CategoryState extends State<Category> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('分类'),
-      ),
       body: Container(
         child: Container(
             child: Column(

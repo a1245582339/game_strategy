@@ -6,5 +6,9 @@ class Store with ChangeNotifier {
       this._userInfo = userInfo;
       notifyListeners();
   }
+  void clearUserInfo () {
+      this._userInfo = {};
+      notifyListeners();
+  }
   get getUserInfo => this._userInfo;
 }

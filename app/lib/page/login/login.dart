@@ -4,6 +4,7 @@ import 'package:bot_toast/bot_toast.dart';
 import 'package:crypto/crypto.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../utils/http.dart';
+import '../../utils/userInfo.dart';
 
 class Login extends StatefulWidget {
   @override
@@ -126,8 +127,7 @@ class _LoginState extends State<Login> {
                             } else {
                                 SharedPreferences prefs = await SharedPreferences.getInstance();
                                 await prefs.setString('token', res['token']);
-                                final userInfo = await Http().get('/client/myDetail', auth: true);
-                                await prefs.setString('userInfo', userInfo);
+                                UserInfo(context);
                                 Future.delayed(Duration(seconds: 1), () {
                                     BotToast.showText(text: '登录成功，欢迎回来～');
                                     BotToast.closeAllLoading();
