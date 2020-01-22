@@ -30,7 +30,7 @@ packages:
     source: hosted
     version: "1.0.5"
   bot_toast:
-    dependency: "direct dev"
+    dependency: "direct main"
     description:
       name: bot_toast
       url: "https://pub.flutter-io.cn"
@@ -84,14 +84,19 @@ packages:
     source: sdk
     version: "0.0.0"
   flutter_html:
-    dependency: "direct dev"
+    dependency: "direct main"
     description:
       name: flutter_html
       url: "https://pub.flutter-io.cn"
     source: hosted
     version: "0.11.1"
+  flutter_localizations:
+    dependency: "direct main"
+    description: flutter
+    source: sdk
+    version: "0.0.0"
   flutter_spinkit:
-    dependency: "direct dev"
+    dependency: "direct main"
     description:
       name: flutter_spinkit
       url: "https://pub.flutter-io.cn"
@@ -115,7 +120,7 @@ packages:
     source: hosted
     version: "0.14.0+3"
   http:
-    dependency: "direct dev"
+    dependency: "direct main"
     description:
       name: http
       url: "https://pub.flutter-io.cn"
@@ -135,6 +140,13 @@ packages:
       url: "https://pub.flutter-io.cn"
     source: hosted
     version: "2.1.4"
+  intl:
+    dependency: transitive
+    description:
+      name: intl
+      url: "https://pub.flutter-io.cn"
+    source: hosted
+    version: "0.16.0"
   matcher:
     dependency: transitive
     description:
@@ -178,7 +190,7 @@ packages:
     source: hosted
     version: "2.4.0"
   provider:
-    dependency: "direct dev"
+    dependency: "direct main"
     description:
       name: provider
       url: "https://pub.flutter-io.cn"
@@ -192,7 +204,7 @@ packages:
     source: hosted
     version: "2.0.5"
   shared_preferences:
-    dependency: "direct dev"
+    dependency: "direct main"
     description:
       name: shared_preferences
       url: "https://pub.flutter-io.cn"

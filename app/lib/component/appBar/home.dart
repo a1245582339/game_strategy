@@ -1,5 +1,5 @@
+import 'package:app/page/search/index.dart';
 import 'package:flutter/material.dart';
-import '../../page/login/login.dart';
 class HomeBar extends StatelessWidget implements PreferredSizeWidget {
   const HomeBar({Key key}) : super(key: key);
 
@@ -12,7 +12,7 @@ class HomeBar extends StatelessWidget implements PreferredSizeWidget {
             icon: Icon(Icons.search),
             onPressed: () {
               Navigator.of(context).push(MaterialPageRoute(builder: (context) {
-                return Login();
+                return Search();
               }));
             },
           )
