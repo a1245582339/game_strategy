@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Search extends StatefulWidget {
   @override
@@ -10,8 +11,8 @@ class Search extends StatefulWidget {
 class _SearchState extends State<Search> {
   @override
   Widget build(BuildContext context) {
-    return new Scaffold(
-        appBar: new AppBar(
+    return Scaffold(
+        appBar: AppBar(
 //      centerTitle: true,
       backgroundColor: Theme.of(context).primaryColor,
       title: TextFileWidget(),
@@ -39,6 +40,7 @@ class TextFileWidget extends StatelessWidget {
     //theme设置局部主题
     return TextField(
       cursorColor: Color(0xff666666),
+      textInputAction: TextInputAction.search,
       decoration: InputDecoration(
           fillColor: Colors.white,
           border: InputBorder.none,
@@ -47,8 +49,17 @@ class TextFileWidget extends StatelessWidget {
             color: Color(0xff666666),
           ),
           hintText: "请输入关键字",
-          hintStyle: TextStyle(fontSize: 14, color: Color(0xff666666), height: 1.2, textBaseline: TextBaseline.alphabetic)),
-          style: TextStyle(fontSize: 14, color: Colors.black),
+          hintStyle: TextStyle(
+              fontSize: 14,
+              color: Color(0xff666666),
+              height: 1.2,
+              textBaseline: TextBaseline.alphabetic)),
+      style: TextStyle(fontSize: 14, color: Colors.black),
+      onSubmitted: (str) async {
+        SharedPreferences prefs = await SharedPreferences.getInstance();
+        final history = await prefs.get('searchHistory');
+        await prefs.setString('searchHistory', history);
+      },
     );
   }
 
@@ -68,8 +79,6 @@ class TextFileWidget extends StatelessWidget {
         child: buildTextField(),
       );
     }
-
-    var cancleView = new Text("cancle");
 
     return editView();
   }
