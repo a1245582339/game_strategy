@@ -23,6 +23,19 @@ export class GameController {
             throw err
         }
     }
+
+    @Get('/byFullName')
+    async getByFullName(@Query('name') name: string, @Res() res: Response) {
+        try {
+            const game = await this.gameService.getByFullname(name)
+            res.json({
+                msg: 'Game list',
+                game
+            })
+        } catch (err) {
+            throw err
+        }
+    }
     
     @UseGuards(AuthGuard('jwt'))
     @Post()

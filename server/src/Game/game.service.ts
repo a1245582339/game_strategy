@@ -30,6 +30,14 @@ export class GameService {
         })
         return [gameList, total]
     }
+
+    async getByFullname(name: string): Promise<Game> {
+        const game = await this.gameService.findOne({
+            name, 
+            del: 0
+        })
+        return game
+    }
     
     async create(body: GameDto): Promise<Game> {
         const create = await this.gameService.save(body)
