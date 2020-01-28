@@ -1,6 +1,7 @@
 import 'package:app/component/appBar/home.dart';
 import 'package:app/component/appBar/notice.dart';
 import 'package:app/component/appBar/category.dart';
+import 'package:app/page/login/register.dart';
 import 'package:app/page/setting/index.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -94,7 +95,8 @@ class _MyHomePageState extends State<MyHomePage> {
                     accountEmail:
                         Text(Provider.of<Store>(context).getUserInfo['email']),
                     currentAccountPicture: CircleAvatar(
-                      child: Text('R'),
+                      backgroundImage: NetworkImage(
+                          Provider.of<Store>(context).getUserInfo['avatar']),
                     ),
                   )
                 : DrawerHeader(
@@ -106,11 +108,13 @@ class _MyHomePageState extends State<MyHomePage> {
                         children: <Widget>[
                           Text(
                             '登录后有新天地',
-                            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold, fontSize: 20),
                           ),
-                          Text('让你体验私人定制', style: TextStyle(color: Color(0xFF666666))),
+                          Text('让你体验私人定制',
+                              style: TextStyle(color: Color(0xFF666666))),
                           SizedBox(
-                              height: 10,
+                            height: 10,
                           ),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -125,7 +129,16 @@ class _MyHomePageState extends State<MyHomePage> {
                                       width: 1),
                                   shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(5)),
-                                  onPressed: () {},
+                                  onPressed: () async {
+                                    await Future.delayed(
+                                        Duration(milliseconds: 200), () {
+                                      Navigator.of(context).pop();
+                                      Navigator.of(context).push(
+                                          MaterialPageRoute(builder: (context) {
+                                        return Register();
+                                      }));
+                                    });
+                                  },
                                 ),
                               ),
                               Container(
@@ -139,11 +152,15 @@ class _MyHomePageState extends State<MyHomePage> {
                                   disabledTextColor: Colors.white,
                                   shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(5)),
-                                  onPressed: () {
+                                  onPressed: () async {
+                                    await Future.delayed(
+                                        Duration(milliseconds: 200), () {
                                       Navigator.of(context).pop();
-                                      Navigator.of(context).push(MaterialPageRoute(builder: (context) {
+                                      Navigator.of(context).push(
+                                          MaterialPageRoute(builder: (context) {
                                         return Login();
-                                    }));
+                                      }));
+                                    });
                                   },
                                 ),
                               )
@@ -156,25 +173,22 @@ class _MyHomePageState extends State<MyHomePage> {
             ListTile(
               leading: Icon(Icons.star_border),
               title: Text('我的收藏'),
-              onTap: () {
-
-              },
+              onTap: () {},
             ),
             ListTile(
               leading: Icon(Icons.notifications_none),
               title: Text('我的关注'),
-              onTap: () {
-                  
-              },
+              onTap: () {},
             ),
             ListTile(
               leading: Icon(Icons.settings),
               title: Text('设置'),
               onTap: () {
-                  Navigator.of(context).pop();
-                  Navigator.of(context).push(MaterialPageRoute(builder: (context) {
-                      return Setting();
-                  }));
+                Navigator.of(context).pop();
+                Navigator.of(context)
+                    .push(MaterialPageRoute(builder: (context) {
+                  return Setting();
+                }));
               },
             ),
           ],

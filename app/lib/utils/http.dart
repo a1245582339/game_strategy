@@ -22,7 +22,7 @@ class Http {
     }
   }
 
-  post(String uri, {Map<String, String> body, bool auth = false}) async {
+  post(String uri, {body, bool auth = false}) async {
     String url = _getfullUrl(uri);
     var res;
     if (auth) {

@@ -78,7 +78,8 @@ export class ClientUserController {
                     msg: 'Ok'
                 })
             } else {
-                res.status(HttpStatus.CONFLICT).json({
+                res.json({
+                    code: 40009,
                     msg: 'Name exist'
                 })
             }

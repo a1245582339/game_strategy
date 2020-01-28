@@ -30,7 +30,7 @@ export class GameController {
             const game = await this.gameService.getByFullname(name)
             res.json({
                 msg: 'Game list',
-                game
+                game: {...game, cover: `http://${getIp()}${game.cover}`}
             })
         } catch (err) {
             throw err
