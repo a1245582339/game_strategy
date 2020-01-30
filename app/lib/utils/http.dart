@@ -39,6 +39,23 @@ class Http {
     }
   }
 
+  delete(String uri, {bool auth = false}) async {
+    String url = _getfullUrl(uri);
+    var res;
+    if (auth) {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      final token = await prefs.get('token');
+      res = await http
+          .delete(url, headers: {'Authorization': 'bearer ' + token});
+    } else {
+      res = await http.delete(url);
+    }
+
+    if (res.statusCode >= 200 && res.statusCode < 300) {
+      return jsonDecode(res.body);
+    }
+  }
+
   String _getfullUrl(uri, {Map<String, String> params}) {
     String url = _host + uri;
     if (params != null) {

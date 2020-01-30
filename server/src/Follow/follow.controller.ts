@@ -36,7 +36,7 @@ export class FollowController {
             throw error
         }
     }
-    @Delete('delByid')
+    @Put('delByid')
     async delById(@Body('ids') ids:[], @Res() res: Response) {
         try {
             await Promise.all(ids.map(id => this.followService.delById(id)))

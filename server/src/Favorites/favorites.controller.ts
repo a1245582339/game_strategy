@@ -4,7 +4,7 @@ import { decode } from 'jsonwebtoken'
 import { ParseIntPipe } from '@nestjs/common/pipes/parse-int.pipe';
 import { FavortiesService } from './favorites.service';
 
-@Controller('api/v1/favorties')
+@Controller('api/v1/favorites')
 export class FavortiesController {
     constructor(private readonly favortiesServies: FavortiesService) {}
     @Get()
@@ -22,6 +22,23 @@ export class FavortiesController {
             throw error
         }
     }
+
+    @Get('ifFavorite')
+    async getIfFavorite(@Res() res: Response, @Req() req: Request, @Query() query: any) {
+        const { articleId } = query
+        try {
+            const token = req.headers.authorization.split(' ')[1]
+            const { id }: any = decode(token)
+            const ifFavorite = await this.favortiesServies.getIfFavorite(id, articleId)
+            res.json({
+                msg: 'If Favorite',
+                ifFavorite
+            })
+        } catch (error) {
+            throw error
+        }
+    }
+
     @Post()
     async create(@Res() res: Response, @Req() req: Request, @Body('articleId', new ParseIntPipe()) articleId: number) {
         const token = req.headers.authorization.split(' ')[1]
@@ -35,7 +52,7 @@ export class FavortiesController {
             throw error
         }
     }
-    @Delete('delByid')
+    @Put('delByid')
     async delById(@Body('ids') ids:[], @Res() res: Response) {
         try {
             await Promise.all(ids.map(id => this.favortiesServies.delById(id)))
@@ -49,9 +66,9 @@ export class FavortiesController {
     @Delete('cancel/:articleId')
     async del(@Param('articleId', new ParseIntPipe()) articleId:number, @Res() res: Response, @Req() req: Request) {
         const token = req.headers.authorization.split(' ')[1]
-        const { userId }: any = decode(token)
+        const { id }: any = decode(token)
         try {
-            await this.favortiesServies.cancel(userId, articleId)
+            await this.favortiesServies.cancel(id, articleId)
             res.json({
                 msg: 'ok'
             })

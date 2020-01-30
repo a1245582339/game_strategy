@@ -21,7 +21,10 @@ export class CommentService {
                     articleId, del: 0
                 },
                 skip: page * size, 
-                take: size
+                take: size,
+                order: {
+                    create_time: 'DESC'
+                }
             })
             const getReplyUser = (userId: number) => {
                 return this.clientUserService.getOne(userId)
@@ -68,7 +71,7 @@ export class CommentService {
         }, { read: 1 })
     }
     async create (body: CommentDto): Promise<Comment> {
-        return this.commentService.save({ ...body, create_time: Date.now().toString() })
+        return this.commentService.save({ ...body, create_time: Date.now().toString(), read: 0 })
     }
     async del (id: number, userId: number): Promise<boolean> {
         const del = await this.commentService.update({ id, userId, del: 0 }, { del: 1 })

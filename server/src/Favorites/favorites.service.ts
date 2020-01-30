@@ -22,6 +22,11 @@ export class FavortiesService {
             }
         })
     }
+    async getIfFavorite(userId: number, articleId: number): Promise<boolean> {
+        return !!(await this.favortiesService.findOne({
+            userId, articleId
+        }))
+    }
     create(userId: number, articleId: number): Promise<Favorties> {
         return this.favortiesService.save({
             userId, articleId, create_time: Date.now().toString()
@@ -40,6 +45,7 @@ export class FavortiesService {
                 userId
             }
         })
-        return this.favortiesService.remove(favorties)
+        await this.favortiesService.remove(favorties)
+        return true
     }
 }
