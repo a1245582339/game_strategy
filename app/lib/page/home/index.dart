@@ -11,8 +11,9 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  List data = [];
-  int page = 0;
+  List _data = [];
+  List<Widget> _articleList = [Loadmore()];
+  int _page = 0;
   bool loadingMore = false;
   bool noMore = false;
   ScrollController _scrollController = ScrollController();
@@ -23,7 +24,8 @@ class _HomeState extends State<Home> {
     _scrollController.addListener(() {
       if (_scrollController.position.pixels ==
           _scrollController.position.maxScrollExtent) {
-        this._getData();
+        _page++;
+        _getData();
       }
     });
   }
@@ -36,19 +38,25 @@ class _HomeState extends State<Home> {
       this.loadingMore = true;
     });
     var data = await this._fetchData();
-    print(data);
     await Future.delayed(Duration(seconds: 1), () {
-      setState(() {
-        print(data['list'].length);
-        if (data['list'].length > 0) {
-          this.data.addAll(data['list']);
-          this.page++;
-          print(page);
-        } else {
+      if (data['list'].length > 0) {
+        setState(() {
+          _data.addAll(data['list']);
+          _articleList = _data.map<Widget>((item) {
+            return ArticleListItem(
+              article: item,
+            );
+          }).toList();
+          _articleList.add(Loadmore());
+        });
+      } else {
+        setState(() {
+          _page--;
           BotToast.showText(text: '没有更多了', duration: Duration(seconds: 1));
-        }
-        this.loadingMore = false;
-      });
+        });
+        _scrollController.animateTo(_scrollController.position.maxScrollExtent - 50,
+            duration: Duration(seconds: 1), curve: Curves.ease);
+      }
     });
   }
 
@@ -57,15 +65,12 @@ class _HomeState extends State<Home> {
       return;
     }
     setState(() {
-      this.page = 0;
+      this._page = 0;
     });
     var data = await this._fetchData();
     await Future.delayed(Duration(milliseconds: 300), () {
       setState(() {
-        this.data = data['list'];
-        setState(() {
-          this.page++;
-        });
+        this._data = data['list'];
       });
     });
   }
@@ -73,30 +78,19 @@ class _HomeState extends State<Home> {
   _fetchData() {
     // 获取数据
     return Http()
-        .get('/article', params: {'page': this.page.toString(), 'size': '10'});
+        .get('/article', params: {'page': this._page.toString(), 'size': '10'});
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      
       body: Container(
-        child: RefreshIndicator(
-            onRefresh: this._onRefesh,
-            child: ListView.builder(
-              controller: _scrollController,
-              itemCount: data.length + 1,
-              itemBuilder: (BuildContext context, int index) {
-                return index == data.length
-                    ? Offstage(
-                        offstage: !this.loadingMore,
-                        child: Loadmore(),
-                      )
-                    : ArticleListItem(article: data[index]);
-              },
-            )),
-      ),
-      
+          child: RefreshIndicator(
+              onRefresh: this._onRefesh,
+              child: ListView(
+                children: _articleList,
+                controller: _scrollController,
+              ))),
     );
   }
 }
