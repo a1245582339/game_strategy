@@ -14,8 +14,7 @@ class _HomeState extends State<Home> {
   List _data = [];
   List<Widget> _articleList = [Loadmore()];
   int _page = 0;
-  bool loadingMore = false;
-  bool noMore = false;
+  bool _loadingMore = false;
   ScrollController _scrollController = ScrollController();
   @override
   void initState() {
@@ -31,11 +30,11 @@ class _HomeState extends State<Home> {
   }
 
   _getData() async {
-    if (this.loadingMore && !this.mounted) {
+    if (_loadingMore && !this.mounted) {
       return false;
     }
     setState(() {
-      this.loadingMore = true;
+      _loadingMore = true;
     });
     var data = await this._fetchData();
     await Future.delayed(Duration(seconds: 1), () {

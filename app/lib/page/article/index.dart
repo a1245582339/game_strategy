@@ -28,6 +28,7 @@ class _ArticleState extends State<Article> {
   String _replyName = '';
   bool _noMore = false;
   bool _hasFavorite = false;
+  ScrollController _scrollController = ScrollController();
 
   @override
   void initState() {
@@ -38,6 +39,13 @@ class _ArticleState extends State<Article> {
           _replyId = 0;
           _replyName = '';
         });
+      }
+    });
+    _scrollController.addListener(() {
+      if (_scrollController.position.pixels ==
+          _scrollController.position.maxScrollExtent) {
+        _page++;
+        _getComment();
       }
     });
     _getData();
@@ -63,13 +71,11 @@ class _ArticleState extends State<Article> {
   _getComment() async {
     final res = await Http().get('/comment',
         params: {'articleId': id.toString(), 'page': _page.toString()});
-
+    if (res['list'].length == 0) {
+      BotToast.showText(text: '没有更多了', duration: Duration(seconds: 1));
+    }
     setState(() {
-      if (_page == 0) {
-        _commentList = res['list'];
-      } else {
-        _commentList.addAll(res['list']);
-      }
+      _commentList.addAll(res['list']);
     });
   }
 
@@ -201,18 +207,18 @@ class _ArticleState extends State<Article> {
                   case 'favorite':
                     {
                       if (_hasFavorite) {
-                        await Http().delete('/favorites/cancel/$id', auth: true);
+                        await Http()
+                            .delete('/favorites/cancel/$id', auth: true);
                         setState(() {
                           _hasFavorite = false;
                         });
                       } else {
                         await Http().post('/favorites',
-                          body: {'articleId': id.toString()}, auth: true);
+                            body: {'articleId': id.toString()}, auth: true);
                         setState(() {
                           _hasFavorite = true;
                         });
                       }
-                      
                     }
                     break;
                   case 'game':
@@ -256,7 +262,10 @@ class _ArticleState extends State<Article> {
               padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
               child: Stack(
                 children: <Widget>[
-                  ListView(children: _renderArticle()),
+                  ListView(
+                    children: _renderArticle(),
+                    controller: _scrollController,
+                  ),
                   Positioned(
                     bottom: 0,
                     left: 0,

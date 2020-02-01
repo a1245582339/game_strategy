@@ -12,7 +12,7 @@ export class CommentService {
         private readonly commentService: Repository<Comment>,
         private readonly clientUserService: ClientUserService
     ) {}
-    async getComments (articleId: number, page: number = 0, size: number = 0): Promise<[any[], number]> {
+    async getComments (articleId: number, page: number = 0, size: number = 10): Promise<[any[], number]> {
         // 获取文章评论
         const getCommentsDetail = async () => {
             const comments: any = await this.commentService.find({

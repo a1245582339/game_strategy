@@ -1,4 +1,5 @@
 import 'package:app/component/ArticleListItem.dart';
+import 'package:app/component/Loadmore.dart';
 import 'package:app/page/search/index.dart';
 import 'package:app/utils/http.dart';
 import 'package:flutter/material.dart';
@@ -83,9 +84,14 @@ class _ResultListState extends State<ResultList> {
 
   final String _str;
   int _page = 0;
+  List _data = [];
+  List<Widget> _articleList = [Loadmore()];
+  bool _loadingMore = false;
   bool _noMore = false;
-  Map _game = null;
+  ScrollController _scrollController = ScrollController();
+  Map _game;
   List _article = [];
+  
 
   _fetchData() async {
     if (_page == 0) {
@@ -122,7 +128,7 @@ class _ResultListState extends State<ResultList> {
   _renderData() {
     List<Widget> widgetList = [];
     if (_game != null) {
-      widgetList.add(ListTile(
+      widgetList.insert(0, ListTile(
         leading: Container(
           height: 50,
           width: 50,
@@ -148,7 +154,7 @@ class _ResultListState extends State<ResultList> {
         },
       ));
     }
-    widgetList.addAll(_article.map((item) {
+    widgetList.insertAll(1, _article.map((item) {
       return ArticleListItem(
         article: item,
       );
