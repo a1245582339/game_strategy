@@ -79,14 +79,18 @@ class _ResultListState extends State<ResultList> {
   @override
   void initState() {
     super.initState();
+    _scrollController.addListener(() {
+      if (_scrollController.position.pixels ==
+          _scrollController.position.maxScrollExtent && _noMore) {
+        _page++;
+        _fetchData();
+      }
+    });
     _fetchData();
   }
 
   final String _str;
   int _page = 0;
-  List _data = [];
-  List<Widget> _articleList = [Loadmore()];
-  bool _loadingMore = false;
   bool _noMore = false;
   ScrollController _scrollController = ScrollController();
   Map _game;
@@ -94,18 +98,19 @@ class _ResultListState extends State<ResultList> {
   
 
   _fetchData() async {
-    if (_page == 0) {
+    if (_page == 0) { // 第一页请求游戏和文章
       Future.wait([_getGame(), _getArticle()]).then((List responses) {
         setState(() {
-          _game = responses[0]['game'];
-          print(_game);
+          if (responses[0] != null) {
+            _game = responses[0]['game'];
+          }
           _article.addAll(responses[1]['list']);
           if (responses[1]['list'].length < 10) {
             _noMore = true;
           }
         });
       });
-    } else {
+    } else {  // 之后的每页只请求文章
       final res = await _getArticle();
       setState(() {
         _article.addAll(res['list']);
@@ -128,7 +133,7 @@ class _ResultListState extends State<ResultList> {
   _renderData() {
     List<Widget> widgetList = [];
     if (_game != null) {
-      widgetList.insert(0, ListTile(
+      widgetList.add(ListTile(
         leading: Container(
           height: 50,
           width: 50,
@@ -154,11 +159,14 @@ class _ResultListState extends State<ResultList> {
         },
       ));
     }
-    widgetList.insertAll(1, _article.map((item) {
+    widgetList.addAll(_article.map((item) {
       return ArticleListItem(
         article: item,
       );
     }));
+    if (!_noMore) {
+      widgetList.add(Loadmore());
+    }
     return widgetList;
   }
 
@@ -166,6 +174,7 @@ class _ResultListState extends State<ResultList> {
   Widget build(BuildContext context) {
     return Container(
       child: ListView(
+        controller: _scrollController,
         children: _renderData(),
       ),
     );

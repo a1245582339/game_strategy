@@ -19,7 +19,7 @@ class _HomeState extends State<Home> {
   @override
   void initState() {
     super.initState();
-    this._getData();
+    _getData();
     _scrollController.addListener(() {
       if (_scrollController.position.pixels ==
           _scrollController.position.maxScrollExtent) {
@@ -36,7 +36,7 @@ class _HomeState extends State<Home> {
     setState(() {
       _loadingMore = true;
     });
-    var data = await this._fetchData();
+    var data = await _fetchData();
     await Future.delayed(Duration(seconds: 1), () {
       if (data['list'].length > 0) {
         setState(() {

@@ -26,7 +26,6 @@ class _ArticleState extends State<Article> {
   int _page = 0;
   int _replyId = 0;
   String _replyName = '';
-  bool _noMore = false;
   bool _hasFavorite = false;
   ScrollController _scrollController = ScrollController();
 
@@ -71,7 +70,7 @@ class _ArticleState extends State<Article> {
   _getComment() async {
     final res = await Http().get('/comment',
         params: {'articleId': id.toString(), 'page': _page.toString()});
-    if (res['list'].length == 0) {
+    if (res['list'].length == 0 && _page > 0) {
       BotToast.showText(text: '没有更多了', duration: Duration(seconds: 1));
     }
     setState(() {
