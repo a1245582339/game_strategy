@@ -39,6 +39,25 @@ class Http {
     }
   }
 
+  put(String uri, {body, bool auth = false}) async {
+    print(body);
+    String url = _getfullUrl(uri);
+    var res;
+    if (auth) {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      final token = await prefs.get('token');
+      res = await http
+          .put(url, body: body, headers: {'Authorization': 'bearer ' + token});
+      print(res);
+    } else {
+      res = await http.post(url, body: body);
+    }
+
+    if (res.statusCode >= 200 && res.statusCode < 300) {
+      return jsonDecode(res.body);
+    }
+  }
+
   delete(String uri, {bool auth = false}) async {
     String url = _getfullUrl(uri);
     var res;

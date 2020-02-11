@@ -3,6 +3,7 @@ import { Response, Request } from 'express';
 import { decode } from 'jsonwebtoken'
 import { ParseIntPipe } from '@nestjs/common/pipes/parse-int.pipe';
 import { FavortiesService } from './favorites.service';
+import getIp from '../utils/getIp'
 
 @Controller('api/v1/favorites')
 export class FavortiesController {
@@ -13,7 +14,9 @@ export class FavortiesController {
         try {
             const token = req.headers.authorization.split(' ')[1]
             const { id }: any = decode(token)
-            const favortiesList = await this.favortiesServies.get(id, page, size)
+            const favortiesList = (await this.favortiesServies.get(id, page, size)).map(item => {
+                return { ...item, article: { ...item.article, cover: `http://${getIp()}${item.article.cover}` } }
+            })
             res.json({
                 msg: 'Favorties list',
                 list: favortiesList
@@ -53,9 +56,9 @@ export class FavortiesController {
         }
     }
     @Put('delByid')
-    async delById(@Body('ids') ids:[], @Res() res: Response) {
+    async delById(@Body('ids') ids:string, @Res() res: Response) {
         try {
-            await Promise.all(ids.map(id => this.favortiesServies.delById(id)))
+            await Promise.all(JSON.parse(ids).map(id => this.favortiesServies.delById(id)))
             res.json({
                 msg: 'ok'
             })
