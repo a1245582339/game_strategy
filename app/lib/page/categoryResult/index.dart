@@ -1,18 +1,24 @@
 import 'dart:async';
+import 'package:app/component/GameListItem.dart';
 import 'package:flutter/material.dart';
 import 'package:bot_toast/bot_toast.dart';
-import '../../component/ArticleListItem.dart';
 import '../../utils/http.dart';
 import '../../component/Loadmore.dart';
 
-class Home extends StatefulWidget {
+class CategoryResult extends StatefulWidget {
+  final int _id;
+  final String _name;
+  CategoryResult(this._id, this._name);
   @override
-  _HomeState createState() => _HomeState();
+  _CategoryResultState createState() => _CategoryResultState(_id, _name);
 }
 
-class _HomeState extends State<Home> {
+class _CategoryResultState extends State<CategoryResult> {
+  final int _id;
+  final String _name;
+  _CategoryResultState(this._id, this._name);
   List _data = [];
-  List<Widget> _articleList = [Loadmore()];
+  List<Widget> _gameList = [Loadmore()];
   int _page = 0;
   bool _loadingMore = false;
   ScrollController _scrollController = ScrollController();
@@ -37,18 +43,26 @@ class _HomeState extends State<Home> {
       _loadingMore = true;
     });
     var data = await _fetchData();
+    print(data);
     await Future.delayed(Duration(seconds: 1), () {
       if (data['list'].length > 0) {
         setState(() {
           _data.addAll(data['list']);
-          _articleList = _data.map<Widget>((item) {
-            return ArticleListItem(
-              article: item,
+          _gameList = _data.map<Widget>((item) {
+            return GameItem(
+              game: item,
             );
           }).toList();
-          _articleList.add(Loadmore());
+          if (_scrollController.position.maxScrollExtent > 0) {
+            _gameList.add(Loadmore());
+          }
         });
       } else {
+        if (_data.length == 0) {
+          setState(() {
+            _gameList = [];
+          });
+        }
         setState(() {
           _page--;
           BotToast.showText(text: '没有更多了', duration: Duration(seconds: 1));
@@ -77,17 +91,21 @@ class _HomeState extends State<Home> {
   _fetchData() {
     // 获取数据
     return Http()
-        .get('/article', params: {'page': _page.toString(), 'size': '10'});
+        .get('/game', params: {'page': _page.toString(), 'size': '10', 'categoryId': _id.toString() });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Theme.of(context).primaryColor,
+        title: Text(_name),
+      ),
       body: Container(
           child: RefreshIndicator(
               onRefresh: this._onRefesh,
               child: ListView(
-                children: _articleList,
+                children: _gameList,
                 controller: _scrollController,
               ))),
     );

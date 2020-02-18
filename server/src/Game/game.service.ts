@@ -14,6 +14,7 @@ export class GameService {
     ){}
     async getByname(name: string = '', page: number = 0, size: number = 10, categoryId?: number): Promise<[Game[], number]> {
         const total = await this.gameService.count({
+            ... (categoryId ? { categoryId } : {}) ,
             name: Like(`%${name}%`), 
             del: 0
         })

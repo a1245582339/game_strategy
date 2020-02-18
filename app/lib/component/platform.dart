@@ -1,3 +1,4 @@
+import 'package:app/page/categoryResult/index.dart';
 import 'package:flutter/material.dart';
 
 class Platform extends StatelessWidget {
@@ -23,7 +24,9 @@ class Platform extends StatelessWidget {
               return RaisedButton(
                 child: Text(item['name']),
                 onPressed: () {
-                  print(item);
+                  Navigator.of(context).push(MaterialPageRoute(builder: (context) {
+                    return CategoryResult(item['id'], item['name']);
+                  }));
                 },
               );
             }).toList(),

@@ -637,51 +637,6 @@ Content-Type:application/json
 
 ---
 
-### 查询游戏详情
-
-#### 请求
-
-```http
-GET /api/v1/game/detail/:id
-```
-
-#### 参数
-
-```json
-name: 游戏名称
-page: 页码（默认0）
-size: 每页条数（默认10）
-```
-
-#### 响应
-
-```json
-HTTP/1.1 200 OK
-Content-Type:application/json
-{
-    "detail": {
-        "id": 1,
-        "name": "英雄联盟",
-        "desp": "ss'd撒大苏打撒旦",
-        "cover": "www",
-        "categoryId": 19,
-        "del": 0,
-        "category": {
-            "id": 19,
-            "p_id": 7,
-            "l_id": 5,
-            "r_id": 6,
-            "name": "角色扮演",
-            "type": 2,
-            "del": 0
-        }
-    },
-    "msg": "detail"
-}
-```
-
----
-
 ### 新建游戏
 
 #### 请求

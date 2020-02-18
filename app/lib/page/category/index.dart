@@ -1,6 +1,6 @@
+import 'package:app/component/platform.dart';
 import 'package:flutter/material.dart';
 import '../../utils/http.dart';
-import './platform.dart';
 
 class Category extends StatefulWidget {
   @override
