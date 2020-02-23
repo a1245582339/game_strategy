@@ -27,7 +27,7 @@ class GameItem extends StatelessWidget {
           onTap: () {
             Future.delayed(Duration(milliseconds: 200), () {
               Navigator.of(context).push(MaterialPageRoute(builder: (context) {
-                return Game(game);
+                return Game(game['id']);
               }));
             });
           },

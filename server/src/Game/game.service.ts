@@ -32,6 +32,13 @@ export class GameService {
         return [gameList, total]
     }
 
+    async getDetail(id: number): Promise<Game> {
+        return this.gameService.findOne({
+            id, 
+            del: 0
+        })
+    }
+
     async getByFullname(name: string): Promise<Game> {
         const game = await this.gameService.findOne({
             name, 

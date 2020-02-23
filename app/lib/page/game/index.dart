@@ -5,25 +5,27 @@ import 'package:bot_toast/bot_toast.dart';
 import 'package:flutter/material.dart';
 
 class Game extends StatefulWidget {
-  final _game;
-  Game(this._game);
+  final _gameId;
+  Game(this._gameId);
   @override
-  _GameState createState() => _GameState(_game);
+  _GameState createState() => _GameState(_gameId);
 }
 
 class _GameState extends State<Game> {
-  final _game;
+  final _gameId;
+  Map _game = {};
   List _data = [];
   List<Widget> _articleList = [Loadmore()];
   int _page = 0;
   bool _loadingMore = false;
   ScrollController _scrollController = ScrollController();
-  _GameState(this._game);
+  _GameState(this._gameId);
 
   @override
   void initState() {
     super.initState();
     _getArticle();
+    _getGame();
     _scrollController.addListener(() {
       if (_scrollController.position.pixels ==
           _scrollController.position.maxScrollExtent) {
@@ -73,31 +75,42 @@ class _GameState extends State<Game> {
 
   _fetchData() {
     // 获取数据
-    return Http()
-        .get('/article', params: {'gameId': _game['id'].toString(), 'page': _page.toString(), 'size': '10'});
+    return Http().get('/article', params: {
+      'gameId': _gameId.toString(),
+      'page': _page.toString(),
+      'size': '10'
+    });
+  }
+
+  _getGame() async {
+    final result = await Http().get('/game/detail/$_gameId');
+    setState(() {
+      _game = result['game'];
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(_game['name'] + '专区'),
+        title: Text((_game['name'] ?? '') + '专区'),
       ),
       body: Container(
-          child: Column(
+          child: ListView(
+        controller: _scrollController,
         children: <Widget>[
           Container(
               child: Image.network(
-            _game['cover'],
+            _game['cover'] ?? '',
             width: MediaQuery.of(context).size.width,
             height: MediaQuery.of(context).size.width / 16 * 9,
             fit: BoxFit.cover,
           )),
-          Expanded(
-              child: ListView(
+          ListView(
+            shrinkWrap: true,
+            physics: NeverScrollableScrollPhysics(),
             children: _articleList,
-            controller: _scrollController,
-          ))
+          )
         ],
       )),
     );

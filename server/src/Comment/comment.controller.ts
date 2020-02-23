@@ -77,8 +77,8 @@ export class CommentController {
     async create(@Res() res: Response, @Body() body: CommentDto) {
         try {
             const result = await this.commentService.create(body)
-            // this.commentGateway.server.to('123').emit('event', result)
-            // console.log(result)
+            this.commentGateway.server.to('123').emit('event', result)
+            console.log(result)
             res.json({
                 msg: 'Ok'
             })
@@ -86,6 +86,11 @@ export class CommentController {
             throw error
         }
         
+    }
+    @Get('/io')
+    async io() {
+        console.log('12312321321313')
+        this.commentGateway.server.to('123').emit('event', {test: '123'})
     }
     @Put('/read')
     async read(@Res() res: Response, @Body('time') time: string) {

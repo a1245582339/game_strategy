@@ -8,10 +8,10 @@ import {
 } from '@nestjs/websockets';
 import { Client, Server } from 'socket.io';
 
-@WebSocketGateway({namespace: 'comment'})
-export class CommentGateway implements 
-    OnGatewayInit, 
-    OnGatewayConnection, 
+@WebSocketGateway({ namespace: 'comment' })
+export class CommentGateway implements
+    OnGatewayInit,
+    OnGatewayConnection,
     OnGatewayDisconnect { // 实现生命周期的接口
 
     constructor() { }
@@ -19,10 +19,10 @@ export class CommentGateway implements
     @WebSocketServer()
     server: Server // server实例,在这里即namespace为'/'的server
     afterInit(server: Server) {
-    
+        console.log('init')
     }
     handleConnection(client: Client) {
-
+        console.log('co')
     }
     handleDisconnect(client: Client) {
     }

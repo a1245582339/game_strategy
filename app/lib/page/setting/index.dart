@@ -1,3 +1,4 @@
+import 'package:app/page/userInfo/index.dart';
 import 'package:app/store/index.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -16,6 +17,18 @@ class Setting extends StatelessWidget {
         padding: EdgeInsets.all(10),
         child: ListView(
           children: <Widget>[
+            Offstage(
+              offstage: Provider.of<Store>(context).getUserInfo['id'] == null,
+              child: RaisedButton(
+                color: Color(0xFFFDFDFD),
+                child: Text('个人信息'),
+                onPressed: () {
+                  Navigator.of(context).push(MaterialPageRoute(builder: (context) {
+                    return UpdateUserInfo();
+                  }));
+                },
+              ),
+            ),
             Offstage(
               offstage: Provider.of<Store>(context).getUserInfo['id'] == null,
               child: RaisedButton(
@@ -55,7 +68,8 @@ class Setting extends StatelessWidget {
                       });
                 },
               ),
-            )
+            ),
+            
           ],
         ),
       ),

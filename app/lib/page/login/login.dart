@@ -116,7 +116,7 @@ class _LoginState extends State<Login> {
                         borderRadius: BorderRadius.circular(5)),
                     onPressed: _validateForm()
                         ? () async {
-                            // BotToast.showLoading();
+                            BotToast.showLoading();
                             final res = await Http().post('/auth/client/login',
                                 body: {"login_name": loginName, "password": md5.convert(Utf8Encoder().convert(password)).toString()});
                             if (res['code'] == 40001) {

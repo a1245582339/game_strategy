@@ -24,6 +24,19 @@ export class GameController {
         }
     }
 
+    @Get('detail/:id')
+    async getGameDetail(@Param('id', new ParseIntPipe()) id: number, @Res() res: Response) {
+        try {
+            const result = await this.gameService.getDetail(id);
+            res.json({
+                msg: 'Game detail',
+                game: { ...result, ...{ cover: `http://${getIp()}${result.cover}` } }
+            })
+        } catch (error) {
+            throw error
+        }
+    }
+
     @Get('/byFullName')
     async getByFullName(@Query('name') name: string, @Res() res: Response) {
         try {

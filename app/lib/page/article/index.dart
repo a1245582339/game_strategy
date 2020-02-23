@@ -1,3 +1,4 @@
+import 'package:app/page/game/index.dart';
 import 'package:app/store/index.dart';
 import 'package:bot_toast/bot_toast.dart';
 import 'package:flutter/material.dart';
@@ -73,6 +74,11 @@ class _ArticleState extends State<Article> {
     if (res['list'].length == 0 && _page > 0) {
       BotToast.showText(text: '没有更多了', duration: Duration(seconds: 1));
     }
+    if (_page == 0) {
+      setState(() {
+        _commentList = [];
+      });
+    }
     setState(() {
       _commentList.addAll(res['list']);
     });
@@ -88,7 +94,6 @@ class _ArticleState extends State<Article> {
                 .toString()
           },
           auth: true);
-      print(res);
       _hasFavorite = res['ifFavorite'];
     }
   }
@@ -221,7 +226,12 @@ class _ArticleState extends State<Article> {
                     }
                     break;
                   case 'game':
-                    {}
+                    {
+                      Navigator.of(context)
+                          .push(MaterialPageRoute(builder: (context) {
+                        return Game(_gameId);
+                      }));
+                    }
                     break;
                 }
               }, itemBuilder: (BuildContext context) {

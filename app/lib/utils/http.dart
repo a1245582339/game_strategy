@@ -16,7 +16,7 @@ class Http {
       res = await http.get(url);
     }
 
-    print(res);
+    print(jsonDecode(res.body));
     if (res.statusCode == 200) {
       return jsonDecode(res.body);
     }
@@ -48,7 +48,8 @@ class Http {
       final token = await prefs.get('token');
       res = await http
           .put(url, body: body, headers: {'Authorization': 'bearer ' + token});
-      print(res);
+      print('res>>>>>>>>>');
+      print(jsonDecode(res.body));
     } else {
       res = await http.post(url, body: body);
     }
@@ -64,8 +65,8 @@ class Http {
     if (auth) {
       SharedPreferences prefs = await SharedPreferences.getInstance();
       final token = await prefs.get('token');
-      res = await http
-          .delete(url, headers: {'Authorization': 'bearer ' + token});
+      res =
+          await http.delete(url, headers: {'Authorization': 'bearer ' + token});
     } else {
       res = await http.delete(url);
     }

@@ -1,31 +1,48 @@
 import 'dart:convert';
 
+import 'package:app/store/index.dart';
 import 'package:app/utils/http.dart';
 import 'package:app/utils/ip.dart';
+import 'package:app/utils/userInfo.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:dio/dio.dart';
 import 'package:bot_toast/bot_toast.dart';
 import 'package:crypto/crypto.dart';
+import 'package:provider/provider.dart';
 
-class Register extends StatefulWidget {
+class UpdateUserInfo extends StatefulWidget {
   @override
-  _RegisterState createState() => _RegisterState();
+  _UpdateUserInfoState createState() => _UpdateUserInfoState();
 }
 
-class _RegisterState extends State<Register> {
+class _UpdateUserInfoState extends State<UpdateUserInfo> {
+  String _id = '';
   String _loginName = '';
   String _nickName = '';
   String _email = '';
-  String _password = '';
-  String _repeatPassword = '';
-  String _avatar;
+  String _avatar = '';
+
+  @override
+  void initState() {
+    super.initState();
+    _getUserInfo();
+  }
+
+  _getUserInfo() async {
+    final userInfo = Provider.of<Store>(context, listen: false).getUserInfo;
+    print(userInfo);
+    setState(() {
+      _id = userInfo['id'].toString();
+      _loginName = userInfo['login_name'];
+      _nickName = userInfo['nick_name'];
+      _avatar = userInfo['avatar'];
+      _email = userInfo['email'];
+    });
+  }
 
   bool _validateForm() {
-    if (_loginName.length == 0 ||
-        _email.length == 0 ||
-        _password.length == 0 ||
-        _avatar.length == 0) {
+    if (_loginName.length == 0 || _email.length == 0 || _avatar.length == 0) {
       return false;
     } else {
       return true;
@@ -56,42 +73,29 @@ class _RegisterState extends State<Register> {
       BotToast.showText(text: '邮箱格式错误');
       return false;
     }
-    if (!RegExp(r"^[a-zA-Z]\w{5,17}$").hasMatch(_password)) {
-      BotToast.showText(text: '密码应以字母开头，长度在6~18之间，只能包含字母、数字和下划线');
-      return false;
-    }
-    if (_password != _repeatPassword) {
-      BotToast.showText(text: '两次密码不一致');
-      return false;
-    }
-    final checkLoginNameRes =
-        await Http().get('/client/check', params: {'login_name': _loginName});
-    if (checkLoginNameRes['data']['exist']) {
-      BotToast.showText(text: '登录名已存在，换一个试试吧');
-      return false;
-    }
-    final createRes = await Http().post('/client/user', body: {
-      'login_name': _loginName,
-      'nick_name': _nickName,
-      'email': _email,
-      'password': md5.convert(Utf8Encoder().convert(_password)).toString(),
-      'avatar': _avatar
+    BotToast.showLoading();
+    final res =  await Http().put('/client/user',
+        body: {
+          'login_name': _loginName,
+          'nick_name': _nickName,
+          'email': _email,
+          'avatar': _avatar
+        },
+        auth: true);
+      print(res);
+    Future.delayed(Duration(seconds: 1), () {
+      BotToast.closeAllLoading();
+      BotToast.showText(text: '保存成功');
+      UserInfo(context);
     });
-		if (createRes['code'] == 40009) {
-			BotToast.showText(text: '登录名已存在，换一个试试吧');
-			return false;
-		} else {
-			BotToast.showText(text: '注册成功，前往登录吧~');
-			Navigator.of(context).pop();
-			return true;
-		}
+    return true;
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('注册'),
+        title: Text('个人信息'),
       ),
       body: ListView(
         children: <Widget>[
@@ -108,7 +112,9 @@ class _RegisterState extends State<Register> {
                             backgroundImage: NetworkImage(_avatar),
                           ),
                     decoration: BoxDecoration(
-                      border: _avatar == null ? Border.all(width: 1, color: Color(0xffeeeeee)) : null,
+                      border: _avatar == null
+                          ? Border.all(width: 1, color: Color(0xffeeeeee))
+                          : null,
                     ),
                   ),
                   onTap: _selectAndUploadAvatar,
@@ -123,9 +129,10 @@ class _RegisterState extends State<Register> {
                     Padding(
                       padding: EdgeInsets.fromLTRB(15.0, 10.0, 0.0, 0.0),
                       child: TextFormField(
+                        enabled: false,
+                        initialValue: _loginName,
                         decoration: InputDecoration(
                             border: InputBorder.none,
-                            labelText: '请输入登录名',
                             icon: new Icon(
                               Icons.person_pin,
                               color: Colors.grey,
@@ -143,6 +150,7 @@ class _RegisterState extends State<Register> {
                     Padding(
                       padding: EdgeInsets.fromLTRB(15.0, 10.0, 0.0, 0.0),
                       child: TextFormField(
+                        initialValue: _nickName,
                         decoration: InputDecoration(
                             border: InputBorder.none,
                             labelText: '请输入昵称',
@@ -163,6 +171,7 @@ class _RegisterState extends State<Register> {
                     Padding(
                       padding: EdgeInsets.fromLTRB(15.0, 10.0, 0.0, 0.0),
                       child: TextFormField(
+                        initialValue: _email,
                         decoration: InputDecoration(
                             border: InputBorder.none,
                             labelText: '请输入电子邮箱',
@@ -176,49 +185,7 @@ class _RegisterState extends State<Register> {
                           });
                         },
                       ),
-                    ),
-                    Divider(
-                      height: 1,
-                    ),
-                    Padding(
-                      padding: EdgeInsets.fromLTRB(15.0, 10.0, 0.0, 0.0),
-                      child: TextFormField(
-                        obscureText: true,
-                        decoration: InputDecoration(
-                            border: InputBorder.none,
-                            labelText: '请输入密码',
-                            icon: new Icon(
-                              Icons.lock,
-                              color: Colors.grey,
-                            )),
-                        onChanged: (value) {
-                          setState(() {
-                            _password = value;
-                          });
-                        },
-                      ),
-                    ),
-                    Divider(
-                      height: 1,
-                    ),
-                    Padding(
-                      padding: EdgeInsets.fromLTRB(15.0, 10.0, 0.0, 0.0),
-                      child: TextFormField(
-                        obscureText: true,
-                        decoration: InputDecoration(
-                            border: InputBorder.none,
-                            labelText: '请重复密码',
-                            icon: new Icon(
-                              Icons.lock_outline,
-                              color: Colors.grey,
-                            )),
-                        onChanged: (value) {
-                          setState(() {
-                            _repeatPassword = value;
-                          });
-                        },
-                      ),
-                    ),
+                    )
                   ],
                 ),
               ),
@@ -232,7 +199,7 @@ class _RegisterState extends State<Register> {
                   height: 50,
                   width: double.infinity,
                   child: RaisedButton(
-                    child: Text('注册'),
+                    child: Text('保存'),
                     textColor: Colors.white,
                     color: Theme.of(context).primaryColor,
                     disabledColor: Theme.of(context).primaryColorLight,
