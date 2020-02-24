@@ -1,3 +1,4 @@
+import 'package:app/page/login/register.dart';
 import 'package:flutter/material.dart';
 import 'dart:convert';
 import 'package:bot_toast/bot_toast.dart';
@@ -97,7 +98,11 @@ class _LoginState extends State<Login> {
                         color: Theme.of(context).primaryColor, width: 1),
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(5)),
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) {
+                        return Register();
+                      }));
+                    },
                   ),
                 ),
                 SizedBox(

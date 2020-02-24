@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'package:app/page/home/index.dart';
 import 'package:app/page/searchResult/index.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';

@@ -1,5 +1,4 @@
-import 'dart:convert';
-
+import 'package:app/page/userInfo/password.dart';
 import 'package:app/store/index.dart';
 import 'package:app/utils/http.dart';
 import 'package:app/utils/ip.dart';
@@ -8,7 +7,6 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:dio/dio.dart';
 import 'package:bot_toast/bot_toast.dart';
-import 'package:crypto/crypto.dart';
 import 'package:provider/provider.dart';
 
 class UpdateUserInfo extends StatefulWidget {
@@ -17,7 +15,6 @@ class UpdateUserInfo extends StatefulWidget {
 }
 
 class _UpdateUserInfoState extends State<UpdateUserInfo> {
-  String _id = '';
   String _loginName = '';
   String _nickName = '';
   String _email = '';
@@ -26,14 +23,13 @@ class _UpdateUserInfoState extends State<UpdateUserInfo> {
   @override
   void initState() {
     super.initState();
-    _getUserInfo();
+    _getUserInfo(context);
   }
 
-  _getUserInfo() async {
+  _getUserInfo(context) async {
     final userInfo = Provider.of<Store>(context, listen: false).getUserInfo;
     print(userInfo);
     setState(() {
-      _id = userInfo['id'].toString();
       _loginName = userInfo['login_name'];
       _nickName = userInfo['nick_name'];
       _avatar = userInfo['avatar'];
@@ -74,7 +70,7 @@ class _UpdateUserInfoState extends State<UpdateUserInfo> {
       return false;
     }
     BotToast.showLoading();
-    final res =  await Http().put('/client/user',
+    final res = await Http().put('/client/user',
         body: {
           'login_name': _loginName,
           'nick_name': _nickName,
@@ -82,7 +78,7 @@ class _UpdateUserInfoState extends State<UpdateUserInfo> {
           'avatar': _avatar
         },
         auth: true);
-      print(res);
+    print(res);
     Future.delayed(Duration(seconds: 1), () {
       BotToast.closeAllLoading();
       BotToast.showText(text: '保存成功');
@@ -96,6 +92,19 @@ class _UpdateUserInfoState extends State<UpdateUserInfo> {
     return Scaffold(
       appBar: AppBar(
         title: Text('个人信息'),
+        actions: <Widget>[
+          MaterialButton(
+            child: Text(
+              '修改密码',
+              style: TextStyle(color: Color(0xcffffffff)),
+            ),
+            onPressed: () {
+              Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) {
+                return ChangePassword();
+              }));
+            },
+          )
+        ],
       ),
       body: ListView(
         children: <Widget>[
