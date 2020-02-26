@@ -3,6 +3,7 @@ import { Response, Request } from 'express';
 import { decode } from 'jsonwebtoken'
 import { ParseIntPipe } from '@nestjs/common/pipes/parse-int.pipe';
 import { FollowService } from './follow.service'
+import getIp from '../utils/getIp';
 
 @Controller('api/v1/follow')
 export class FollowController {
@@ -16,7 +17,12 @@ export class FollowController {
             const followList = await this.followService.get(id, page, size)
             res.json({
                 msg: 'Follow list',
-                list: followList
+                list: followList.map(item => {
+                    return {
+                        ...item,
+                        game: { ...item.game, cover: `http://${getIp()}${item.game.cover}` }
+                    }
+                })
             })
         } catch (error) {
             throw error
@@ -37,9 +43,9 @@ export class FollowController {
         }
     }
     @Put('delByid')
-    async delById(@Body('ids') ids:[], @Res() res: Response) {
+    async delById(@Body('ids') ids:string, @Res() res: Response) {
         try {
-            await Promise.all(ids.map(id => this.followService.delById(id)))
+            await Promise.all(JSON.parse(ids).map(id => this.followService.delById(id)))
             res.json({
                 msg: 'ok'
             })

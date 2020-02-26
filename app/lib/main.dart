@@ -2,6 +2,7 @@ import 'package:app/component/appBar/home.dart';
 import 'package:app/component/appBar/notice.dart';
 import 'package:app/component/appBar/category.dart';
 import 'package:app/page/favorites/index.dart';
+import 'package:app/page/follow/index.dart';
 import 'package:app/page/login/register.dart';
 import 'package:app/page/setting/index.dart';
 import 'package:flutter/material.dart';
@@ -183,7 +184,11 @@ class _MyHomePageState extends State<MyHomePage> {
             ListTile(
               leading: Icon(Icons.notifications_none),
               title: Text('我的关注'),
-              onTap: () {},
+              onTap: () {
+                Navigator.of(context).push(MaterialPageRoute(builder: (context) {
+                  return Follow();
+                }));
+              },
             ),
             ListTile(
               leading: Icon(Icons.settings),
