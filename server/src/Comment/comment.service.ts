@@ -11,8 +11,8 @@ export class CommentService {
         @InjectRepository(Comment)
         private readonly commentService: Repository<Comment>,
         private readonly clientUserService: ClientUserService
-    ) {}
-    async getComments (articleId: number, page: number = 0, size: number = 10): Promise<[any[], number]> {
+    ) { }
+    async getComments(articleId: number, page: number = 0, size: number = 10): Promise<[any[], number]> {
         // 获取文章评论
         const getCommentsDetail = async () => {
             const comments: any = await this.commentService.find({
@@ -20,7 +20,7 @@ export class CommentService {
                 where: {
                     articleId, del: 0
                 },
-                skip: page * size, 
+                skip: page * size,
                 take: size,
                 order: {
                     create_time: 'DESC'
@@ -41,7 +41,7 @@ export class CommentService {
         })
         return Promise.all([getCommentsDetail(), total])
     }
-    async getMyReplied (userId: number, page: number = 0, size: number = 0): Promise<[Comment[], number]> {
+    async getMyReplied(userId: number, page: number = 0, size: number = 0): Promise<[Comment[], number]> {
         const comment = this.commentService.find({
             select: ['article', "user", 'content', 'create_time', 'read'],
             relations: ['article', 'user'],
@@ -49,7 +49,7 @@ export class CommentService {
                 del: 0,
                 replyUserId: userId
             },
-            skip: page * size, 
+            skip: page * size,
             take: size,
             order: {
                 create_time: 'DESC'
@@ -60,20 +60,20 @@ export class CommentService {
         })
         return Promise.all([comment, total])
     }
-    getUnreadCount (replyUserId: number): Promise<number> {
+    getUnreadCount(replyUserId: number): Promise<number> {
         return this.commentService.count({
             del: 0, read: 0, replyUserId
         })
     }
-    async read(time: string) {
+    async read(userId: number, time: string) {
         return this.commentService.update({
-            del: 0, create_time: LessThanOrEqual(time)
+            replyUserId: userId, del: 0, create_time: LessThanOrEqual(time)
         }, { read: 1 })
     }
-    async create (body: CommentDto): Promise<Comment> {
+    async create(body: CommentDto): Promise<Comment> {
         return this.commentService.save({ ...body, create_time: Date.now().toString(), read: 0 })
     }
-    async del (id: number, userId: number): Promise<boolean> {
+    async del(id: number, userId: number): Promise<boolean> {
         const del = await this.commentService.update({ id, userId, del: 0 }, { del: 1 })
         return !!del
     }

@@ -3,9 +3,12 @@ import 'dart:convert';
 import 'package:app/component/Loadmore.dart';
 import 'package:app/page/article/index.dart';
 import 'package:app/page/game/index.dart';
+import 'package:app/page/login/login.dart';
+import 'package:app/store/index.dart';
 import 'package:app/utils/http.dart';
 import 'package:bot_toast/bot_toast.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class Follow extends StatefulWidget {
   @override
@@ -90,8 +93,7 @@ class _FollowState extends State<Follow> {
                                     actions: <Widget>[
                                       FlatButton(
                                           onPressed: () async {
-                                            await Http().put(
-                                                '/follow/delByid',
+                                            await Http().put('/follow/delByid',
                                                 body: {
                                                   'ids': jsonEncode(_checkedIds)
                                                 },
@@ -193,7 +195,7 @@ class _FollowState extends State<Follow> {
           )),
         ),
         onWillPop: () {
-          if (_delFlag) { 
+          if (_delFlag) {
             _changeModel(false);
             return Future.value(false);
           } else {

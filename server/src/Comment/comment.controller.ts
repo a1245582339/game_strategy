@@ -87,15 +87,12 @@ export class CommentController {
         }
         
     }
-    @Get('/io')
-    async io() {
-        console.log('12312321321313')
-        this.commentGateway.server.to('123').emit('event', {test: '123'})
-    }
     @Put('/read')
-    async read(@Res() res: Response, @Body('time') time: string) {
+    async read(@Req() req: Request, @Res() res: Response, @Body('time') time: string) {
         try {
-            await this.commentService.read(time)
+            const token = req.headers.authorization.split(' ')[1]
+            const { id }: any = decode(token);
+            await this.commentService.read(id, time)
             res.json({
                 msg: 'Ok'
             })

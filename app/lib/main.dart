@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:app/component/appBar/home.dart';
 import 'package:app/component/appBar/notice.dart';
 import 'package:app/component/appBar/category.dart';
@@ -5,6 +7,8 @@ import 'package:app/page/favorites/index.dart';
 import 'package:app/page/follow/index.dart';
 import 'package:app/page/login/register.dart';
 import 'package:app/page/setting/index.dart';
+import 'package:app/utils/http.dart';
+import 'package:badges/badges.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:bot_toast/bot_toast.dart';
@@ -57,13 +61,35 @@ class _MyHomePageState extends State<MyHomePage> {
   int _currentIndex = 0;
   List<Widget> pages = [];
   List<Widget> appBar = [];
+  int _unreadCount = 0;
   @override
   void initState() {
     super.initState();
     appBar..add(HomeBar())..add(CategoryBar())..add(NoticeBar());
     pages..add(Home())..add(Category())..add(Notice());
-
     UserInfo(context);
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _getUnread();
+  }
+
+  _getUnread() async {
+    // 获取未读的数量
+    if (Provider.of<Store>(context, listen: false).getUserInfo['id'] == null) {
+      return false;
+    }
+    final countRes = await Http().get('/comment/unread', auth: true);
+    if (_unreadCount != countRes['count']) {
+      setState(() {
+        _unreadCount = countRes['count'];
+      });
+    }
+    Timer(Duration(seconds: 10), () {
+      _getUnread();
+    });
   }
 
   @override
@@ -76,8 +102,18 @@ class _MyHomePageState extends State<MyHomePage> {
             BottomNavigationBarItem(icon: Icon(Icons.home), title: Text('首页')),
             BottomNavigationBarItem(
                 icon: Icon(Icons.category), title: Text('分类')),
-            BottomNavigationBarItem(
-                icon: Icon(Icons.notifications), title: Text('通知')),
+            _unreadCount != 0
+                ? BottomNavigationBarItem(
+                    icon: Badge(
+                      badgeContent: Text(
+                        _unreadCount > 99 ? '...' : _unreadCount.toString(),
+                        style: TextStyle(color: Colors.white),
+                      ),
+                      child: Icon(Icons.notifications),
+                    ),
+                    title: Text('通知'))
+                : BottomNavigationBarItem(
+                    icon: Icon(Icons.notifications), title: Text('通知')),
           ],
           currentIndex: _currentIndex,
           onTap: (int index) {
@@ -176,18 +212,42 @@ class _MyHomePageState extends State<MyHomePage> {
               leading: Icon(Icons.star_border),
               title: Text('我的收藏'),
               onTap: () {
-                Navigator.of(context).push(MaterialPageRoute(builder: (context) {
-                  return Favorites();
-                }));
+                if (Provider.of<Store>(context, listen: false)
+                        .getUserInfo['id'] ==
+                    null) {
+                  Navigator.of(context)
+                      .push(MaterialPageRoute(builder: (context) {
+                    BotToast.showText(
+                        text: '请先登录', duration: Duration(seconds: 1));
+                    return Login();
+                  }));
+                } else {
+                  Navigator.of(context)
+                      .push(MaterialPageRoute(builder: (context) {
+                    return Favorites();
+                  }));
+                }
               },
             ),
             ListTile(
               leading: Icon(Icons.notifications_none),
               title: Text('我的关注'),
               onTap: () {
-                Navigator.of(context).push(MaterialPageRoute(builder: (context) {
-                  return Follow();
-                }));
+                if (Provider.of<Store>(context, listen: false)
+                        .getUserInfo['id'] ==
+                    null) {
+                  Navigator.of(context)
+                      .push(MaterialPageRoute(builder: (context) {
+                    BotToast.showText(
+                        text: '请先登录', duration: Duration(seconds: 1));
+                    return Login();
+                  }));
+                } else {
+                  Navigator.of(context)
+                      .push(MaterialPageRoute(builder: (context) {
+                    return Follow();
+                  }));
+                }
               },
             ),
             ListTile(
