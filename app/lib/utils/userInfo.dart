@@ -1,3 +1,4 @@
+import 'package:bot_toast/bot_toast.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:provider/provider.dart';
 import './http.dart';
@@ -11,9 +12,13 @@ class UserInfo {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var token = await prefs.get('token');
     if (token != '') {
-      final Map userInfo = await Http().get('/client/me', auth: true);
-      Provider.of<Store>(context, listen: false).setUserInfo(userInfo['data']);
-      print(Provider.of<Store>(context, listen: false).getUserInfo);
+      try {
+        final Map userInfo = await Http().get('/client/me', auth: true);
+        Provider.of<Store>(context, listen: false).setUserInfo(userInfo['data']);
+      } catch (err) {
+        BotToast.showText(text: '登录信息已失效，请重新登录');
+        prefs.setString('token', '');
+      } 
     } else {
       Provider.of<Store>(context, listen: false).clearUserInfo();
     }

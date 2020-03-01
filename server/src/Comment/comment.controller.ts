@@ -5,6 +5,7 @@ import { ParseIntPipe } from '@nestjs/common/pipes/parse-int.pipe';
 import { CommentService } from './comment.service';
 import { CommentDto } from './comment.dto'
 import { CommentGateway } from './comment.gateway'
+import getIp from '../utils/getIp';
 
 @Controller('api/v1/comment')
 export class CommentController {
@@ -45,13 +46,20 @@ export class CommentController {
             const user = {
                 id: item.user.id,
                 name: item.user.nick_name || item.user.login_name,
-                avatar: item.user.avatar,
+                avatar: `http://${getIp()}${item.user.avatar}`,
+            }
+            const article = {
+                title: item.article.title,
+                cover: `http://${getIp()}${item.article.cover}`,
+                id: item.article.id
             }
             return {
                 ...item,
-                user
+                user,
+                article
             }
         })
+        console.log(comment)
         res.json({
             msg: 'Comment list',
             list: comment,

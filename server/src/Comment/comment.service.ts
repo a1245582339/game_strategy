@@ -41,15 +41,15 @@ export class CommentService {
         })
         return Promise.all([getCommentsDetail(), total])
     }
-    async getMyReplied(userId: number, page: number = 0, size: number = 0): Promise<[Comment[], number]> {
+    async getMyReplied(userId: number, page: number = 0, size: number = 20): Promise<[Comment[], number]> {
         const comment = this.commentService.find({
-            select: ['article', "user", 'content', 'create_time', 'read'],
+            select: ['id', 'article', "user", 'content', 'create_time', 'read'],
             relations: ['article', 'user'],
             where: {
                 del: 0,
                 replyUserId: userId
             },
-            skip: page * size,
+            skip: page * size, 
             take: size,
             order: {
                 create_time: 'DESC'

@@ -82,6 +82,7 @@ class _MyHomePageState extends State<MyHomePage> {
       return false;
     }
     final countRes = await Http().get('/comment/unread', auth: true);
+    print(countRes);
     if (_unreadCount != countRes['count']) {
       setState(() {
         _unreadCount = countRes['count'];

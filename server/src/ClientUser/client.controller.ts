@@ -39,7 +39,7 @@ export class ClientUserController {
             const myDetail = await this.clientUserService.getOne(id)
             res.json({
                 msg: 'My detail',
-                data: myDetail
+                data: { ...myDetail, avatar: `http://${getIp()}${myDetail.avatar}`}
             })
         } catch (error) {
             res.json({
