@@ -67,6 +67,9 @@ export class GameController {
     @Put('/:id')
     async update(@Param('id', new ParseIntPipe()) id:number, @Body() body: GameDto, @Res() res: Response) {
         try {
+            if (body.cover === null) {
+                delete body.cover
+            }
             await this.gameService.update(id, body)
             res.json({
                 msg: 'Ok'

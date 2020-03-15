@@ -90,11 +90,13 @@ export class AdminUserController {
         }
     }
 
-    @Put('changePassword')
+    @Post('/changePassword')
     async changePassword(@Req() req:Request, @Body('password') password:string, @Body('old_password') old_password:string, @Res() res: Response) {
+        console.log(1111111111111111111111111111111111)
         try {
             const token = req.headers.authorization.split(' ')[1]
             const { id }: any = decode(token)
+            
             if (await this.adminUserService.checkPassword(id, old_password)) {
                 await this.adminUserService.update(id, { password })
                 res.json({ msg: 'Ok' })

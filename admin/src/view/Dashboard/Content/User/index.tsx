@@ -27,7 +27,9 @@ const User: React.FC = () => {
     }, {
         title: '头像',
         key: 'avatar',
-        dataIndex: 'avatar',
+        render (_text: any, record: any) {
+            return (<div style={{height: 50, width: 50, backgroundImage: "url(" + record.avatar + ")", backgroundSize: 'cover', backgroundPosition: 'center'}}></div>)
+        }
     }, {
         title: '登录名',
         key: 'login_name',

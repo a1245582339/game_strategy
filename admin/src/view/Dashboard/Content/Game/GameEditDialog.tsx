@@ -22,6 +22,7 @@ const GameEditDialog: React.FC<IFormProps<IGame>> = (props) => {
     const [visible, setVisible] = useState(false)
     const [coverPath, setCoverPath] = useState<UploadFile[]>([])
     const { getFieldDecorator } = props.form
+    const [coverChanged, setCoverChanged] = useState(false)
 
     useEffect(() => {
         if (props.editData.id) {
@@ -44,7 +45,7 @@ const GameEditDialog: React.FC<IFormProps<IGame>> = (props) => {
     const handleOk = () => {
         props.form.validateFields(async (err, value) => {
             if (!err) {
-                await props.onSubmit({...value, id: props.editData.id, cover: coverPath[0] ? coverPath[0].response.path : '', categoryId: props.editData.category.id })
+                await props.onSubmit({...value, id: props.editData.id, cover: props.editData.id ? (coverChanged ? coverPath[0].response.path : null) : (coverPath[0] ? coverPath[0].response.path : ''), categoryId: props.editData.category.id })
                 setCoverPath([])
                 props.onClose()
             }
@@ -55,6 +56,7 @@ const GameEditDialog: React.FC<IFormProps<IGame>> = (props) => {
         props.onClose()
     }
     const handleUpload = (info: UploadChangeParam) => {
+        setCoverChanged(true)
         setCoverPath([info.fileList[info.fileList.length - 1]])
     }
     const handlePreview = (file: UploadFile) => {
@@ -62,7 +64,7 @@ const GameEditDialog: React.FC<IFormProps<IGame>> = (props) => {
     }
     return (
         <Modal
-            title={`${true ? '添加' : '编辑'}`}
+            title={`${props.editData.id ? '编辑' : '添加'}`}
             visible={visible}
             onOk={handleOk}
             onCancel={() => handleCancle()}

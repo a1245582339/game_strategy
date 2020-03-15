@@ -24,7 +24,7 @@ export class ClientUserController {
             const [userList, total] = await this.clientUserService.get(_query, page, size)
             res.json({
                 msg: 'Client user list',
-                list: userList.map(item => ({ ...item, cover: `http://${getIp()}${item.avatar}`})),
+                list: userList.map(item => ({ ...item, avatar: `http://${getIp()}${item.avatar}`})),
                 total
             })
         } catch (err) {

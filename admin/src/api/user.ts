@@ -17,5 +17,5 @@ export const createAdminApi = <T>(body: { name: string; password: string }): Pro
 }
 
 export const changePasswordApi = <T>(body: {password: string; old_password: string}) :Promise<T> => {
-    return http.put(`${domain}/changePassword`, body)
+    return http.post(`${domain}/changePassword`, body)
 }

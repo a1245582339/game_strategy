@@ -275,6 +275,7 @@ class _ArticleState extends State<Article> {
                     children: _renderArticle(),
                     controller: _scrollController,
                   ),
+                  Provider.of<Store>(context).getUserInfo['id'] != null ?
                   Positioned(
                     bottom: 0,
                     left: 0,
@@ -340,7 +341,7 @@ class _ArticleState extends State<Article> {
                             ),
                           ],
                         )),
-                  )
+                  ) : null
                 ],
               ))),
     );

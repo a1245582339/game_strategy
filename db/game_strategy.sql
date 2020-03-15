@@ -3,15 +3,15 @@
 
  Source Server         : localhost_3306
  Source Server Type    : MySQL
- Source Server Version : 50729
+ Source Server Version : 50720
  Source Host           : localhost:3306
  Source Schema         : game_strategy
 
  Target Server Type    : MySQL
- Target Server Version : 50729
+ Target Server Version : 50720
  File Encoding         : 65001
 
- Date: 02/02/2020 15:58:01
+ Date: 15/03/2020 18:14:20
 */
 
 SET NAMES utf8mb4;
@@ -23,10 +23,10 @@ SET FOREIGN_KEY_CHECKS = 0;
 DROP TABLE IF EXISTS `admin_user`;
 CREATE TABLE `admin_user`  (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
-  `password` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
-  `del` int(11) NOT NULL DEFAULT 0,
-  `role` int(11) NOT NULL,
+  `name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '用户名',
+  `password` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '密码',
+  `del` int(11) NOT NULL DEFAULT 0 COMMENT '删除标识',
+  `role` int(11) NOT NULL COMMENT '角色',
   PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 5 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
@@ -44,16 +44,16 @@ INSERT INTO `admin_user` VALUES (4, 'test', '123', 1, 2);
 DROP TABLE IF EXISTS `article`;
 CREATE TABLE `article`  (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `title` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
-  `cover` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
-  `gameId` int(11) NOT NULL,
-  `del` int(11) NOT NULL DEFAULT 0,
-  `create_time` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
-  `content` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `title` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '文章标题',
+  `cover` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '文章封面',
+  `gameId` int(11) NOT NULL COMMENT '游戏id',
+  `del` int(11) NOT NULL DEFAULT 0 COMMENT '删除标识',
+  `create_time` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '创建时间',
+  `content` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '文章内容',
   PRIMARY KEY (`id`) USING BTREE,
   INDEX `FK_f0c0a548770631363577d0c6063`(`gameId`) USING BTREE,
   CONSTRAINT `FK_f0c0a548770631363577d0c6063` FOREIGN KEY (`gameId`) REFERENCES `game` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE = InnoDB AUTO_INCREMENT = 18 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 19 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of article
@@ -73,6 +73,7 @@ INSERT INTO `article` VALUES (14, '云顶：山脉、水晶羁绊加强 法海�
 INSERT INTO `article` VALUES (15, '涛涛涛涛', '/public/defaultCover.png', 1, 0, '1580444111749', '<p></p>\n');
 INSERT INTO `article` VALUES (16, '123123123213', '/public/defaultCover.png', 1, 0, '1580444118681', '<p></p>\n');
 INSERT INTO `article` VALUES (17, '额为全额', '/public/defaultCover.png', 1, 0, '1580444123880', '<p></p>\n');
+INSERT INTO `article` VALUES (18, '去问我去饿我去饿', '/public/img_1583068794937m3in303ijp.jpg', 1, 0, '1583068825435', '<h2>去问我去<strong>饿我去饿我去饿我去</strong></h2>\n');
 
 -- ----------------------------
 -- Table structure for category
@@ -80,14 +81,14 @@ INSERT INTO `article` VALUES (17, '额为全额', '/public/defaultCover.png', 1,
 DROP TABLE IF EXISTS `category`;
 CREATE TABLE `category`  (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `p_id` int(11) NOT NULL,
-  `l_id` int(11) NOT NULL,
-  `r_id` int(11) NOT NULL,
-  `name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
+  `p_id` int(11) NOT NULL COMMENT '父id',
+  `l_id` int(11) NOT NULL COMMENT '左id',
+  `r_id` int(11) NOT NULL COMMENT '右id',
+  `name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '分类名称',
   `type` int(11) NOT NULL COMMENT '1：游戏平台\r\n2：游戏类型\r\n3：游戏专区',
-  `del` int(11) NOT NULL DEFAULT 0,
+  `del` int(11) NOT NULL DEFAULT 0 COMMENT '删除标识',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 27 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 28 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of category
@@ -103,6 +104,7 @@ INSERT INTO `category` VALUES (23, 7, 9, 10, '赛车竞速', 2, 0);
 INSERT INTO `category` VALUES (24, 21, 13, 14, '体育竞技', 2, 0);
 INSERT INTO `category` VALUES (25, 21, 15, 16, '休闲益智', 2, 0);
 INSERT INTO `category` VALUES (26, 21, 17, 18, '生存冒险', 2, 0);
+INSERT INTO `category` VALUES (27, 7, 11, 12, '123', 2, 1);
 
 -- ----------------------------
 -- Table structure for comment
@@ -110,53 +112,55 @@ INSERT INTO `category` VALUES (26, 21, 17, 18, '生存冒险', 2, 0);
 DROP TABLE IF EXISTS `comment`;
 CREATE TABLE `comment`  (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `userId` int(11) NOT NULL,
-  `articleId` int(11) NOT NULL,
-  `replyUserId` int(11) NOT NULL DEFAULT 0,
-  `read` int(11) NOT NULL DEFAULT 0,
-  `del` int(11) NOT NULL DEFAULT 0,
-  `create_time` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
-  `content` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
+  `userId` int(11) NOT NULL COMMENT '用户id',
+  `articleId` int(11) NOT NULL COMMENT '文章id',
+  `replyUserId` int(11) NOT NULL DEFAULT 0 COMMENT '回复用户的id',
+  `read` int(11) NOT NULL DEFAULT 0 COMMENT '已读的标识',
+  `del` int(11) NOT NULL DEFAULT 0 COMMENT '删除标识',
+  `create_time` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '创建时间',
+  `content` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '评论内容',
   PRIMARY KEY (`id`) USING BTREE,
   INDEX `FK_c0354a9a009d3bb45a08655ce3b`(`userId`) USING BTREE,
   INDEX `FK_c20404221e5c125a581a0d90c0e`(`articleId`) USING BTREE,
   CONSTRAINT `FK_c0354a9a009d3bb45a08655ce3b` FOREIGN KEY (`userId`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `FK_c20404221e5c125a581a0d90c0e` FOREIGN KEY (`articleId`) REFERENCES `article` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE = InnoDB AUTO_INCREMENT = 31 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 33 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of comment
 -- ----------------------------
-INSERT INTO `comment` VALUES (1, 3, 13, 0, 0, 0, '1580201430937', '4121212121445');
-INSERT INTO `comment` VALUES (2, 3, 13, 0, 0, 0, '1580201586555', '4121212121445');
-INSERT INTO `comment` VALUES (3, 3, 13, 0, 0, 0, '1580201586833', '4121212121445');
-INSERT INTO `comment` VALUES (4, 3, 13, 0, 0, 0, '1580201687342', '4121212121445');
-INSERT INTO `comment` VALUES (5, 3, 14, 0, 0, 0, '1580209505153', '4121212121445');
-INSERT INTO `comment` VALUES (6, 3, 14, 0, 0, 0, '1580209507699', '4121212121445');
-INSERT INTO `comment` VALUES (7, 3, 14, 0, 0, 0, '1580209510093', '4121212121445');
-INSERT INTO `comment` VALUES (8, 3, 14, 0, 0, 0, '1580209534671', '4121212121445');
-INSERT INTO `comment` VALUES (9, 3, 14, 0, 0, 0, '1580211036367', '4121212121445');
-INSERT INTO `comment` VALUES (10, 3, 14, 3, 0, 0, '1580269881355', '4121212121445');
-INSERT INTO `comment` VALUES (11, 3, 14, 0, 0, 0, '1580270947453', '4121212121445');
-INSERT INTO `comment` VALUES (12, 3, 14, 0, 0, 0, '1580270977303', '4121212121445');
-INSERT INTO `comment` VALUES (13, 3, 14, 0, 0, 0, '1580271051733', '4121212121445');
-INSERT INTO `comment` VALUES (14, 3, 14, 0, 0, 0, '1580271188252', '4121212121445');
-INSERT INTO `comment` VALUES (15, 3, 14, 0, 0, 0, '1580271368041', '4121212121445');
-INSERT INTO `comment` VALUES (16, 3, 14, 0, 0, 0, '1580271543752', '4121212121445');
-INSERT INTO `comment` VALUES (17, 3, 14, 0, 0, 0, '1580271838457', '4121212121445');
-INSERT INTO `comment` VALUES (18, 3, 14, 0, 0, 0, '1580271866652', '4121212121445');
-INSERT INTO `comment` VALUES (19, 3, 14, 0, 0, 0, '1580271899498', '4121212121445');
-INSERT INTO `comment` VALUES (20, 3, 14, 0, 0, 0, '1580271920891', '4121212121445');
-INSERT INTO `comment` VALUES (21, 3, 14, 0, 0, 0, '1580272140418', '4121212121445');
-INSERT INTO `comment` VALUES (22, 3, 14, 0, 0, 0, '1580272215713', '4121212121445');
-INSERT INTO `comment` VALUES (23, 3, 14, 0, 0, 0, '1580272475142', '4121212121445');
-INSERT INTO `comment` VALUES (24, 3, 14, 3, 0, 0, '1580272513444', 'v火炬计划v计划v计划v计划v');
-INSERT INTO `comment` VALUES (25, 1, 14, 0, 0, 0, '1580527905759', '古古怪怪发发发');
-INSERT INTO `comment` VALUES (26, 1, 14, 3, 0, 0, '1580527911196', '滚滚滚滚滚滚');
-INSERT INTO `comment` VALUES (27, 1, 14, 0, 0, 0, '1580527989644', '让人');
-INSERT INTO `comment` VALUES (28, 1, 14, 0, 0, 0, '1580528354152', '是是是');
-INSERT INTO `comment` VALUES (29, 1, 14, 0, 0, 0, '1580531296580', '吞吞吐吐');
-INSERT INTO `comment` VALUES (30, 1, 14, 3, 0, 0, '1580541191208', '应该会哈哈哈');
+INSERT INTO `comment` VALUES (1, 2, 13, 1, 1, 0, '1580201430937', '4121212121445');
+INSERT INTO `comment` VALUES (2, 2, 13, 1, 1, 0, '1580201586555', '4121212121445');
+INSERT INTO `comment` VALUES (3, 2, 13, 1, 1, 0, '1580201586833', '4121212121445');
+INSERT INTO `comment` VALUES (4, 2, 13, 1, 1, 0, '1580201687342', '4121212121445');
+INSERT INTO `comment` VALUES (5, 2, 14, 1, 1, 0, '1580209505153', '4121212121445');
+INSERT INTO `comment` VALUES (6, 2, 14, 1, 1, 0, '1580209507699', '4121212121445');
+INSERT INTO `comment` VALUES (7, 2, 14, 1, 1, 0, '1580209510093', '4121212121445');
+INSERT INTO `comment` VALUES (8, 2, 14, 1, 1, 0, '1580209534671', '4121212121445');
+INSERT INTO `comment` VALUES (9, 2, 14, 1, 1, 0, '1580211036367', '4121212121445');
+INSERT INTO `comment` VALUES (10, 2, 14, 1, 1, 0, '1580269881355', '4121212121445');
+INSERT INTO `comment` VALUES (11, 2, 14, 1, 1, 0, '1580270947453', '4121212121445');
+INSERT INTO `comment` VALUES (12, 2, 14, 1, 1, 0, '1580270977303', '4121212121445');
+INSERT INTO `comment` VALUES (13, 2, 14, 1, 1, 0, '1580271051733', '4121212121445');
+INSERT INTO `comment` VALUES (14, 2, 14, 1, 1, 0, '1580271188252', '4121212121445');
+INSERT INTO `comment` VALUES (15, 2, 14, 1, 1, 0, '1580271368041', '4121212121445');
+INSERT INTO `comment` VALUES (16, 1, 14, 1, 1, 0, '1580271543752', '4121212121445');
+INSERT INTO `comment` VALUES (17, 3, 14, 1, 1, 0, '1580271838457', '4121212121445');
+INSERT INTO `comment` VALUES (18, 3, 14, 1, 1, 0, '1580271866652', '4121212121445');
+INSERT INTO `comment` VALUES (19, 3, 14, 1, 1, 0, '1580271899498', '4121212121445');
+INSERT INTO `comment` VALUES (20, 3, 14, 1, 1, 0, '1580271920891', '4121212121445');
+INSERT INTO `comment` VALUES (21, 3, 14, 1, 1, 0, '1580272140418', '4121212121445');
+INSERT INTO `comment` VALUES (22, 3, 14, 1, 1, 0, '1580272215713', '4121212121445');
+INSERT INTO `comment` VALUES (23, 3, 14, 1, 1, 0, '1580272475142', '4121212121445');
+INSERT INTO `comment` VALUES (24, 3, 14, 1, 1, 0, '1580272513444', 'v火炬计划v计划v计划v计划v');
+INSERT INTO `comment` VALUES (25, 1, 14, 1, 1, 0, '1580527905759', '古古怪怪发发发');
+INSERT INTO `comment` VALUES (26, 1, 14, 1, 1, 0, '1580527911196', '滚滚滚滚滚滚');
+INSERT INTO `comment` VALUES (27, 1, 14, 1, 1, 0, '1580527989644', '让人');
+INSERT INTO `comment` VALUES (28, 1, 14, 1, 1, 0, '1580528354152', '是是是');
+INSERT INTO `comment` VALUES (29, 1, 14, 1, 1, 0, '1580531296580', '吞吞吐吐');
+INSERT INTO `comment` VALUES (30, 1, 14, 1, 1, 0, '1580541191208', '应该会哈哈哈');
+INSERT INTO `comment` VALUES (31, 1, 14, 2, 0, 0, '1583069502284', '555555');
+INSERT INTO `comment` VALUES (32, 1, 14, 1, 1, 0, '1583069541203', '古古怪怪个');
 
 -- ----------------------------
 -- Table structure for favorites
@@ -164,20 +168,21 @@ INSERT INTO `comment` VALUES (30, 1, 14, 3, 0, 0, '1580541191208', '应该会哈
 DROP TABLE IF EXISTS `favorites`;
 CREATE TABLE `favorites`  (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `articleId` int(11) NOT NULL,
-  `userId` int(11) NOT NULL,
-  `create_time` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
+  `articleId` int(11) NOT NULL COMMENT '文章id',
+  `userId` int(11) NOT NULL COMMENT '用户id',
+  `create_time` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '创建时间',
   PRIMARY KEY (`id`) USING BTREE,
   INDEX `FK_a9e25be94f65c6f11f420d97bca`(`articleId`) USING BTREE,
   INDEX `FK_e747534006c6e3c2f09939da60f`(`userId`) USING BTREE,
   CONSTRAINT `FK_a9e25be94f65c6f11f420d97bca` FOREIGN KEY (`articleId`) REFERENCES `article` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `FK_e747534006c6e3c2f09939da60f` FOREIGN KEY (`userId`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE = InnoDB AUTO_INCREMENT = 4 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 8 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of favorites
 -- ----------------------------
 INSERT INTO `favorites` VALUES (3, 14, 3, '1580356503349');
+INSERT INTO `favorites` VALUES (7, 18, 1, '1583069475105');
 
 -- ----------------------------
 -- Table structure for follow
@@ -185,8 +190,8 @@ INSERT INTO `favorites` VALUES (3, 14, 3, '1580356503349');
 DROP TABLE IF EXISTS `follow`;
 CREATE TABLE `follow`  (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `gameId` int(11) NOT NULL,
-  `userId` int(11) NOT NULL,
+  `gameId` int(11) NOT NULL COMMENT '游戏id',
+  `userId` int(11) NOT NULL COMMENT '用户id',
   PRIMARY KEY (`id`) USING BTREE,
   INDEX `FK_82d964eacf90242048c84e5e405`(`gameId`) USING BTREE,
   INDEX `FK_af9f90ce5e8f66f845ebbcc6f15`(`userId`) USING BTREE,
@@ -206,15 +211,15 @@ INSERT INTO `follow` VALUES (3, 2, 1);
 DROP TABLE IF EXISTS `game`;
 CREATE TABLE `game`  (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
-  `desp` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
-  `cover` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
-  `categoryId` int(11) NOT NULL,
-  `del` int(11) NOT NULL DEFAULT 0,
+  `name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '游戏名称',
+  `desp` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '游戏简介',
+  `cover` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '游戏封面',
+  `categoryId` int(11) NOT NULL COMMENT '游戏分类id',
+  `del` int(11) NOT NULL DEFAULT 0 COMMENT '删除标识',
   PRIMARY KEY (`id`) USING BTREE,
   INDEX `FK_3f10804f18297163a6189353e64`(`categoryId`) USING BTREE,
   CONSTRAINT `FK_3f10804f18297163a6189353e64` FOREIGN KEY (`categoryId`) REFERENCES `category` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE = InnoDB AUTO_INCREMENT = 7 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 8 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of game
@@ -223,6 +228,7 @@ INSERT INTO `game` VALUES (1, '英雄联盟', 'ss\'d撒大苏打撒旦', '/publi
 INSERT INTO `game` VALUES (2, '刺激战场', '123', '/public/img_157840656367996ht7fvfunv.jpg', 26, 0);
 INSERT INTO `game` VALUES (5, '使命召唤', 'rewrewr ', '/public/img_1577934348198m8z9oem013.jpeg', 20, 0);
 INSERT INTO `game` VALUES (6, '英雄联盟', 'ss\'d撒大苏打撒旦', '/public/img_1577934364104njml4dvnrli.jpeg', 19, 1);
+INSERT INTO `game` VALUES (7, 'wewqewqe', 'wqewqewqe', '/public/img_1583068682925sre1n9pzt5.jpeg', 25, 1);
 
 -- ----------------------------
 -- Table structure for user
@@ -231,19 +237,19 @@ DROP TABLE IF EXISTS `user`;
 CREATE TABLE `user`  (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `login_name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '登录名',
-  `nick_name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
+  `nick_name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '昵称',
   `password` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '密码',
   `email` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '邮箱',
-  `del` int(11) NOT NULL DEFAULT 0,
-  `avatar` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
+  `del` int(11) NOT NULL DEFAULT 0 COMMENT '删除标识',
+  `avatar` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '头像图片',
   PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 4 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of user
 -- ----------------------------
-INSERT INTO `user` VALUES (1, 'test', 'test', '0b4e7a0e5fe84ad35fb5f95b9ceeac79', '1', 0, 'qwe');
-INSERT INTO `user` VALUES (2, 't', '额', '0b4e7a0e5fe84ad35fb5f95b9ceeac79', '122222@qq.com', 0, 'http://192.168.0.107:3000/public/img_1580180533521j2skkr1j969.jpg');
-INSERT INTO `user` VALUES (3, 't2', 'q', '0b4e7a0e5fe84ad35fb5f95b9ceeac79', '4@qq.com', 0, 'http://192.168.0.107:3000/public/img_15801861816911k7r65qhoam.jpg');
+INSERT INTO `user` VALUES (1, 'test', 'test', '0b4e7a0e5fe84ad35fb5f95b9ceeac79', '111111@ee.com', 0, 'http://192.168.43.135:3000/public/img_1578407114178o9mnm951wam.jpg');
+INSERT INTO `user` VALUES (2, 't', '额', '0b4e7a0e5fe84ad35fb5f95b9ceeac79', '122222@qq.com', 0, '/public/img_1580180533521j2skkr1j969.jpg');
+INSERT INTO `user` VALUES (3, 't2', 'q', '0b4e7a0e5fe84ad35fb5f95b9ceeac79', '4@qq.com', 0, '/public/img_15801861816911k7r65qhoam.jpg');
 
 SET FOREIGN_KEY_CHECKS = 1;
