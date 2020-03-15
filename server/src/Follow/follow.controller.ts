@@ -56,9 +56,10 @@ export class FollowController {
     @Delete('cancel/:gameId')
     async del(@Param('gameId', new ParseIntPipe()) gameId:number, @Res() res: Response, @Req() req: Request) {
         const token = req.headers.authorization.split(' ')[1]
-        const { userId }: any = decode(token)
+        const { id }: any = decode(token)
+        console.log('userId, gameId', id, gameId)
         try {
-            await this.followService.cancel(userId, gameId)
+            await this.followService.cancel(id, gameId)
             res.json({
                 msg: 'ok'
             })

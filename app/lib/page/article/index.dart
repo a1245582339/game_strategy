@@ -341,7 +341,7 @@ class _ArticleState extends State<Article> {
                             ),
                           ],
                         )),
-                  ) : null
+                  ) : SizedBox()
                 ],
               ))),
     );

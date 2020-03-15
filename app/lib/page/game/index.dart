@@ -20,6 +20,7 @@ class _GameState extends State<Game> {
   bool _loadingMore = false;
   ScrollController _scrollController = ScrollController();
   _GameState(this._gameId);
+  bool _followed = false;
 
   @override
   void initState() {
@@ -92,9 +93,46 @@ class _GameState extends State<Game> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text((_game['name'] ?? '') + '专区'),
-      ),
+      appBar:
+          AppBar(title: Text((_game['name'] ?? '') + '专区'), actions: <Widget>[
+        PopupMenuButton(
+          onSelected: (value) async {
+            switch (value) {
+              case 'follow':
+                {
+                  if (_followed) {
+                    await Http().delete('/follow/cancel/$_gameId', auth: true);
+                    setState(() {
+                      _followed = false;
+                    });
+                  } else {
+                    await Http().post('/follow',
+                        body: {'gameId': _gameId.toString()}, auth: true);
+                    setState(() {
+                      _followed = true;
+                    });
+                  }
+                }
+            }
+          },
+          itemBuilder: (BuildContext context) {
+            return [
+              PopupMenuItem(
+                child: Row(
+                  children: <Widget>[
+                    Icon(
+                      Icons.favorite,
+                      color: Color(0xfff44336),
+                    ),
+                    _followed ? Text(' 取消关注') : Text(' 添加关注')
+                  ],
+                ),
+                value: 'follow',
+              )
+            ];
+          },
+        )
+      ]),
       body: Container(
           child: ListView(
         controller: _scrollController,

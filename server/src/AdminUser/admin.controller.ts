@@ -92,7 +92,6 @@ export class AdminUserController {
 
     @Post('/changePassword')
     async changePassword(@Req() req:Request, @Body('password') password:string, @Body('old_password') old_password:string, @Res() res: Response) {
-        console.log(1111111111111111111111111111111111)
         try {
             const token = req.headers.authorization.split(' ')[1]
             const { id }: any = decode(token)
