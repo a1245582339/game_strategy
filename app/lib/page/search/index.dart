@@ -16,7 +16,7 @@ class _SearchState extends State<Search> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).primaryColor,
-        title: TextFileWidget(),
+        title: TextFileWidget(),    // 自定义输入框
         automaticallyImplyLeading: false,
         actions: <Widget>[
           Center(
@@ -28,19 +28,19 @@ class _SearchState extends State<Search> {
               ),
             ),
             onTap: () {
-              Navigator.of(context).pop();
+              Navigator.of(context).pop();    // 点击时返回到首页
             },
           ))
         ],
       ),
-      body: HistoryList(),
+      body: HistoryList(),    // 页面主体是搜索历史
     );
   }
 }
 
 class TextFileWidget extends StatelessWidget {
   Widget buildTextField(BuildContext context) {
-    return TextField(
+    return TextField(   // 搜索框
       cursorColor: Color(0xff666666),
       textInputAction: TextInputAction.search,
       decoration: InputDecoration(
@@ -57,20 +57,20 @@ class TextFileWidget extends StatelessWidget {
               height: 1.2,
               textBaseline: TextBaseline.alphabetic)),
       style: TextStyle(fontSize: 14, color: Colors.black),
-      onSubmitted: (str) async {
-        if (str == '') {
+      onSubmitted: (str) async {    // 点击虚拟键盘的提交时的事件
+        if (str == '') {    // 如果没有输入文字，则什么都不做
           return;
-        } else {
+        } else {    // 有输入文字时，跳转到搜索结果页，同时将历史记录塞到本地存储中
           Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) {
             return SearchResult(str);
           }));
-          SharedPreferences prefs = await SharedPreferences.getInstance();
-          final history = await prefs.get('searchHistory');
-          if (history == null) {
+          SharedPreferences prefs = await SharedPreferences.getInstance();  // 获取本地存储
+          final history = await prefs.get('searchHistory');   // 获取历史记录
+          if (history == null) {  // 如果没有历史记录，则直接写入
             prefs.setString('searchHistory', jsonEncode([str]));
-          } else {
+          } else {    // 如果有历史记录，则解析历史记录，并塞进去
             var historyArr = jsonDecode(history);
-            if (jsonDecode(history).length == 20) {
+            if (jsonDecode(history).length == 20) { // 如果长度已经到20了，要把最后一条历史记录删掉
               historyArr.removeLast();
             }
             prefs.setString(

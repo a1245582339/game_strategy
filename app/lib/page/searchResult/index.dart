@@ -121,11 +121,11 @@ class _ResultListState extends State<ResultList> {
     }
   }
 
-  Future _getGame() {
+  Future _getGame() {   // 请求游戏
     return Http().get('/game/byFullName', params: {'name': _str});
   }
 
-  Future _getArticle() {
+  Future _getArticle() {    // 请求文章
     return Http().get('/article',
         params: {'title': _str, 'page': _page.toString(), 'size': '10'});
   }

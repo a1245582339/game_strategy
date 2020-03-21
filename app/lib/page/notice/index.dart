@@ -41,7 +41,7 @@ class _NoticeState extends State<Notice> {
     }
   }
 
-  _read() {
+  _read() {   // 已读接口，进入页面调用一次
     Http().put('/comment/read',
         body: {'time': DateTime.now().millisecondsSinceEpoch.toString()},
         auth: true);

@@ -70,7 +70,7 @@ class _ArticleState extends State<Article> {
 
   _getComment() async {
     final res = await Http().get('/comment',
-        params: {'articleId': id.toString(), 'page': _page.toString()});
+        params: {'articleId': id.toString(), 'page': _page.toString()});  // 获取评论
     if (res['list'].length == 0 && _page > 0) {
       BotToast.showText(text: '没有更多了', duration: Duration(seconds: 1));
     }
@@ -99,27 +99,27 @@ class _ArticleState extends State<Article> {
   }
 
   List<Widget> _renderArticle() {
-    List<Widget> articleAndComment = [
+    List<Widget> articleAndComment = [ 
       SizedBox(
         height: 20,
       ),
-      Text(
+      Text(   // 文章标题
         _title,
         style: TextStyle(fontSize: 30),
       ),
       SizedBox(
         height: 10,
       ),
-      Row(
+      Row(  // 游戏名称与创建时间的这一行
         mainAxisSize: MainAxisSize.max,
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[
-          Text(
+          Text( // 游戏名称
             _gameName,
             textAlign: TextAlign.start,
             style: TextStyle(fontSize: 15, color: Color(0xFF576b95)),
           ),
-          Text(
+          Text( // 创建时间
             _createTime,
             textAlign: TextAlign.right,
             style: TextStyle(fontSize: 15, color: Color.fromRGBO(0, 0, 0, 0.3)),
@@ -132,7 +132,7 @@ class _ArticleState extends State<Article> {
       Container(
         child: SingleChildScrollView(
           child: Html(
-            data: _articleDetail,
+            data: _articleDetail,   // 获取到的富文本字符串
           ),
         ),
       ),
@@ -206,17 +206,17 @@ class _ArticleState extends State<Article> {
               _title,
             ),
             actions: <Widget>[
-              PopupMenuButton(onSelected: (value) async {
+              PopupMenuButton(onSelected: (value) async {   // 右上角菜单
                 switch (value) {
                   case 'favorite':
                     {
-                      if (_hasFavorite) {
+                      if (_hasFavorite) {   // 如果已经被收藏了，则发送取消收藏的请求
                         await Http()
                             .delete('/favorites/cancel/$id', auth: true);
                         setState(() {
                           _hasFavorite = false;
                         });
-                      } else {
+                      } else {    // 若没被收藏，则发送收藏请求
                         await Http().post('/favorites',
                             body: {'articleId': id.toString()}, auth: true);
                         setState(() {
@@ -226,8 +226,8 @@ class _ArticleState extends State<Article> {
                     }
                     break;
                   case 'game':
-                    {
-                      Navigator.of(context)
+                    {                       // 点击游戏专区则跳转到这个文章的游戏专区
+                      Navigator.of(context) 
                           .push(MaterialPageRoute(builder: (context) {
                         return Game(_gameId);
                       }));
@@ -246,7 +246,7 @@ class _ArticleState extends State<Article> {
                           Icons.favorite,
                           color: Color(0xfff44336),
                         ),
-                        _hasFavorite ? Text(' 取消收藏') : Text(' 添加收藏')
+                        _hasFavorite ? Text(' 取消收藏') : Text(' 添加收藏')  // 根据状态判断是显示取消收藏还是添加收藏
                       ],
                     ),
                     value: 'favorite',

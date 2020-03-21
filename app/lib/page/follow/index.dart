@@ -158,7 +158,7 @@ class _FollowState extends State<Follow> {
                           fit: BoxFit.cover,
                         ),
                         trailing: !_delFlag ? Icon(Icons.chevron_right) : null,
-                        onTap: _delFlag
+                        onTap: _delFlag   // 删除模式下，点击为选中；普通模式下，点击为跳转
                             ? () {
                                 if (_checkedIds.contains(item['id'])) {
                                   setState(() {
@@ -178,9 +178,9 @@ class _FollowState extends State<Follow> {
                                   }));
                                 });
                               },
-                        onLongPress: () {
-                          _checkedIds.add(item['id']);
-                          _changeModel(true);
+                        onLongPress: () { // 长按事件
+                          _checkedIds.add(item['id']);  // 被选择的数组加上这一条
+                          _changeModel(true);   // 将长按的这一条选中
                         },
                         contentPadding: EdgeInsets.fromLTRB(16, 10, 16, 10),
                       ),
@@ -194,7 +194,7 @@ class _FollowState extends State<Follow> {
             }).toList(),
           )),
         ),
-        onWillPop: () {
+        onWillPop: () {   
           if (_delFlag) {
             _changeModel(false);
             return Future.value(false);

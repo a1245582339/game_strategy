@@ -94,7 +94,7 @@ class _GameState extends State<Game> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar:
-          AppBar(title: Text((_game['name'] ?? '') + '专区'), actions: <Widget>[
+          AppBar(title: Text((_game['name'] ?? '') + '专区'), actions: <Widget>[  // 顶部栏及菜单
         PopupMenuButton(
           onSelected: (value) async {
             switch (value) {
