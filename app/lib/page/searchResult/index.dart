@@ -1,5 +1,6 @@
 import 'package:app/component/ArticleListItem.dart';
 import 'package:app/component/Loadmore.dart';
+import 'package:app/page/game/index.dart';
 import 'package:app/page/search/index.dart';
 import 'package:app/utils/http.dart';
 import 'package:flutter/material.dart';
@@ -153,7 +154,7 @@ class _ResultListState extends State<ResultList> {
         onTap: () {
           Future.delayed(Duration(milliseconds: 200), () {
             Navigator.of(context).push(MaterialPageRoute(builder: (context) {
-              // return Article(id: article['id']);
+              return Game(_game['id']);
             }));
           });
         },

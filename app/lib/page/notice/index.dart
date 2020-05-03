@@ -74,16 +74,7 @@ class _NoticeState extends State<Notice> {
                     Text(item['user']['name'].length > 5
                         ? item['user']['name'].substring(0, 5)
                         : item['user']['name']),
-                    Text(
-                      ' 在 ',
-                      style: TextStyle(color: Colors.grey),
-                    ),
-                    Text('《' +
-                        (item['article']['title'].length > 10
-                            ? item['article']['title'].substring(0, 10) + '...'
-                            : item['article']['title']) +
-                        '》'),
-                    Text(' 中回复了你', style: TextStyle(color: Colors.grey)),
+                    Text(' 回复了你', style: TextStyle(color: Colors.grey)),
                   ],
                 ),
                 subtitle: Text(
